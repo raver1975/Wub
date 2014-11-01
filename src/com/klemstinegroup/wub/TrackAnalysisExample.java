@@ -21,7 +21,7 @@ import com.echonest.api.v4.TrackAnalysis;
  */
 public class TrackAnalysisExample {
 
-	static String song = "songs/heat.mp3";
+	static String song = "songs/plumber.mp3";
 
 	public static void main(String[] args) throws EchoNestException {
 		EchoNestAPI en = new EchoNestAPI();

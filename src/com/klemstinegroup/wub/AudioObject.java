@@ -10,17 +10,44 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import com.echonest.api.v4.EchoNestAPI;
+import com.echonest.api.v4.EchoNestException;
+import com.echonest.api.v4.Track;
+import com.echonest.api.v4.TrackAnalysis;
+
 public class AudioObject {
 
+	public byte[] data;
+	public File file;
+	TrackAnalysis analysis;
+	
 	public AudioObject(String file) {
 		this(new File(file));
 	}
 
 	public AudioObject(File file) {
+		this.file=file;
 		convert(file);
+
 	}
 
-	public byte[] data;
+    void echoNest(final File file){
+    	new Thread(new Runnable(){
+    		public void run(){
+    			try{
+    				EchoNestAPI en=null;
+    		    	Track track = en.uploadTrack(file);
+    				track.waitForAnalysis(30000);
+    				if (track.getStatus() == Track.AnalysisStatus.COMPLETE) {
+    					analysis = track.getAnalysis();
+    				}
+    			}
+    			catch(Exception e){
+    				e.printStackTrace();
+    			}
+    		}
+    	}).start();
+    }
 
 	void convert(File soundFile) {
 		AudioInputStream mp3InputStream = null;
@@ -32,39 +59,16 @@ public class AudioObject {
 			e.printStackTrace();
 		}
 		AudioFormat baseFormat = mp3InputStream.getFormat();
-		System.out.println(baseFormat.getSampleRate());
-//		AudioFormat decodedFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, Player.sampleRate, Player.resolution, Player.channels, Player.frameSize, Player.sampleRate, false);
 		AudioInputStream convertedAudioInputStream = AudioSystem.getAudioInputStream(Player.audioFormat, mp3InputStream);
-//		ByteOutputStream bos=new ByteOutputStream();
-//		try {
-//			AudioSystem.write(convertedAudioInputStream, AudioFileFormat.Type.WAVE, bos);
-//			data=bos.getBytes();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+		File temp=new File("temp.mp3");
 		try {
 			AudioSystem.write(convertedAudioInputStream, AudioFileFormat.Type.WAVE,
-					new File("temp.mp3"));
+					temp);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-//		try {
-//			mp3InputStream = AudioSystem.getAudioInputStream(new File("temp.mp3"));
-//		} catch (UnsupportedAudioFileException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-		data=FileToBytes(new File("temp.mp3"));
-		
-//		data=new byte[(int) (mp3InputStream.getFrameLength()*Player.frameSize)];
-//		try {
-//			convertedAudioInputStream.read(data);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-		new File("temp.mp3").delete();
+		data=FileToBytes(temp);
+		temp.delete();
 	}
 	
 	public static byte[] FileToBytes(File file){
@@ -72,6 +76,7 @@ public class AudioObject {
        try { 
              FileInputStream fileInputStream = new FileInputStream(file);
              fileInputStream.read(b);
+             fileInputStream.close();
         } catch (FileNotFoundException e) {
                     System.out.println("File Not Found.");
                     e.printStackTrace();
@@ -80,6 +85,7 @@ public class AudioObject {
                  System.out.println("Error Reading The File.");
                   e1.printStackTrace();
         } 
+       
        return b;
 	}
 }
