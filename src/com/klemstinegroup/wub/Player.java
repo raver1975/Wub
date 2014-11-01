@@ -8,11 +8,10 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
-import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Player {
 	boolean isRunning = true;
-	SourceDataLine line;
+	public SourceDataLine line;
 	PipedInputStream input;
 	PipedOutputStream output;
 	static final int sampleRate = 44100;
@@ -48,7 +47,7 @@ public class Player {
 
 	public void play(AudioObject ai, double d, double e) {
 
-		int startInBytes = (int)(d * sampleRate * frameSize)-( (int)(d * sampleRate * frameSize))%4;
+		int startInBytes = (int)(d * sampleRate * frameSize)-( (int)(d * sampleRate * frameSize))%frameSize;
 		double lengthInFrames = (e* sampleRate);
 		int lengthInBytes = (int) (lengthInFrames * frameSize) - (((int) (lengthInFrames * frameSize)) % frameSize);
 		System.out.println(startInBytes+"\t"+lengthInBytes);

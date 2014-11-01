@@ -1,7 +1,9 @@
 package com.klemstinegroup.wub;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.sound.sampled.AudioFileFormat;
@@ -11,45 +13,44 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import com.echonest.api.v4.EchoNestAPI;
-import com.echonest.api.v4.EchoNestException;
 import com.echonest.api.v4.Track;
 import com.echonest.api.v4.TrackAnalysis;
+import com.jssrc.resample.JSSRCResampler;
+
+//-Xbootclasspath/p:./libs/tritonus_share.jar;./libs/tritonus_aos-0.3.6.jar;./libs/tritonus_remaining-0.3.6.jar
 
 public class AudioObject {
 
 	public byte[] data;
 	public File file;
 	TrackAnalysis analysis;
-	
+	Player player = new Player();
+
 	public AudioObject(String file) {
 		this(new File(file));
 	}
 
 	public AudioObject(File file) {
-		this.file=file;
+		this.file = file;
 		convert(file);
-
+		analysis = echoNest(file);
 	}
 
-    void echoNest(final File file){
-    	new Thread(new Runnable(){
-    		public void run(){
-    			try{
-    				EchoNestAPI en=null;
-    		    	Track track = en.uploadTrack(file);
-    				track.waitForAnalysis(30000);
-    				if (track.getStatus() == Track.AnalysisStatus.COMPLETE) {
-    					analysis = track.getAnalysis();
-    				}
-    			}
-    			catch(Exception e){
-    				e.printStackTrace();
-    			}
-    		}
-    	}).start();
-    }
+	public static TrackAnalysis echoNest(File file) {
+		try {
+			EchoNestAPI en = new EchoNestAPI();
+			Track track = en.uploadTrack(file);
+			track.waitForAnalysis(30000);
+			if (track.getStatus() == Track.AnalysisStatus.COMPLETE) {
+				return track.getAnalysis();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
-	void convert(File soundFile) {
+	public void convert(File soundFile) {
 		AudioInputStream mp3InputStream = null;
 		try {
 			mp3InputStream = AudioSystem.getAudioInputStream(soundFile);
@@ -58,34 +59,47 @@ public class AudioObject {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		AudioFormat baseFormat = mp3InputStream.getFormat();
-		AudioInputStream convertedAudioInputStream = AudioSystem.getAudioInputStream(Player.audioFormat, mp3InputStream);
-		File temp=new File("temp.mp3");
+
+		File temp = new File("temp.wav");
+		mp3InputStream = AudioSystem.getAudioInputStream(new AudioFormat(mp3InputStream.getFormat().getSampleRate(), Player.resolution, Player.channels, true, false), mp3InputStream);
 		try {
-			AudioSystem.write(convertedAudioInputStream, AudioFileFormat.Type.WAVE,
-					temp);
+			AudioSystem.write(mp3InputStream, AudioFileFormat.Type.WAVE, temp);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		data=FileToBytes(temp);
+		// try {
+		// data = Files.readAllBytes(temp.toPath());
+		try {
+			mp3InputStream = AudioSystem.getAudioInputStream(temp);
+		} catch (UnsupportedAudioFileException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+
+		mp3InputStream = AudioSystem.getAudioInputStream(Player.audioFormat, mp3InputStream);
+
+		ByteArrayOutputStream bo = new ByteArrayOutputStream();
+		try {
+			AudioSystem.write(mp3InputStream, AudioFileFormat.Type.WAVE, bo);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		data = bo.toByteArray();
+		
+		try {
+			mp3InputStream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		temp.delete();
 	}
-	
-	public static byte[] FileToBytes(File file){
-		 byte[] b = new byte[(int) file.length()];
-       try { 
-             FileInputStream fileInputStream = new FileInputStream(file);
-             fileInputStream.read(b);
-             fileInputStream.close();
-        } catch (FileNotFoundException e) {
-                    System.out.println("File Not Found.");
-                    e.printStackTrace();
-        } 
-        catch (IOException e1) {
-                 System.out.println("Error Reading The File.");
-                  e1.printStackTrace();
-        } 
-       
-       return b;
+
+	public String getFileName() {
+		return file.getName();
 	}
+
 }

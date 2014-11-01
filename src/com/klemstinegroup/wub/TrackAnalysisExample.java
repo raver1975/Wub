@@ -53,7 +53,7 @@ public class TrackAnalysisExample {
 					System.out.println("Beat start times:");
 					TrackAnalysis analysis = track.getAnalysis()
 							;
-					List<TimedEvent> list = analysis.getBeats();
+					List<TimedEvent> list = analysis.getSections();
 					Collections.sort(list, new Comparator<TimedEvent>() {
 
 						@Override
