@@ -25,7 +25,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 	TrackAnalysis analysis;
 	BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
 	BufferedImage bufferedimage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
-	private TimedEvent tempTimedEvent;
+	private Interval tempTimedEvent;
 
 	public MusicCanvas(AudioObject au) {
 		this.au = au;
@@ -78,14 +78,21 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 				g1.fillRect(x3, i.y, x4, 20);
 			}
 		}
+		if (tempTimedEvent != null) {
+			g1.setColor(Color.LIGHT_GRAY);
+			int x3 = (int) ((tempTimedEvent.te.getStart() / duration) * (double) getWidth() + .5d);
+			int x4 = (int) ((tempTimedEvent.te.getDuration() / duration) * (double) getWidth() + .5d);
+			g1.fillRect(x3, tempTimedEvent.y, x4, 20);
+		}
 		if (au.positionInterval != null) {
 			g1.setColor(Color.yellow);
 			int x3 = (int) ((au.positionInterval.te.getStart() / duration) * (double) getWidth() + .5d);
 			int x4 = (int) ((au.positionInterval.te.getDuration() / duration) * (double) getWidth() + .5d);
 			g1.fillRect(x3, au.positionInterval.y, x4, 20);
 		}
+		
 		g1.setColor(Color.black);
-		int x1 = (int) (getWidth() * (double) au.position / (double) au.data.length);
+		int x1 = (int) (getWidth() * (double) au.position / (double) au.data.length+ .5d);
 		g1.drawLine(x1, 0, x1, getHeight());
 		g.drawImage(bufferedimage, 0, 0, null);
 	}
@@ -97,9 +104,18 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 		int y = this.getHeight();
 		g.setColor(Color.white);
 		g.fillRect(0, 0, x, y);
-
+		g.drawImage(SamplingGraph.createWaveForm(au.data, au.audioFormat, getWidth(), 200),0, 80, null);
+		g.setColor(Color.magenta);
+		List<TimedEvent> list = au.analysis.getTatums();
+		for (int i = 0; i < list.size(); i++) {
+			TimedEvent te = list.get(i);
+			int x1 = (int) ((te.getStart() / duration) * (double) x + .5d);
+			int x2 = (int) ((te.getDuration() / duration) * (double) x + .5d);
+			g.drawRect(x1, 60, x2, 19);
+		}
+		
 		g.setColor(Color.green);
-		List<TimedEvent> list = au.analysis.getBeats();
+		list = au.analysis.getBeats();
 		for (int i = 0; i < list.size(); i++) {
 			TimedEvent te = list.get(i);
 			int x1 = (int) ((te.getStart() / duration) * (double) x + .5d);
@@ -122,6 +138,9 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			int x2 = (int) ((te.getDuration() / duration) * (double) x + .5d);
 			g.drawRect(x1, 0, x2, 19);
 		}
+		
+
+		
 		g.setColor(Color.red);
 		List<Segment> list1 = au.analysis.getSegments();
 		for (int i = 0; i < list1.size() - 1; i++) {
@@ -132,14 +151,15 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			double loudstart = testart.getLoudnessStart();
 			double loudend = teend.getLoudnessStart();
 			g.setColor(Color.red);
-			g.drawLine(x1, (int) (120 + loudstart), x2, (int) (120 + loudend));
+			g.drawLine(x1, (int) (260 + loudstart), x2, (int) (260 + loudend));
 			double[] pitch = testart.getPitches();
 			for (int j = 0; j < 12; j++) {
 				g.setColor(ColorHelper.numberToColorPercentage(pitch[j]));
-				g.fillRect(x1, 120 + (j * 15), x2 - x1, 15);
+				g.fillRect(x1, 260+ (j * 15), x2 - x1, 15);
 			}
 			// g.drawLine(x3, (int)(70-loudmax), x2, (int)(70-loudend));
 		}
+
 
 	}
 
@@ -168,7 +188,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			Collections.reverse(list);
 			for (int i = 0; i < list.size(); i++) {
 				if (list.get(i).getStart() <= loc) {
-					tempTimedEvent = list.get(i);
+					tempTimedEvent = new Interval(list.get(i), 0);
 					au.play(list.get(i), 0);
 					break;
 				}
@@ -180,7 +200,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			Collections.reverse(list);
 			for (int i = 0; i < list.size(); i++) {
 				if (list.get(i).getStart() <= loc) {
-					tempTimedEvent = list.get(i);
+					tempTimedEvent = new Interval(list.get(i), 20);
 					au.play(list.get(i), 20);
 					break;
 				}
@@ -192,8 +212,21 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			Collections.reverse(list);
 			for (int i = 0; i < list.size(); i++) {
 				if (list.get(i).getStart() <= loc) {
-					tempTimedEvent = list.get(i);
+					tempTimedEvent = new Interval(list.get(i),40);
 					au.play(list.get(i), 40);
+					break;
+				}
+
+			}
+		}
+		
+		if (y >= 60 && y < 80) {
+			List<TimedEvent> list = au.analysis.getTatums();
+			Collections.reverse(list);
+			for (int i = 0; i < list.size(); i++) {
+				if (list.get(i).getStart() <= loc) {
+					tempTimedEvent = new Interval(list.get(i),60);
+					au.play(list.get(i), 60);
 					break;
 				}
 
@@ -255,8 +288,8 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			Collections.reverse(list);
 			for (int i = 0; i < list.size(); i++) {
 				if (list.get(i).getStart() <= loc) {
-					if (tempTimedEvent.getStart() != list.get(i).getStart()) {
-						tempTimedEvent = list.get(i);
+					if (tempTimedEvent.te.getStart() != list.get(i).getStart()) {
+						tempTimedEvent = new Interval(list.get(i),0);
 						au.play(list.get(i), 0);
 					}
 					break;
@@ -270,8 +303,8 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			Collections.reverse(list);
 			for (int i = 0; i < list.size(); i++) {
 				if (list.get(i).getStart() <= loc) {
-					if (tempTimedEvent.getStart() != list.get(i).getStart()) {
-						tempTimedEvent = list.get(i);
+					if (tempTimedEvent.te.getStart() != list.get(i).getStart()) {
+						tempTimedEvent = new Interval(list.get(i),20);
 						au.play(list.get(i), 20);
 					}
 					break;
@@ -284,9 +317,24 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			Collections.reverse(list);
 			for (int i = 0; i < list.size(); i++) {
 				if (list.get(i).getStart() <= loc) {
-					if (tempTimedEvent.getStart() != list.get(i).getStart()) {
-						tempTimedEvent = list.get(i);
+					if (tempTimedEvent.te.getStart() != list.get(i).getStart()) {
+						tempTimedEvent = new Interval(list.get(i),40);
 						au.play(list.get(i), 40);
+					}
+					break;
+				}
+
+			}
+		}
+		
+		if (y >= 60 && y < 80) {
+			List<TimedEvent> list = au.analysis.getTatums();
+			Collections.reverse(list);
+			for (int i = 0; i < list.size(); i++) {
+				if (list.get(i).getStart() <= loc) {
+					if (tempTimedEvent.te.getStart() != list.get(i).getStart()) {
+						tempTimedEvent = new Interval(list.get(i),60);
+						au.play(list.get(i), 60);
 					}
 					break;
 				}

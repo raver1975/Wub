@@ -39,11 +39,11 @@ public class AudioObject implements Serializable {
 	transient int position = 0;
 	transient Interval positionInterval;
 
-	static final int resolution = 16;
-	static final int channels = 2;
-	static final int frameSize = channels * resolution / 8;
-	static final int sampleRate = 44100;
-	static final AudioFormat audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sampleRate, resolution, channels, frameSize, sampleRate, false);
+	public static final int resolution = 16;
+	public static final int channels = 2;
+	public static final int frameSize = channels * resolution / 8;
+	public static final int sampleRate = 44100;
+	public static final AudioFormat audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sampleRate, resolution, channels, frameSize, sampleRate, false);
 	static final int bufferSize = 4096;
 
 	public AudioObject(String file) {
@@ -66,17 +66,15 @@ public class AudioObject implements Serializable {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		} else {
-			AudioObject au = new AudioObject(file);
-			try {
-				Serializer.store(au, newFile);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return au;
 		}
-		return null;
+		AudioObject au = new AudioObject(file);
+		try {
+			Serializer.store(au, newFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return au;
 	}
 
 	public AudioObject(File file) {
@@ -88,7 +86,7 @@ public class AudioObject implements Serializable {
 	}
 
 	private void init() {
-		 queue=new LinkedList<Interval>();
+		queue = new LinkedList<Interval>();
 		makeCanvas();
 		startPlaying();
 	}
@@ -131,39 +129,9 @@ public class AudioObject implements Serializable {
 	private void makeCanvas() {
 		JFrame frame = new JFrame(getFileName());
 		mc = new MusicCanvas(this);
-
-		// mc.setBounds(0, 0, 4500,350);
-		// mc.setMinimumSize(new Dimension(4500,350));
-		mc.setSize(new Dimension(4500, 320));
+		mc.setSize(new Dimension(4500, 440));
 		final JScrollPane js = new JScrollPane(mc);
-		// js.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
-		// js.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
 		js.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-		// js.getHorizontalScrollBar().addAdjustmentListener(
-		// new AdjustmentListener(){
-		//
-		// @Override
-		// public void adjustmentValueChanged(AdjustmentEvent e) {
-		// // final JScrollPane scroll = ((JScrollPane) e.getSource());
-		// // if (null == scroll) {
-		// // // do nothing
-		// // return;
-		// // }
-		// final Point top = js.getLocation();
-		// final Rectangle visible = js.getVisibleRect();
-		//
-		// // set up new location
-		// frame1.setSize(visible.width, visible.height);
-		// frame1.setLocation(visible.x - top.x, visible.y - top.y);
-		// mc.setSize(js.getWidth(), js.getHeight());
-		// mc.setLocation(top.x - visible.x, top.y - visible.y);
-		//
-		// mc.makeImage();
-		// }
-		//
-		// });
-		// player.setCanvas(mc);
-		// frame.getContentPane().setLayout(new BorderLayout());
 		frame.getContentPane().add(js, "Center");
 		JScrollBar jbar = new JScrollBar(JScrollBar.VERTICAL);
 		jbar.setMinimum(1);
@@ -180,7 +148,7 @@ public class AudioObject implements Serializable {
 
 		frame.getContentPane().add(jbar, "East");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setBounds(100, 100, 500, 400);
+		frame.setBounds(100, 100, 800, 500);
 		frame.show();
 		frame.validate();
 		frame.repaint();

@@ -8,9 +8,9 @@ public class Wub {
 
 	public Wub() {
 		AudioObject au = AudioObject.factory("songs/plumber.mp3");
-		AudioObject au1 = new AudioObject("songs/heat.mp3");
-		AudioObject au2 = new AudioObject("songs/mylittle.mp3");
-//		System.out.println("here");
+		AudioObject au1 = AudioObject.factory("songs/heat.mp3");
+		AudioObject au2 = AudioObject.factory("songs/mylittle.mp3");
+		// System.out.println("here");
 	}
 
 	public static void main(String[] args) {
