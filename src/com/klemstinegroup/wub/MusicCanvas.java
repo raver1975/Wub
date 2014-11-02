@@ -1,9 +1,8 @@
 package com.klemstinegroup.wub;
 
-import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.GraphicsConfiguration;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
@@ -12,11 +11,13 @@ import java.awt.image.BufferedImage;
 import java.util.Collections;
 import java.util.List;
 
+import javax.swing.JComponent;
+
 import com.echonest.api.v4.Segment;
 import com.echonest.api.v4.TimedEvent;
 import com.echonest.api.v4.TrackAnalysis;
 
-public class MusicCanvas extends Canvas implements MouseListener, ComponentListener {
+public class MusicCanvas extends JComponent implements MouseListener, ComponentListener {
 
 	private AudioObject au;
 	double duration;
@@ -50,7 +51,8 @@ public class MusicCanvas extends Canvas implements MouseListener, ComponentListe
 
 	}
 
-	private void makeImage() {
+	void makeImage() {
+		System.out.println(getWidth()+"\t"+getHeight());
 		image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
 		bufferedimage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
 		Graphics g = image.getGraphics();
@@ -67,7 +69,6 @@ public class MusicCanvas extends Canvas implements MouseListener, ComponentListe
 		g1.drawImage(image, 0, 0, null);
 		g1.setColor(Color.black);
 		int x1 = (int) (getWidth()*(double)au.position/(double)au.data.length);
-		System.out.println((double)au.position/(double)au.data.length);
 		g1.drawLine(x1, 0, x1, getHeight());
 		g.drawImage(bufferedimage, 0, 0, null);
 	}
@@ -129,11 +130,14 @@ public class MusicCanvas extends Canvas implements MouseListener, ComponentListe
 		}
 
 	}
-
-	public MusicCanvas(GraphicsConfiguration config) {
-		super(config);
-		// TODO Auto-generated constructor stub
-	}
+	public Dimension getPreferredSize()
+	{
+	return new Dimension(this.getSize().width,this.getSize().height);
+	} 
+//	public MusicCanvas(GraphicsConfiguration config) {
+//		super(config);
+//		// TODO Auto-generated constructor stub
+//	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {

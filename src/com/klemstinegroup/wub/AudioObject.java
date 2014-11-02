@@ -1,5 +1,8 @@
 package com.klemstinegroup.wub;
 
+import java.awt.Dimension;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +18,8 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 
 import com.echonest.api.v4.EchoNestAPI;
 import com.echonest.api.v4.Track;
@@ -40,7 +45,7 @@ public class AudioObject {
 	static final int frameSize = channels * resolution / 8;
 	static final int sampleRate = 44100;
 	static final AudioFormat audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sampleRate, resolution, channels, frameSize, sampleRate, false);
-	static final int bufferSize=4096;
+	static final int bufferSize = 4096;
 
 	public AudioObject(String file) {
 		this(new File(file));
@@ -65,16 +70,21 @@ public class AudioObject {
 						Interval i = queue.poll();
 						System.out.println(i);
 						int j = 0;
-						for (j = i.min; j <= i.max-bufferSize; j += bufferSize) {
-							line.write(data, j, bufferSize);
+						for (j = i.min; j <= i.max - bufferSize; j += bufferSize) {
 							position = j;
+							line.write(data, j, bufferSize);
+							
 							// System.out.println(j);
 						}
-						if (j < i.max)
-							line.write(data, j, i.max - j);
 
+						if (j < i.max) {
+							position = j;
+							line.write(data, j, i.max - j);
+//							line.drain();
+						}
 					} else
 						try {
+							line.drain();
 							Thread.sleep(100);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
@@ -89,10 +99,57 @@ public class AudioObject {
 	private void makeCanvas() {
 		JFrame frame = new JFrame(getFileName());
 		mc = new MusicCanvas(this);
+
+		// mc.setBounds(0, 0, 4500,350);
+		// mc.setMinimumSize(new Dimension(4500,350));
+		mc.setSize(new Dimension(4500, 320));
+		final JScrollPane js = new JScrollPane(mc);
+		// js.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
+		// js.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
+		 js.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+		// js.getHorizontalScrollBar().addAdjustmentListener(
+		// new AdjustmentListener(){
+		//
+		// @Override
+		// public void adjustmentValueChanged(AdjustmentEvent e) {
+		// // final JScrollPane scroll = ((JScrollPane) e.getSource());
+		// // if (null == scroll) {
+		// // // do nothing
+		// // return;
+		// // }
+		// final Point top = js.getLocation();
+		// final Rectangle visible = js.getVisibleRect();
+		//
+		// // set up new location
+		// frame1.setSize(visible.width, visible.height);
+		// frame1.setLocation(visible.x - top.x, visible.y - top.y);
+		// mc.setSize(js.getWidth(), js.getHeight());
+		// mc.setLocation(top.x - visible.x, top.y - visible.y);
+		//
+		// mc.makeImage();
+		// }
+		//
+		// });
 		// player.setCanvas(mc);
-		frame.getContentPane().add(mc);
-		frame.setBounds(200, 200, 1500, 350);
+//		frame.getContentPane().setLayout(new BorderLayout());
+		frame.getContentPane().add(js,"Center");
+		JScrollBar jbar=new JScrollBar(JScrollBar.VERTICAL);
+		jbar.setMinimum(1);
+		jbar.setMaximum(1000);
+		jbar.setValue(100);
+		jbar.addAdjustmentListener(new AdjustmentListener() {
+		      public void adjustmentValueChanged(AdjustmentEvent ae) {
+		        if (ae.getValueIsAdjusting())
+		          return;
+		        System.out.println("Value of vertical scroll bar: " + ae.getValue());
+		        mc.setSize(50*ae.getValue(),mc.getHeight());
+		        mc.makeImage();
+		      }
+		    });
+
+		frame.getContentPane().add(jbar,"East");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setBounds(100, 100, 500, 400);
 		frame.show();
 		frame.validate();
 		frame.repaint();
