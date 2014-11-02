@@ -6,6 +6,7 @@ import java.awt.event.AdjustmentListener;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -22,23 +23,21 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 
 import com.echonest.api.v4.EchoNestAPI;
+import com.echonest.api.v4.TimedEvent;
 import com.echonest.api.v4.Track;
 import com.echonest.api.v4.TrackAnalysis;
 
-//-Xbootclasspath/p:./libs/tritonus_share.jar;./libs/tritonus_aos-0.3.6.jar;./libs/tritonus_remaining-0.3.6.jar
-
-public class AudioObject {
+public class AudioObject implements Serializable {
 
 	public byte[] data;
 	public File file;
 	TrackAnalysis analysis;
-	// Player player = new Player();
-	MusicCanvas mc;
-	public SourceDataLine line;
-	// PipedInputStream input;
-	// PipedOutputStream output;
-	Queue<Interval> queue = new LinkedList<Interval>();
-	int position = 0;
+	public transient MusicCanvas mc;
+	public transient SourceDataLine line;
+	public transient Queue<Interval> queue;
+
+	transient int position = 0;
+	transient Interval positionInterval;
 
 	static final int resolution = 16;
 	static final int channels = 2;
@@ -51,10 +50,45 @@ public class AudioObject {
 		this(new File(file));
 	}
 
+	public static AudioObject factory(String file) {
+		return factory(new File(file));
+	}
+
+	public static AudioObject factory(File file) {
+		File newFile = new File(file.getAbsolutePath() + ".save");
+		if (newFile.exists()) {
+			try {
+				AudioObject au = (AudioObject) Serializer.load(newFile);
+				au.init();
+				return au;
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			AudioObject au = new AudioObject(file);
+			try {
+				Serializer.store(au, newFile);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return au;
+		}
+		return null;
+	}
+
 	public AudioObject(File file) {
+
 		this.file = file;
 		convert(file);
 		analysis = echoNest(file);
+		init();
+	}
+
+	private void init() {
+		 queue=new LinkedList<Interval>();
 		makeCanvas();
 		startPlaying();
 	}
@@ -63,24 +97,22 @@ public class AudioObject {
 		line = getLine();
 		new Thread(new Runnable() {
 			public void run() {
-				System.out.println("Thread");
 				while (true) {
 					// System.out.println(queue.size());
 					if (!queue.isEmpty()) {
 						Interval i = queue.poll();
-						System.out.println(i);
+						positionInterval = i;
 						int j = 0;
-						for (j = i.min; j <= i.max - bufferSize; j += bufferSize) {
+						for (j = i.startBytes; j <= i.endBytes - bufferSize; j += bufferSize) {
 							position = j;
 							line.write(data, j, bufferSize);
-							
-							// System.out.println(j);
+
 						}
 
-						if (j < i.max) {
+						if (j < i.endBytes) {
 							position = j;
-							line.write(data, j, i.max - j);
-//							line.drain();
+							line.write(data, j, i.endBytes - j);
+							// line.drain();
 						}
 					} else
 						try {
@@ -106,7 +138,7 @@ public class AudioObject {
 		final JScrollPane js = new JScrollPane(mc);
 		// js.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
 		// js.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
-		 js.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+		js.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		// js.getHorizontalScrollBar().addAdjustmentListener(
 		// new AdjustmentListener(){
 		//
@@ -131,23 +163,22 @@ public class AudioObject {
 		//
 		// });
 		// player.setCanvas(mc);
-//		frame.getContentPane().setLayout(new BorderLayout());
-		frame.getContentPane().add(js,"Center");
-		JScrollBar jbar=new JScrollBar(JScrollBar.VERTICAL);
+		// frame.getContentPane().setLayout(new BorderLayout());
+		frame.getContentPane().add(js, "Center");
+		JScrollBar jbar = new JScrollBar(JScrollBar.VERTICAL);
 		jbar.setMinimum(1);
 		jbar.setMaximum(1000);
 		jbar.setValue(100);
 		jbar.addAdjustmentListener(new AdjustmentListener() {
-		      public void adjustmentValueChanged(AdjustmentEvent ae) {
-		        if (ae.getValueIsAdjusting())
-		          return;
-		        System.out.println("Value of vertical scroll bar: " + ae.getValue());
-		        mc.setSize(50*ae.getValue(),mc.getHeight());
-		        mc.makeImage();
-		      }
-		    });
+			public void adjustmentValueChanged(AdjustmentEvent ae) {
+				if (ae.getValueIsAdjusting())
+					return;
+				mc.setSize(50 * ae.getValue(), mc.getHeight());
+				mc.makeImage();
+			}
+		});
 
-		frame.getContentPane().add(jbar,"East");
+		frame.getContentPane().add(jbar, "East");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setBounds(100, 100, 500, 400);
 		frame.show();
@@ -234,12 +265,19 @@ public class AudioObject {
 		return res;
 	}
 
-	public void play(double start, double duration) {
-		int startInBytes = (int) (start * AudioObject.sampleRate * AudioObject.frameSize) - (int) (start * AudioObject.sampleRate * AudioObject.frameSize) % AudioObject.frameSize;
-		double lengthInFrames = duration * AudioObject.sampleRate;
-		int lengthInBytes = (int) (lengthInFrames * AudioObject.frameSize) - (int) (lengthInFrames * AudioObject.frameSize) % AudioObject.frameSize;
-		queue.add(new Interval(startInBytes, Math.min(startInBytes + lengthInBytes, data.length)));
-		System.out.println(data.length);
-
+	public void play(TimedEvent te, int y) {
+		queue.add(new Interval(te, y));
 	}
+
+	// public void play(double start, double duration) {
+	// int startInBytes = (int) (start * AudioObject.sampleRate *
+	// AudioObject.frameSize) - (int) (start * AudioObject.sampleRate *
+	// AudioObject.frameSize) % AudioObject.frameSize;
+	// double lengthInFrames = duration * AudioObject.sampleRate;
+	// int lengthInBytes = (int) (lengthInFrames * AudioObject.frameSize) -
+	// (int) (lengthInFrames * AudioObject.frameSize) % AudioObject.frameSize;
+	// queue.add(new Interval(startInBytes, Math.min(startInBytes +
+	// lengthInBytes, data.length)));
+	//
+	// }
 }

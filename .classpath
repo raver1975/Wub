@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="libs/jEN.jar"/>
 	<classpathentry kind="lib" path="libs/json_simple-1.1.jar"/>
 	<classpathentry kind="lib" path="libs/jl1.0.1.jar"/>
 	<classpathentry kind="lib" path="libs/mp3spi1.9.5.jar"/>
