@@ -44,7 +44,7 @@ public class AudioObject implements Serializable {
 	public static final int frameSize = channels * resolution / 8;
 	public static final int sampleRate = 44100;
 	public static final AudioFormat audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sampleRate, resolution, channels, frameSize, sampleRate, false);
-	static final int bufferSize = 4096;
+	static final int bufferSize = 8192;
 
 	public AudioObject(String file) {
 		this(new File(file));
@@ -114,6 +114,8 @@ public class AudioObject implements Serializable {
 						}
 					} else
 						try {
+							positionInterval=null;
+							mc.tempTimedEvent=null;
 							line.drain();
 							Thread.sleep(100);
 						} catch (InterruptedException e) {

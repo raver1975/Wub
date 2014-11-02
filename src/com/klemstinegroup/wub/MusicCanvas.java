@@ -25,7 +25,8 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 	TrackAnalysis analysis;
 	BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
 	BufferedImage bufferedimage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
-	private Interval tempTimedEvent;
+	public Interval tempTimedEvent;
+	private int currPos;
 
 	public MusicCanvas(AudioObject au) {
 		this.au = au;
@@ -75,25 +76,27 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			for (Interval i : au.queue) {
 				int x3 = (int) ((i.te.getStart() / duration) * (double) getWidth() + .5d);
 				int x4 = (int) ((i.te.getDuration() / duration) * (double) getWidth() + .5d);
-				g1.fillRect(x3, i.y, x4, 20);
+				g1.fillRect(x3 + 1, i.y + 1, x4 - 1, 18);
 			}
 		}
 		if (tempTimedEvent != null) {
 			g1.setColor(Color.LIGHT_GRAY);
 			int x3 = (int) ((tempTimedEvent.te.getStart() / duration) * (double) getWidth() + .5d);
 			int x4 = (int) ((tempTimedEvent.te.getDuration() / duration) * (double) getWidth() + .5d);
-			g1.fillRect(x3, tempTimedEvent.y, x4, 20);
+			g1.fillRect(x3 + 1, tempTimedEvent.y + 1, x4 - 1, 18);
 		}
 		if (au.positionInterval != null) {
-			g1.setColor(Color.yellow);
+			g1.setColor(Color.cyan);
 			int x3 = (int) ((au.positionInterval.te.getStart() / duration) * (double) getWidth() + .5d);
 			int x4 = (int) ((au.positionInterval.te.getDuration() / duration) * (double) getWidth() + .5d);
-			g1.fillRect(x3, au.positionInterval.y, x4, 20);
-		}
-		
-		g1.setColor(Color.black);
-		int x1 = (int) (getWidth() * (double) au.position / (double) au.data.length+ .5d);
+			g1.fillRect(x3 + 1, au.positionInterval.y + 1, x4 - 1, 18);
+		} 
+		g1.setColor(Color.white);
+		int x1 = (int) (getWidth() * (double) au.position / (double) au.data.length + .5d);
 		g1.drawLine(x1, 0, x1, getHeight());
+
+		g1.setColor(Color.cyan);
+		g1.drawLine(currPos, 0, currPos, getHeight());
 		g.drawImage(bufferedimage, 0, 0, null);
 	}
 
@@ -102,9 +105,9 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			return;
 		int x = this.getWidth();
 		int y = this.getHeight();
-		g.setColor(Color.white);
+		g.setColor(Color.black);
 		g.fillRect(0, 0, x, y);
-		g.drawImage(SamplingGraph.createWaveForm(au.data, au.audioFormat, getWidth(), 200),0, 80, null);
+		g.drawImage(SamplingGraph.createWaveForm(au.data, au.audioFormat, getWidth(), 200), 0, 80, null);
 		g.setColor(Color.magenta);
 		List<TimedEvent> list = au.analysis.getTatums();
 		for (int i = 0; i < list.size(); i++) {
@@ -113,7 +116,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			int x2 = (int) ((te.getDuration() / duration) * (double) x + .5d);
 			g.drawRect(x1, 60, x2, 19);
 		}
-		
+
 		g.setColor(Color.green);
 		list = au.analysis.getBeats();
 		for (int i = 0; i < list.size(); i++) {
@@ -130,7 +133,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			int x2 = (int) ((te.getDuration() / duration) * (double) x + .5d);
 			g.drawRect(x1, 20, x2, 19);
 		}
-		g.setColor(Color.blue);
+		g.setColor(Color.yellow);
 		list = au.analysis.getSections();
 		for (int i = 0; i < list.size(); i++) {
 			TimedEvent te = list.get(i);
@@ -138,9 +141,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			int x2 = (int) ((te.getDuration() / duration) * (double) x + .5d);
 			g.drawRect(x1, 0, x2, 19);
 		}
-		
 
-		
 		g.setColor(Color.red);
 		List<Segment> list1 = au.analysis.getSegments();
 		for (int i = 0; i < list1.size() - 1; i++) {
@@ -155,11 +156,10 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			double[] pitch = testart.getPitches();
 			for (int j = 0; j < 12; j++) {
 				g.setColor(ColorHelper.numberToColorPercentage(pitch[j]));
-				g.fillRect(x1, 260+ (j * 15), x2 - x1, 15);
+				g.fillRect(x1, 260 + (j * 15), x2 - x1, 15);
 			}
 			// g.drawLine(x3, (int)(70-loudmax), x2, (int)(70-loudend));
 		}
-
 
 	}
 
@@ -212,20 +212,20 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			Collections.reverse(list);
 			for (int i = 0; i < list.size(); i++) {
 				if (list.get(i).getStart() <= loc) {
-					tempTimedEvent = new Interval(list.get(i),40);
+					tempTimedEvent = new Interval(list.get(i), 40);
 					au.play(list.get(i), 40);
 					break;
 				}
 
 			}
 		}
-		
+
 		if (y >= 60 && y < 80) {
 			List<TimedEvent> list = au.analysis.getTatums();
 			Collections.reverse(list);
 			for (int i = 0; i < list.size(); i++) {
 				if (list.get(i).getStart() <= loc) {
-					tempTimedEvent = new Interval(list.get(i),60);
+					tempTimedEvent = new Interval(list.get(i), 60);
 					au.play(list.get(i), 60);
 					break;
 				}
@@ -281,6 +281,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 	public void mouseDragged(MouseEvent e) {
 		int x = e.getX();
 		int y = e.getY();
+		currPos = x;
 		double loc = ((double) x / (double) this.getWidth()) * duration;
 
 		if (y >= 0 && y < 20) {
@@ -288,8 +289,8 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			Collections.reverse(list);
 			for (int i = 0; i < list.size(); i++) {
 				if (list.get(i).getStart() <= loc) {
-					if (tempTimedEvent.te.getStart() != list.get(i).getStart()) {
-						tempTimedEvent = new Interval(list.get(i),0);
+					if (tempTimedEvent == null || tempTimedEvent.te.getStart() != list.get(i).getStart()) {
+						tempTimedEvent = new Interval(list.get(i), 0);
 						au.play(list.get(i), 0);
 					}
 					break;
@@ -303,8 +304,8 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			Collections.reverse(list);
 			for (int i = 0; i < list.size(); i++) {
 				if (list.get(i).getStart() <= loc) {
-					if (tempTimedEvent.te.getStart() != list.get(i).getStart()) {
-						tempTimedEvent = new Interval(list.get(i),20);
+					if (tempTimedEvent == null || tempTimedEvent.te.getStart() != list.get(i).getStart()) {
+						tempTimedEvent = new Interval(list.get(i), 20);
 						au.play(list.get(i), 20);
 					}
 					break;
@@ -317,8 +318,8 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			Collections.reverse(list);
 			for (int i = 0; i < list.size(); i++) {
 				if (list.get(i).getStart() <= loc) {
-					if (tempTimedEvent.te.getStart() != list.get(i).getStart()) {
-						tempTimedEvent = new Interval(list.get(i),40);
+					if (tempTimedEvent == null || tempTimedEvent.te.getStart() != list.get(i).getStart()) {
+						tempTimedEvent = new Interval(list.get(i), 40);
 						au.play(list.get(i), 40);
 					}
 					break;
@@ -326,14 +327,14 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 
 			}
 		}
-		
+
 		if (y >= 60 && y < 80) {
 			List<TimedEvent> list = au.analysis.getTatums();
 			Collections.reverse(list);
 			for (int i = 0; i < list.size(); i++) {
 				if (list.get(i).getStart() <= loc) {
-					if (tempTimedEvent.te.getStart() != list.get(i).getStart()) {
-						tempTimedEvent = new Interval(list.get(i),60);
+					if (tempTimedEvent == null || tempTimedEvent.te.getStart() != list.get(i).getStart()) {
+						tempTimedEvent = new Interval(list.get(i), 60);
 						au.play(list.get(i), 60);
 					}
 					break;
@@ -346,7 +347,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		// TODO Auto-generated method stub
+		currPos = e.getX();
 
 	}
 
