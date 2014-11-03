@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +38,7 @@ import com.echonest.api.v4.TimedEvent;
 import com.echonest.api.v4.Track;
 import com.echonest.api.v4.TrackAnalysis;
 
-public class AudioObject implements Serializable {
+public class AudioObject implements Serializable, KeyListener {
 
 	public byte[] data;
 	public File file;
@@ -58,6 +60,7 @@ public class AudioObject implements Serializable {
 			frameSize, sampleRate, false);
 	static final int bufferSize = 8192;
 	public transient int oldWidth;
+	public transient boolean pause = true;
 
 	public AudioObject(String file) {
 		this(new File(file));
@@ -162,19 +165,28 @@ public class AudioObject implements Serializable {
 		new Thread(new Runnable() {
 			public void run() {
 				top: while (true) {
+
 					// System.out.println(queue.size());
 					if (!queue.isEmpty()) {
 						Interval i = queue.poll();
 						positionInterval = i;
 						int j = 0;
 						for (j = i.startBytes; j <= i.endBytes - bufferSize; j += bufferSize) {
+							while (pause || breakPlay) {
+								if (breakPlay) {
+									breakPlay = false;
+									queue.clear();
+									continue top;
+								}
+								try {
+									Thread.sleep(10);
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+							}
 							position = j;
 							line.write(data, j, bufferSize);
-							if (breakPlay) {
-								breakPlay = false;
-								queue.clear();
-								continue top;
-							}
+
 						}
 
 						if (j < i.endBytes) {
@@ -204,6 +216,7 @@ public class AudioObject implements Serializable {
 		mc.setSize(new Dimension(4500, 750));
 		oldWidth = 4500;
 		final JScrollPane js = new JScrollPane(mc);
+		frame.addKeyListener(this);
 		js.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		frame.getContentPane().add(js, "Center");
 		JScrollBar jbar = new JScrollBar(JScrollBar.VERTICAL);
@@ -212,8 +225,8 @@ public class AudioObject implements Serializable {
 		jbar.setValue(100);
 		jbar.addAdjustmentListener(new AdjustmentListener() {
 			public void adjustmentValueChanged(AdjustmentEvent ae) {
-				 if (ae.getValueIsAdjusting())
-				 return;
+				if (ae.getValueIsAdjusting())
+					return;
 				double factor = ((double) (50 * ae.getValue()) / (double) oldWidth);
 				double oldPos = js.getHorizontalScrollBar().getValue()
 						+ js.getViewport().getWidth() / 2d;
@@ -325,6 +338,22 @@ public class AudioObject implements Serializable {
 
 	public void play(TimedEvent te, int y) {
 		queue.add(new Interval(te, y));
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		pause = !pause;
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+
 	}
 
 	// public void play(double start, double duration) {

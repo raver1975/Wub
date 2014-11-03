@@ -11,6 +11,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JComponent;
@@ -42,6 +43,7 @@ public class MusicCanvas extends JComponent implements MouseListener,
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 		this.addComponentListener(this);
+		// this.addKeyListener(this);
 		startPosition();
 		// makeImage();
 	}
@@ -82,12 +84,12 @@ public class MusicCanvas extends JComponent implements MouseListener,
 
 		if (!au.queue.isEmpty()) {
 
-			int num = au.queue.size();
-			double col = 175d / ((double) num);
-			int co = 255;
-			for (Interval i : au.queue) {
+			int c = 0;
+			LinkedList<Interval> temp=new LinkedList<Interval>(au.queue);
+			for (Interval i : temp) {
+				int co = (int) (255 - (225d / ((double) temp.size())) * (c++));
 				g1.setColor(new Color(co, co, co));
-				co -= col;
+
 				int x3 = (int) (((i.te.getStart() / duration) * (double) getWidth()) + .5d);
 				int x4 = (int) (((i.te.getDuration() / duration) * (double) getWidth()) + .5d);
 				g1.fillRect(x3 + 1, i.y + 1, x4 - 1, 18);
@@ -101,7 +103,6 @@ public class MusicCanvas extends JComponent implements MouseListener,
 		// (double) getWidth() + .5d);
 		// g1.fillRect(x3 + 1, tempTimedEvent.y + 1, x4 - 2, 18);
 		// }
-
 
 		if (au.positionInterval != null) {
 			g1.setColor(Color.magenta);
@@ -119,7 +120,7 @@ public class MusicCanvas extends JComponent implements MouseListener,
 			}
 			g1.fillRect(st, selectedStartY, en - st, 18);
 		}
-		
+
 		g1.setColor(Color.white);
 		int x1 = (int) ((getWidth() * (double) au.position / (double) au.data.length) + .5d);
 		g1.drawLine(x1, 0, x1, getHeight());
@@ -212,10 +213,10 @@ public class MusicCanvas extends JComponent implements MouseListener,
 			Segment teend = list1.get(i + 1);
 			int x1 = (int) ((testart.getStart() / duration) * (double) x + .5d);
 			int x2 = (int) ((teend.getStart() / duration) * (double) x + .5d);
-//			double loudstart = testart.getLoudnessStart()*2d;
-//			double loudend = teend.getLoudnessStart()*2d;
-//			g.setColor(Color.red);
-//			g.drawLine(x1, (int) (80 - loudstart), x2, (int) (80 - loudend));
+			// double loudstart = testart.getLoudnessStart()*2d;
+			// double loudend = teend.getLoudnessStart()*2d;
+			// g.setColor(Color.red);
+			// g.drawLine(x1, (int) (80 - loudstart), x2, (int) (80 - loudend));
 			double[] pitch = testart.getPitches();
 			float col = 0f;
 			for (int j = 0; j < 12; j++) {
@@ -270,7 +271,7 @@ public class MusicCanvas extends JComponent implements MouseListener,
 
 		if (e.getButton() == MouseEvent.BUTTON3) {
 			au.breakPlay = true;
-			selectedPress=false;
+			selectedPress = false;
 			return;
 		}
 		if (y >= 0 && y < 20) {
@@ -325,7 +326,7 @@ public class MusicCanvas extends JComponent implements MouseListener,
 		if (y > 80) {
 			selectedStart = loc;
 			selectedStartX = x;
-			selectedStartY=y;
+			selectedStartY = y-10;
 			selectedPress = true;
 		}
 
@@ -336,8 +337,8 @@ public class MusicCanvas extends JComponent implements MouseListener,
 		int x = e.getX();
 		int y = e.getY();
 		double loc = ((double) x / (double) this.getWidth()) * duration;
-		
-		if (y > 80&&selectedPress) {
+
+		if (y > 80 && selectedPress) {
 			double st = selectedStart;
 			double en = loc;
 			if (loc < st) {
@@ -351,7 +352,7 @@ public class MusicCanvas extends JComponent implements MouseListener,
 			hm.put("confidence", 1d);
 			au.play(new TimedEvent(hm), selectedStartY);
 		}
-		selectedPress=false;
+		selectedPress = false;
 	}
 
 	@Override
