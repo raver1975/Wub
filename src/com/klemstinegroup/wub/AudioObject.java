@@ -221,10 +221,8 @@ public class AudioObject implements Serializable {
 	public static TrackAnalysis echoNest(File file) {
 		try {
 			EchoNestAPI en = new EchoNestAPI();
-			Track track1=en.getKnownTrack(file);
-			System.out.println(track1);
-			if (track1!=null)return track1.getAnalysis();
 			Track track = en.uploadTrack(file);
+			System.out.println(track);
 			track.waitForAnalysis(30000);
 			if (track.getStatus() == Track.AnalysisStatus.COMPLETE) {
 				return track.getAnalysis();
