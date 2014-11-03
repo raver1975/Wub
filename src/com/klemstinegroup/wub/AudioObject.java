@@ -57,6 +57,7 @@ public class AudioObject implements Serializable {
 			AudioFormat.Encoding.PCM_SIGNED, sampleRate, resolution, channels,
 			frameSize, sampleRate, false);
 	static final int bufferSize = 8192;
+	public transient int oldWidth;
 
 	public AudioObject(String file) {
 		this(new File(file));
@@ -201,6 +202,7 @@ public class AudioObject implements Serializable {
 		JFrame frame = new JFrame(getFileName());
 		mc = new MusicCanvas(this);
 		mc.setSize(new Dimension(4500, 750));
+		oldWidth = 4500;
 		final JScrollPane js = new JScrollPane(mc);
 		js.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		frame.getContentPane().add(js, "Center");
@@ -210,12 +212,21 @@ public class AudioObject implements Serializable {
 		jbar.setValue(100);
 		jbar.addAdjustmentListener(new AdjustmentListener() {
 			public void adjustmentValueChanged(AdjustmentEvent ae) {
-//				if (ae.getValueIsAdjusting())
-//					return;
-//				js.getHorizontalScrollBar().setValue(mc.currPos);
+				 if (ae.getValueIsAdjusting())
+				 return;
+				double factor = ((double) (50 * ae.getValue()) / (double) oldWidth);
+				double oldPos = js.getHorizontalScrollBar().getValue()
+						+ js.getViewport().getWidth() / 2d;
+				int newPos = (int) (oldPos * factor);
+				newPos -= js.getViewport().getWidth() / 2d;
+				System.out.println(factor);
+				System.out.println(newPos);
+
+				js.getHorizontalScrollBar().setValue(newPos);
 				mc.setSize(50 * ae.getValue(), mc.getHeight());
 				mc.makeImage();
-				
+				oldWidth = 50 * ae.getValue();
+
 			}
 		});
 
