@@ -1,12 +1,12 @@
 package com.klemstinegroup.wub;
- 
+
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
- 
+
 /**
  * Color gradient map from blue to red in 1200 steps.<br>
  * Returns a Color for a double value.
@@ -17,14 +17,14 @@ import java.util.Map;
  * 
  */
 public class ColorHelper {
- 
+
 	private final static int LOW = 0;
 	private final static int HIGH = 255;
 	private final static int HALF = (HIGH + 1) / 2;
- 
+
 	private final static Map<Integer, Color> map = initNumberToColorMap();
 	private static int factor;
- 
+
 	/**
 	 * 
 	 * @param value
@@ -36,7 +36,7 @@ public class ColorHelper {
 		}
 		return numberToColorPercentage(value / 100);
 	}
- 
+
 	/**
 	 * @param value
 	 *            should be from 0 unti 1
@@ -53,7 +53,7 @@ public class ColorHelper {
 		}
 		return map.get(index);
 	}
- 
+
 	/**
 	 * @return
 	 */
@@ -62,12 +62,12 @@ public class ColorHelper {
 		int r = LOW;
 		int g = LOW;
 		int b = HALF;
- 
+
 		// factor (increment or decrement)
 		int rF = 0;
 		int gF = 0;
 		int bF = 1;
- 
+
 		int count = 0;
 		// 1276 steps
 		while (true) {
@@ -101,7 +101,7 @@ public class ColorHelper {
 		initList(localMap);
 		return localMap;
 	}
- 
+
 	/**
 	 * @param localMap
 	 */
@@ -113,7 +113,7 @@ public class ColorHelper {
 		factor = max + 1;
 		System.out.println(factor);
 	}
- 
+
 	/**
 	 * @param value
 	 * @return
@@ -126,7 +126,7 @@ public class ColorHelper {
 		}
 		return value;
 	}
- 
+
 	/**
 	 * blue-green-red 1276 steps
 	 * 
@@ -152,7 +152,7 @@ public class ColorHelper {
 	 * }
 	 * </pre>
 	 */
- 
+
 	/**
 	 * blue-short green-red 1200 steps
 	 * 

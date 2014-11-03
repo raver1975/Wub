@@ -11,7 +11,7 @@ public class TimedEvent implements Serializable {
     private double duration;
     private double confidence;
 
-    TimedEvent(Map map) {
+    public TimedEvent(Map map) {
         MQuery mq = new MQuery(map);
         start = mq.getDouble("start");
         duration = mq.getDouble("duration");

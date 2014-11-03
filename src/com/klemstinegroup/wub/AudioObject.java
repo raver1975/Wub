@@ -2,13 +2,13 @@ package com.klemstinegroup.wub;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -47,12 +47,15 @@ public class AudioObject implements Serializable {
 
 	transient int position = 0;
 	transient Interval positionInterval;
+	protected transient boolean breakPlay;
 
 	public static final int resolution = 16;
 	public static final int channels = 2;
 	public static final int frameSize = channels * resolution / 8;
 	public static final int sampleRate = 44100;
-	public static final AudioFormat audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sampleRate, resolution, channels, frameSize, sampleRate, false);
+	public static final AudioFormat audioFormat = new AudioFormat(
+			AudioFormat.Encoding.PCM_SIGNED, sampleRate, resolution, channels,
+			frameSize, sampleRate, false);
 	static final int bufferSize = 8192;
 
 	public AudioObject(String file) {
@@ -61,7 +64,8 @@ public class AudioObject implements Serializable {
 
 	public static AudioObject factory() {
 		JFileChooser chooser = new JFileChooser();
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("Audio", "mp3", "wav", "wub");
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Audio",
+				"mp3", "wav", "wub");
 		chooser.setFileFilter(filter);
 		int returnVal = chooser.showOpenDialog(new JFrame());
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -86,7 +90,8 @@ public class AudioObject implements Serializable {
 			filePrefix = fileName.substring(0, i);
 		}
 		if (!extension.equals("wub")) {
-			newFile = new File(file.getParent() + File.separator + filePrefix + ".wub");
+			newFile = new File(file.getParent() + File.separator + filePrefix
+					+ ".wub");
 			System.out.println(newFile.getAbsolutePath());
 		}
 		if (newFile.exists()) {
@@ -155,7 +160,7 @@ public class AudioObject implements Serializable {
 		line = getLine();
 		new Thread(new Runnable() {
 			public void run() {
-				while (true) {
+				top: while (true) {
 					// System.out.println(queue.size());
 					if (!queue.isEmpty()) {
 						Interval i = queue.poll();
@@ -164,7 +169,11 @@ public class AudioObject implements Serializable {
 						for (j = i.startBytes; j <= i.endBytes - bufferSize; j += bufferSize) {
 							position = j;
 							line.write(data, j, bufferSize);
-
+							if (breakPlay) {
+								breakPlay = false;
+								queue.clear();
+								continue top;
+							}
 						}
 
 						if (j < i.endBytes) {
@@ -191,7 +200,7 @@ public class AudioObject implements Serializable {
 	private void makeCanvas() {
 		JFrame frame = new JFrame(getFileName());
 		mc = new MusicCanvas(this);
-		mc.setSize(new Dimension(4500, 700));
+		mc.setSize(new Dimension(4500, 750));
 		final JScrollPane js = new JScrollPane(mc);
 		js.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		frame.getContentPane().add(js, "Center");
@@ -201,16 +210,18 @@ public class AudioObject implements Serializable {
 		jbar.setValue(100);
 		jbar.addAdjustmentListener(new AdjustmentListener() {
 			public void adjustmentValueChanged(AdjustmentEvent ae) {
-				if (ae.getValueIsAdjusting())
-					return;
+//				if (ae.getValueIsAdjusting())
+//					return;
+//				js.getHorizontalScrollBar().setValue(mc.currPos);
 				mc.setSize(50 * ae.getValue(), mc.getHeight());
 				mc.makeImage();
+				
 			}
 		});
 
 		frame.getContentPane().add(jbar, "East");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setBounds(100, 100, 800, 720);
+		frame.setBounds(100, 100, 800, 770);
 		frame.show();
 		frame.validate();
 		frame.repaint();
@@ -244,7 +255,9 @@ public class AudioObject implements Serializable {
 		}
 
 		File temp = new File("temp.wav");
-		mp3InputStream = AudioSystem.getAudioInputStream(new AudioFormat(mp3InputStream.getFormat().getSampleRate(), resolution, AudioObject.channels, true, false), mp3InputStream);
+		mp3InputStream = AudioSystem.getAudioInputStream(new AudioFormat(
+				mp3InputStream.getFormat().getSampleRate(), resolution,
+				AudioObject.channels, true, false), mp3InputStream);
 		try {
 			AudioSystem.write(mp3InputStream, AudioFileFormat.Type.WAVE, temp);
 		} catch (IOException e) {
@@ -262,7 +275,8 @@ public class AudioObject implements Serializable {
 			e1.printStackTrace();
 		}
 
-		mp3InputStream = AudioSystem.getAudioInputStream(AudioObject.audioFormat, mp3InputStream);
+		mp3InputStream = AudioSystem.getAudioInputStream(
+				AudioObject.audioFormat, mp3InputStream);
 
 		ByteArrayOutputStream bo = new ByteArrayOutputStream();
 		try {
@@ -286,7 +300,8 @@ public class AudioObject implements Serializable {
 
 	public SourceDataLine getLine() {
 		SourceDataLine res = null;
-		DataLine.Info info = new DataLine.Info(SourceDataLine.class, AudioObject.audioFormat);
+		DataLine.Info info = new DataLine.Info(SourceDataLine.class,
+				AudioObject.audioFormat);
 		try {
 			res = (SourceDataLine) AudioSystem.getLine(info);
 			res.open(AudioObject.audioFormat);
