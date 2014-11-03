@@ -1,5 +1,6 @@
 package com.klemstinegroup.wub;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
@@ -7,6 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -18,9 +20,16 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.BorderFactory;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.echonest.api.v4.EchoNestAPI;
 import com.echonest.api.v4.TimedEvent;
@@ -50,12 +59,37 @@ public class AudioObject implements Serializable {
 		this(new File(file));
 	}
 
+	public static AudioObject factory() {
+		while (true) {
+			JFileChooser chooser = new JFileChooser();
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("Audio", "mp3", "wav", "wub");
+			chooser.setFileFilter(filter);
+			int returnVal = chooser.showOpenDialog(new JFrame());
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				// System.out.println("You chose to open this file: " +
+				return factory(chooser.getSelectedFile());
+			}
+		}
+	}
+
 	public static AudioObject factory(String file) {
 		return factory(new File(file));
 	}
 
 	public static AudioObject factory(File file) {
-		File newFile = new File(file.getAbsolutePath() + ".save");
+		File newFile = file;
+		String fileName = file.getName();
+		String extension = "";
+		String filePrefix="";
+		int i = fileName.lastIndexOf('.');
+		if (i > 0) {
+			extension = fileName.substring(i + 1);
+			filePrefix=fileName.substring(0,i);
+		}
+		if (!extension.equals("wub")) {
+			newFile = new File(file.getParent()+File.separator+filePrefix+ ".wub");
+			System.out.println(newFile.getAbsolutePath());
+		}
 		if (newFile.exists()) {
 			try {
 				AudioObject au = (AudioObject) Serializer.load(newFile);
@@ -77,12 +111,39 @@ public class AudioObject implements Serializable {
 		return au;
 	}
 
-	public AudioObject(File file) {
+	public AudioObject(final File file) {
 
 		this.file = file;
 		convert(file);
+		JTextArea msgLabel;
+		JProgressBar progressBar;
+		final int MAXIMUM = 100;
+		JPanel panel;
+
+		progressBar = new JProgressBar(0, MAXIMUM);
+		progressBar.setIndeterminate(true);
+		msgLabel = new JTextArea(file.getName());
+		msgLabel.setEditable(false);
+
+		panel = new JPanel(new BorderLayout(5, 5));
+		panel.add(msgLabel, BorderLayout.PAGE_START);
+		panel.add(progressBar, BorderLayout.CENTER);
+		panel.setBorder(BorderFactory.createEmptyBorder(11, 11, 11, 11));
+
+		final JDialog dialog = new JDialog();
+		dialog.setTitle("Analyzing audio...");
+		dialog.getContentPane().add(panel);
+		dialog.setResizable(false);
+		dialog.pack();
+		dialog.setSize(500, dialog.getHeight());
+		dialog.setLocationRelativeTo(null);
+		dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+		dialog.setAlwaysOnTop(false);
+		dialog.setVisible(true);
+		msgLabel.setBackground(panel.getBackground());
 		analysis = echoNest(file);
 		init();
+		dialog.dispose();
 	}
 
 	private void init() {
@@ -114,8 +175,8 @@ public class AudioObject implements Serializable {
 						}
 					} else
 						try {
-							positionInterval=null;
-							mc.tempTimedEvent=null;
+							positionInterval = null;
+							mc.tempTimedEvent = null;
 							line.drain();
 							Thread.sleep(100);
 						} catch (InterruptedException e) {
@@ -160,6 +221,9 @@ public class AudioObject implements Serializable {
 	public static TrackAnalysis echoNest(File file) {
 		try {
 			EchoNestAPI en = new EchoNestAPI();
+			Track track1=en.getKnownTrack(file);
+			System.out.println(track1);
+			if (track1!=null)return track1.getAnalysis();
 			Track track = en.uploadTrack(file);
 			track.waitForAnalysis(30000);
 			if (track.getStatus() == Track.AnalysisStatus.COMPLETE) {
@@ -174,6 +238,7 @@ public class AudioObject implements Serializable {
 	public void convert(File soundFile) {
 		AudioInputStream mp3InputStream = null;
 		try {
+			System.out.println(soundFile.getAbsolutePath());
 			mp3InputStream = AudioSystem.getAudioInputStream(soundFile);
 		} catch (UnsupportedAudioFileException e) {
 			e.printStackTrace();
