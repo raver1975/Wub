@@ -1,7 +1,6 @@
 package com.klemstinegroup.wub;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
@@ -14,9 +13,6 @@ import javax.sound.sampled.AudioFormat;
  */
 class SamplingGraph {
 	static Vector<Line2D.Double> lines = new Vector<Line2D.Double>();
-	private Thread thread;
-	private Font font10 = new Font("serif", Font.PLAIN, 10);
-	private static Font font12 = new Font("serif", Font.PLAIN, 12);
 	static Color jfcBlue = new Color(255, 255, 0);
 	static Color pink = new Color(255, 175, 175);
 
@@ -95,14 +91,7 @@ class SamplingGraph {
 	private static void createSampleOnGraphicsContext(int w, int h, int INFOPAD, Graphics2D g2) {
 		g2.setBackground(Color.black);
 		g2.clearRect(0, 0, w, h);
-		g2.setColor(Color.white);
-		g2.fillRect(0, h - INFOPAD, w, INFOPAD);
-
 		g2.setColor(Color.black);
-		g2.setFont(font12);
-		// g2.drawString("File: " + fileName + "  Length: " +
-		// String.valueOf(duration) + "  Position: " + String.valueOf(seconds),
-		// 3, h-4);
 
 		// .. render sampling graph ..
 		g2.setColor(jfcBlue);

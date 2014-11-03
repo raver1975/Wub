@@ -108,6 +108,8 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 		g.setColor(Color.black);
 		g.fillRect(0, 0, x, y);
 		g.drawImage(SamplingGraph.createWaveForm(au.data, au.audioFormat, getWidth(), 200), 0, 80, null);
+		g.setColor(Color.white);
+		g.drawLine(0, 180, getWidth(), 180);
 		g.setColor(Color.magenta);
 		List<TimedEvent> list = au.analysis.getTatums();
 		for (int i = 0; i < list.size(); i++) {
@@ -152,12 +154,20 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			double loudstart = testart.getLoudnessStart();
 			double loudend = teend.getLoudnessStart();
 			g.setColor(Color.red);
-			g.drawLine(x1, (int) (260 + loudstart), x2, (int) (260 + loudend));
+			g.drawLine(x1, (int) (160 + loudstart), x2, (int) (160 + loudend));
 			double[] pitch = testart.getPitches();
 			for (int j = 0; j < 12; j++) {
 				g.setColor(ColorHelper.numberToColorPercentage(pitch[j]));
-				g.fillRect(x1, 260 + (j * 15), x2 - x1, 15);
+				g.fillRect(x1, 280 + (j * 15), x2 - x1, 15);
 			}
+			
+			double[] timbre= testart.getTimbre();
+			for (int j = 0; j < 12; j++) {
+				g.setColor(ColorHelper.numberToColor(timbre[j]+50));
+				g.fillRect(x1, 480+ (j * 15), x2 - x1, 15);
+			}
+
+			
 			// g.drawLine(x3, (int)(70-loudmax), x2, (int)(70-loudend));
 		}
 
@@ -352,3 +362,4 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 	}
 
 }
+

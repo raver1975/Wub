@@ -60,16 +60,15 @@ public class AudioObject implements Serializable {
 	}
 
 	public static AudioObject factory() {
-		while (true) {
-			JFileChooser chooser = new JFileChooser();
-			FileNameExtensionFilter filter = new FileNameExtensionFilter("Audio", "mp3", "wav", "wub");
-			chooser.setFileFilter(filter);
-			int returnVal = chooser.showOpenDialog(new JFrame());
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				// System.out.println("You chose to open this file: " +
-				return factory(chooser.getSelectedFile());
-			}
+		JFileChooser chooser = new JFileChooser();
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Audio", "mp3", "wav", "wub");
+		chooser.setFileFilter(filter);
+		int returnVal = chooser.showOpenDialog(new JFrame());
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			// System.out.println("You chose to open this file: " +
+			return factory(chooser.getSelectedFile());
 		}
+		return null;
 	}
 
 	public static AudioObject factory(String file) {
@@ -80,14 +79,14 @@ public class AudioObject implements Serializable {
 		File newFile = file;
 		String fileName = file.getName();
 		String extension = "";
-		String filePrefix="";
+		String filePrefix = "";
 		int i = fileName.lastIndexOf('.');
 		if (i > 0) {
 			extension = fileName.substring(i + 1);
-			filePrefix=fileName.substring(0,i);
+			filePrefix = fileName.substring(0, i);
 		}
 		if (!extension.equals("wub")) {
-			newFile = new File(file.getParent()+File.separator+filePrefix+ ".wub");
+			newFile = new File(file.getParent() + File.separator + filePrefix + ".wub");
 			System.out.println(newFile.getAbsolutePath());
 		}
 		if (newFile.exists()) {
@@ -192,13 +191,13 @@ public class AudioObject implements Serializable {
 	private void makeCanvas() {
 		JFrame frame = new JFrame(getFileName());
 		mc = new MusicCanvas(this);
-		mc.setSize(new Dimension(4500, 440));
+		mc.setSize(new Dimension(4500, 700));
 		final JScrollPane js = new JScrollPane(mc);
 		js.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		frame.getContentPane().add(js, "Center");
 		JScrollBar jbar = new JScrollBar(JScrollBar.VERTICAL);
 		jbar.setMinimum(1);
-		jbar.setMaximum(1000);
+		jbar.setMaximum(2000);
 		jbar.setValue(100);
 		jbar.addAdjustmentListener(new AdjustmentListener() {
 			public void adjustmentValueChanged(AdjustmentEvent ae) {
@@ -211,7 +210,7 @@ public class AudioObject implements Serializable {
 
 		frame.getContentPane().add(jbar, "East");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setBounds(100, 100, 800, 500);
+		frame.setBounds(100, 100, 800, 720);
 		frame.show();
 		frame.validate();
 		frame.repaint();
