@@ -38,7 +38,7 @@ import com.echonest.api.v4.TimedEvent;
 import com.echonest.api.v4.Track;
 import com.echonest.api.v4.TrackAnalysis;
 
-public class AudioObject implements Serializable, KeyListener {
+public class AudioObject implements Serializable {
 
 	public byte[] data;
 	public File file;
@@ -55,12 +55,11 @@ public class AudioObject implements Serializable, KeyListener {
 	public static final int channels = 2;
 	public static final int frameSize = channels * resolution / 8;
 	public static final int sampleRate = 44100;
-	public static final AudioFormat audioFormat = new AudioFormat(
-			AudioFormat.Encoding.PCM_SIGNED, sampleRate, resolution, channels,
-			frameSize, sampleRate, false);
+	public static final AudioFormat audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sampleRate, resolution, channels, frameSize, sampleRate, false);
 	static final int bufferSize = 8192;
-	public transient int oldWidth;
-	public transient boolean pause = true;
+
+	public transient boolean pause = false;
+	public transient boolean loop = false;
 
 	public AudioObject(String file) {
 		this(new File(file));
@@ -68,8 +67,7 @@ public class AudioObject implements Serializable, KeyListener {
 
 	public static AudioObject factory() {
 		JFileChooser chooser = new JFileChooser();
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("Audio",
-				"mp3", "wav", "wub");
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Audio", "mp3", "wav", "wub");
 		chooser.setFileFilter(filter);
 		int returnVal = chooser.showOpenDialog(new JFrame());
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -94,8 +92,7 @@ public class AudioObject implements Serializable, KeyListener {
 			filePrefix = fileName.substring(0, i);
 		}
 		if (!extension.equals("wub")) {
-			newFile = new File(file.getParent() + File.separator + filePrefix
-					+ ".wub");
+			newFile = new File(file.getParent() + File.separator + filePrefix + ".wub");
 			System.out.println(newFile.getAbsolutePath());
 		}
 		if (newFile.exists()) {
@@ -156,7 +153,7 @@ public class AudioObject implements Serializable, KeyListener {
 
 	private void init() {
 		queue = new LinkedList<Interval>();
-		makeCanvas();
+		mc = new MusicCanvas(this);
 		startPlaying();
 	}
 
@@ -194,6 +191,8 @@ public class AudioObject implements Serializable, KeyListener {
 							line.write(data, j, i.endBytes - j);
 							// line.drain();
 						}
+						if (loop)
+							queue.add(i);
 					} else
 						try {
 							positionInterval = null;
@@ -208,48 +207,6 @@ public class AudioObject implements Serializable, KeyListener {
 				}
 			}
 		}).start();
-	}
-
-	private void makeCanvas() {
-		JFrame frame = new JFrame(getFileName());
-		mc = new MusicCanvas(this);
-		mc.setSize(new Dimension(4500, 750));
-		oldWidth = 4500;
-		final JScrollPane js = new JScrollPane(mc);
-		frame.addKeyListener(this);
-		js.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-		frame.getContentPane().add(js, "Center");
-		JScrollBar jbar = new JScrollBar(JScrollBar.VERTICAL);
-		jbar.setMinimum(1);
-		jbar.setMaximum(2000);
-		jbar.setValue(100);
-		jbar.addAdjustmentListener(new AdjustmentListener() {
-			public void adjustmentValueChanged(AdjustmentEvent ae) {
-				if (ae.getValueIsAdjusting())
-					return;
-				double factor = ((double) (50 * ae.getValue()) / (double) oldWidth);
-				double oldPos = js.getHorizontalScrollBar().getValue()
-						+ js.getViewport().getWidth() / 2d;
-				int newPos = (int) (oldPos * factor);
-				newPos -= js.getViewport().getWidth() / 2d;
-				System.out.println(factor);
-				System.out.println(newPos);
-
-				js.getHorizontalScrollBar().setValue(newPos);
-				mc.setSize(50 * ae.getValue(), mc.getHeight());
-				mc.makeImage();
-				oldWidth = 50 * ae.getValue();
-
-			}
-		});
-
-		frame.getContentPane().add(jbar, "East");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setBounds(100, 100, 800, 770);
-		frame.show();
-		frame.validate();
-		frame.repaint();
-
 	}
 
 	public static TrackAnalysis echoNest(File file) {
@@ -279,9 +236,7 @@ public class AudioObject implements Serializable, KeyListener {
 		}
 
 		File temp = new File("temp.wav");
-		mp3InputStream = AudioSystem.getAudioInputStream(new AudioFormat(
-				mp3InputStream.getFormat().getSampleRate(), resolution,
-				AudioObject.channels, true, false), mp3InputStream);
+		mp3InputStream = AudioSystem.getAudioInputStream(new AudioFormat(mp3InputStream.getFormat().getSampleRate(), resolution, AudioObject.channels, true, false), mp3InputStream);
 		try {
 			AudioSystem.write(mp3InputStream, AudioFileFormat.Type.WAVE, temp);
 		} catch (IOException e) {
@@ -299,8 +254,7 @@ public class AudioObject implements Serializable, KeyListener {
 			e1.printStackTrace();
 		}
 
-		mp3InputStream = AudioSystem.getAudioInputStream(
-				AudioObject.audioFormat, mp3InputStream);
+		mp3InputStream = AudioSystem.getAudioInputStream(AudioObject.audioFormat, mp3InputStream);
 
 		ByteArrayOutputStream bo = new ByteArrayOutputStream();
 		try {
@@ -324,8 +278,7 @@ public class AudioObject implements Serializable, KeyListener {
 
 	public SourceDataLine getLine() {
 		SourceDataLine res = null;
-		DataLine.Info info = new DataLine.Info(SourceDataLine.class,
-				AudioObject.audioFormat);
+		DataLine.Info info = new DataLine.Info(SourceDataLine.class, AudioObject.audioFormat);
 		try {
 			res = (SourceDataLine) AudioSystem.getLine(info);
 			res.open(AudioObject.audioFormat);
@@ -338,22 +291,6 @@ public class AudioObject implements Serializable, KeyListener {
 
 	public void play(TimedEvent te, int y) {
 		queue.add(new Interval(te, y));
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		pause = !pause;
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-
 	}
 
 	// public void play(double start, double duration) {

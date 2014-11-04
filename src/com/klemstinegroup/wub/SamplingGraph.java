@@ -20,8 +20,7 @@ class SamplingGraph {
 	public SamplingGraph() {
 	}
 
-	public static BufferedImage createWaveForm(List<Segment> segment,
-			double duration, byte[] audioBytes, AudioFormat format, int w, int h) {
+	public synchronized BufferedImage createWaveForm(List<Segment> segment, double duration, byte[] audioBytes, AudioFormat format, int w, int h) {
 
 		int[] audioData = null;
 		if (format.getSampleSizeInBits() == 16) {
@@ -58,7 +57,7 @@ class SamplingGraph {
 			}
 		}
 		Vector<Line2D.Double> lines = new Vector<Line2D.Double>();
-		int frames_per_pixel = audioBytes.length / format.getFrameSize() / w;
+		double frames_per_pixel = (double) audioBytes.length / (double) format.getFrameSize() / (double) w;
 		byte my_byte = 0;
 		int numChannels = format.getChannels();
 		for (double x = 0; x < w && audioData != null; x++) {
@@ -76,10 +75,9 @@ class SamplingGraph {
 			}
 			double y_new = (double) (h * (128 - min) / 256);
 			double y_new1 = (double) (h * (128 - max) / 256);
-			lines.add(new Line2D.Double(x,h-y_new1, x, y_new1));
+			lines.add(new Line2D.Double(x, h - y_new1, x, y_new1));
 		}
-		BufferedImage bufferedImage = new BufferedImage(w, h,
-				BufferedImage.TYPE_INT_RGB);
+		BufferedImage bufferedImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g2 = bufferedImage.createGraphics();
 
 		g2.setBackground(Color.black);
@@ -108,8 +106,7 @@ class SamplingGraph {
 
 			for (Segment s : segment) {
 				int x1 = (int) ((s.getStart() / duration) * (double) w + .5d);
-				int x2 = (int) (((s.getStart() + s.getDuration()) / duration)
-						* (double) w + .5d);
+				int x2 = (int) (((s.getStart() + s.getDuration()) / duration) * (double) w + .5d);
 				float hc = (float) ((s.getTimbre()[1] - min[1]) / range[1]);
 				float sc = 1.0f;
 				float lc = (float) ((s.getTimbre()[0] - min[0]) / range[0]);

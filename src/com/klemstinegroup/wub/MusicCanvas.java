@@ -3,11 +3,17 @@ package com.klemstinegroup.wub;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,26 +21,30 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 
 import com.echonest.api.v4.Segment;
 import com.echonest.api.v4.TimedEvent;
 import com.echonest.api.v4.TrackAnalysis;
 
-public class MusicCanvas extends JComponent implements MouseListener,
-		MouseMotionListener, ComponentListener {
+public class MusicCanvas extends JComponent implements MouseListener, MouseMotionListener, ComponentListener, KeyListener, MouseWheelListener {
 
 	private AudioObject au;
 	double duration;
 	TrackAnalysis analysis;
 	BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
-	BufferedImage bufferedimage = new BufferedImage(1, 1,
-			BufferedImage.TYPE_INT_RGB);
+	BufferedImage bufferedimage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
 	public Interval tempTimedEvent;
 	public double selectedStart;
 	public int selectedStartX;
 	int currPos;
 	private boolean selectedPress;
-	private int selectedStartY;
+	public transient int oldWidth;
+	private JScrollBar jbar;
+	private JScrollPane js;
+	SamplingGraph samplingGraph = new SamplingGraph();
 
 	public MusicCanvas(AudioObject au) {
 		this.au = au;
@@ -43,8 +53,10 @@ public class MusicCanvas extends JComponent implements MouseListener,
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 		this.addComponentListener(this);
-		// this.addKeyListener(this);
+		this.addKeyListener(this);
+		this.addMouseWheelListener(this);
 		startPosition();
+		makeCanvas();
 		// makeImage();
 	}
 
@@ -65,10 +77,8 @@ public class MusicCanvas extends JComponent implements MouseListener,
 	}
 
 	void makeImage() {
-		image = new BufferedImage(getWidth(), getHeight(),
-				BufferedImage.TYPE_INT_RGB);
-		bufferedimage = new BufferedImage(getWidth(), getHeight(),
-				BufferedImage.TYPE_INT_RGB);
+		image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
+		bufferedimage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
 		Graphics g = image.getGraphics();
 		paint1(g);
 	}
@@ -85,7 +95,7 @@ public class MusicCanvas extends JComponent implements MouseListener,
 		if (!au.queue.isEmpty()) {
 
 			int c = 0;
-			LinkedList<Interval> temp=new LinkedList<Interval>(au.queue);
+			LinkedList<Interval> temp = new LinkedList<Interval>(au.queue);
 			for (Interval i : temp) {
 				int co = (int) (255 - (225d / ((double) temp.size())) * (c++));
 				g1.setColor(new Color(co, co, co));
@@ -111,14 +121,14 @@ public class MusicCanvas extends JComponent implements MouseListener,
 			g1.fillRect(x3 + 1, au.positionInterval.y + 1, x4 - 1, 18);
 		}
 		if (selectedPress) {
-			g1.setColor(Color.red);
+			g1.setColor(new Color(255, 0, 0, 127));
 			int st = selectedStartX;
 			int en = currPos;
 			if (en < st) {
 				st = currPos;
 				en = selectedStartX;
 			}
-			g1.fillRect(st, selectedStartY, en - st, 18);
+			g1.fillRect(st, 100, en - st, 200);
 		}
 
 		g1.setColor(Color.white);
@@ -137,9 +147,7 @@ public class MusicCanvas extends JComponent implements MouseListener,
 		int y = this.getHeight();
 		g.setColor(Color.black);
 		g.fillRect(0, 0, x, y);
-		g.drawImage(SamplingGraph.createWaveForm(au.analysis.getSegments(),
-				duration, au.data, AudioObject.audioFormat, getWidth(), 200),
-				0, 100, null);
+		g.drawImage(samplingGraph.createWaveForm(au.analysis.getSegments(), duration, au.data, AudioObject.audioFormat, getWidth(), 200), 0, 100, null);
 		g.setColor(Color.white);
 		g.drawLine(0, 200, getWidth(), 200);
 
@@ -326,7 +334,7 @@ public class MusicCanvas extends JComponent implements MouseListener,
 		if (y > 80) {
 			selectedStart = loc;
 			selectedStartX = x;
-			selectedStartY = y-10;
+			// selectedStartY = y-10;
 			selectedPress = true;
 		}
 
@@ -350,7 +358,7 @@ public class MusicCanvas extends JComponent implements MouseListener,
 			hm.put("start", st);
 			hm.put("duration", en);
 			hm.put("confidence", 1d);
-			au.play(new TimedEvent(hm), selectedStartY);
+			au.play(new TimedEvent(hm), 80);
 		}
 		selectedPress = false;
 	}
@@ -370,6 +378,7 @@ public class MusicCanvas extends JComponent implements MouseListener,
 	@Override
 	public void componentResized(ComponentEvent e) {
 		makeImage();
+		jbar.setMinimum(js.getViewport().getWidth() / 50);
 
 	}
 
@@ -403,9 +412,7 @@ public class MusicCanvas extends JComponent implements MouseListener,
 			Collections.reverse(list);
 			for (int i = 0; i < list.size(); i++) {
 				if (list.get(i).getStart() <= loc) {
-					if (tempTimedEvent == null
-							|| tempTimedEvent.te.getStart() != list.get(i)
-									.getStart()) {
+					if (tempTimedEvent == null || tempTimedEvent.te.getStart() != list.get(i).getStart()) {
 						tempTimedEvent = new Interval(list.get(i), 0);
 						au.play(list.get(i), 0);
 					}
@@ -420,9 +427,7 @@ public class MusicCanvas extends JComponent implements MouseListener,
 			Collections.reverse(list);
 			for (int i = 0; i < list.size(); i++) {
 				if (list.get(i).getStart() <= loc) {
-					if (tempTimedEvent == null
-							|| tempTimedEvent.te.getStart() != list.get(i)
-									.getStart()) {
+					if (tempTimedEvent == null || tempTimedEvent.te.getStart() != list.get(i).getStart()) {
 						tempTimedEvent = new Interval(list.get(i), 20);
 						au.play(list.get(i), 20);
 					}
@@ -436,9 +441,7 @@ public class MusicCanvas extends JComponent implements MouseListener,
 			Collections.reverse(list);
 			for (int i = 0; i < list.size(); i++) {
 				if (list.get(i).getStart() <= loc) {
-					if (tempTimedEvent == null
-							|| tempTimedEvent.te.getStart() != list.get(i)
-									.getStart()) {
+					if (tempTimedEvent == null || tempTimedEvent.te.getStart() != list.get(i).getStart()) {
 						tempTimedEvent = new Interval(list.get(i), 40);
 						au.play(list.get(i), 40);
 					}
@@ -453,9 +456,7 @@ public class MusicCanvas extends JComponent implements MouseListener,
 			Collections.reverse(list);
 			for (int i = 0; i < list.size(); i++) {
 				if (list.get(i).getStart() <= loc) {
-					if (tempTimedEvent == null
-							|| tempTimedEvent.te.getStart() != list.get(i)
-									.getStart()) {
+					if (tempTimedEvent == null || tempTimedEvent.te.getStart() != list.get(i).getStart()) {
 						tempTimedEvent = new Interval(list.get(i), 60);
 						au.play(list.get(i), 60);
 					}
@@ -473,4 +474,71 @@ public class MusicCanvas extends JComponent implements MouseListener,
 
 	}
 
+	public void makeCanvas() {
+		JFrame frame = new JFrame(au.getFileName());
+		oldWidth = 800;
+		setSize(new Dimension(oldWidth, 750));
+
+		js = new JScrollPane(this);
+		frame.addKeyListener(this);
+		js.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+		frame.getContentPane().add(js, "Center");
+		jbar = new JScrollBar(JScrollBar.VERTICAL);
+		jbar.setMinimum(oldWidth / 50);
+		jbar.setMaximum(2000);
+		jbar.setValue(oldWidth / 50);
+		jbar.addAdjustmentListener(new AdjustmentListener() {
+			public void adjustmentValueChanged(AdjustmentEvent ae) {
+				if (ae.getValueIsAdjusting())
+					return;
+				double factor = ((double) (50 * ae.getValue()) / (double) oldWidth);
+				double oldPos = js.getHorizontalScrollBar().getValue() + js.getViewport().getWidth() / 2d;
+				int newPos = (int) (oldPos * factor);
+				newPos -= js.getViewport().getWidth() / 2d;
+				js.getHorizontalScrollBar().setValue(newPos);
+				setSize(50 * ae.getValue(), getHeight());
+				makeImage();
+				oldWidth = 50 * ae.getValue();
+
+			}
+		});
+
+		frame.getContentPane().add(jbar, "East");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setBounds(100, 100, oldWidth + 50, 770);
+		frame.setVisible(true);
+		frame.validate();
+		frame.repaint();
+
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if (e.getKeyChar()==' ')au.pause = !au.pause;
+		if (e.getKeyChar()=='l')au.loop = !au.loop;
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+
+	}
+
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		int notches = e.getWheelRotation();
+		int x = e.getX();
+		double percentage = (double) x / (double) getWidth();
+		int barvalue = js.getHorizontalScrollBar().getValue();
+		System.out.println(x);
+		System.out.println(barvalue);
+		jbar.setValue(jbar.getValue() + notches * -10);
+		js.getHorizontalScrollBar().setValue((int) (percentage * getWidth() - js.getViewport().getWidth() / 2d));
+		currPos=(int) (percentage * getWidth());
+	}
 }
