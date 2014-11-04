@@ -94,7 +94,6 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 	@Override
 	public void paint(Graphics g) {
 		Graphics g1 = bufferedimage.getGraphics();
-		System.out.println(tempTimedEvent);
 		g1.drawImage(image, 0, 0, null);
 
 		int c = 1;
@@ -578,6 +577,9 @@ System.out.println(tempTimedEvent);
 			au.queue.clear();
 			au.breakPlay = true;
 		}
+	    if(e.getKeyChar()=='d'){
+//	    	au.dumpSample();
+	    }
 	}
 
 	@Override
