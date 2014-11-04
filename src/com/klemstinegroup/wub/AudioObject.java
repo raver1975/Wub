@@ -48,7 +48,7 @@ public class AudioObject implements Serializable {
 	public transient Queue<Interval> queue;
 
 	transient int position = 0;
-	transient Interval positionInterval;
+	transient Interval currentlyPlaying;
 	protected transient boolean breakPlay;
 
 	public static final int resolution = 16;
@@ -166,13 +166,16 @@ public class AudioObject implements Serializable {
 					// System.out.println(queue.size());
 					if (!queue.isEmpty()) {
 						Interval i = queue.poll();
-						positionInterval = i;
+						
+						currentlyPlaying = i;
 						int j = 0;
 						for (j = i.startBytes; j <= i.endBytes - bufferSize; j += bufferSize) {
 							while (pause || breakPlay) {
 								if (breakPlay) {
 									breakPlay = false;
-									queue.clear();
+//									if (loop)
+//										queue.add(i);
+//									queue.clear();
 									continue top;
 								}
 								try {
@@ -195,7 +198,7 @@ public class AudioObject implements Serializable {
 							queue.add(i);
 					} else
 						try {
-							positionInterval = null;
+							currentlyPlaying = null;
 							mc.tempTimedEvent = null;
 							line.drain();
 							Thread.sleep(100);

@@ -24,6 +24,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 
 import com.echonest.api.v4.Segment;
 import com.echonest.api.v4.TimedEvent;
@@ -94,11 +95,11 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 
 		if (!au.queue.isEmpty()) {
 
-			int c = 0;
+			int c = 1;
 			LinkedList<Interval> temp = new LinkedList<Interval>(au.queue);
 			for (Interval i : temp) {
 				int co = (int) (255 - (225d / ((double) temp.size())) * (c++));
-				g1.setColor(new Color(co, co, co));
+				g1.setColor(new Color(co, 255 - co, co));
 
 				int x3 = (int) (((i.te.getStart() / duration) * (double) getWidth()) + .5d);
 				int x4 = (int) (((i.te.getDuration() / duration) * (double) getWidth()) + .5d);
@@ -114,11 +115,11 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 		// g1.fillRect(x3 + 1, tempTimedEvent.y + 1, x4 - 2, 18);
 		// }
 
-		if (au.positionInterval != null) {
+		if (au.currentlyPlaying != null) {
 			g1.setColor(Color.magenta);
-			int x3 = (int) (((au.positionInterval.te.getStart() / duration) * (double) getWidth()) + .5d);
-			int x4 = (int) (((au.positionInterval.te.getDuration() / duration) * (double) getWidth()) + .5d);
-			g1.fillRect(x3 + 1, au.positionInterval.y + 1, x4 - 1, 18);
+			int x3 = (int) (((au.currentlyPlaying.te.getStart() / duration) * (double) getWidth()) + .5d);
+			int x4 = (int) (((au.currentlyPlaying.te.getDuration() / duration) * (double) getWidth()) + .5d);
+			g1.fillRect(x3 + 1, au.currentlyPlaying.y + 1, x4 - 1, 18);
 		}
 		if (selectedPress) {
 			g1.setColor(new Color(255, 0, 0, 127));
@@ -179,9 +180,9 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			TimedEvent te = list.get(i);
 			int x1 = (int) ((te.getStart() / duration) * (double) x + .5d);
 			int x2 = (int) ((te.getDuration() / duration) * (double) x + .5d);
-			g.setColor(Color.red.darker().darker());
+			g.setColor(Color.yellow.darker().darker());
 			g.fillRect(x1, 20, x2, 19);
-			g.setColor(Color.red);
+			g.setColor(Color.yellow);
 			g.drawRect(x1, 20, x2, 19);
 		}
 
@@ -190,9 +191,9 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			TimedEvent te = list.get(i);
 			int x1 = (int) ((te.getStart() / duration) * (double) x + .5d);
 			int x2 = (int) ((te.getDuration() / duration) * (double) x + .5d);
-			g.setColor(Color.yellow.darker().darker());
+			g.setColor(Color.red.darker().darker());
 			g.fillRect(x1, 0, x2, 19);
-			g.setColor(Color.yellow);
+			g.setColor(Color.red);
 			g.drawRect(x1, 0, x2, 19);
 		}
 
@@ -278,8 +279,22 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 		double loc = ((double) x / (double) this.getWidth()) * duration;
 
 		if (e.getButton() == MouseEvent.BUTTON3) {
-			au.breakPlay = true;
-			selectedPress = false;
+			List<Interval> temp = new LinkedList<Interval>(au.queue);
+			for (Interval i : temp) {
+				int x3 = (int) (((i.te.getStart() / duration) * (double) getWidth()) + .5d);
+				int x4 = (int) ((((i.te.getStart() + i.te.getDuration()) / duration) * (double) getWidth()) + .5d);
+				if (x >= x3 && x <= x4 && y >= i.y && y <= i.y + 20) {
+					au.queue.remove(i);
+				}
+			}
+			if (au.currentlyPlaying != null) {
+				int x3 = (int) (((au.currentlyPlaying.te.getStart() / duration) * (double) getWidth()) + .5d);
+				int x4 = (int) ((((au.currentlyPlaying.te.getStart() + au.currentlyPlaying.te.getDuration()) / duration) * (double) getWidth()) + .5d);
+				if (x >= x3 && x <= x4 && y >= au.currentlyPlaying.y && y <= au.currentlyPlaying.y + 20) {
+
+					au.breakPlay = true;
+				}
+			}
 			return;
 		}
 		if (y >= 0 && y < 20) {
@@ -404,6 +419,25 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 	public void mouseDragged(MouseEvent e) {
 		int x = e.getX();
 		int y = e.getY();
+		if (SwingUtilities.isRightMouseButton(e)) {
+			List<Interval> temp = new LinkedList<Interval>(au.queue);
+			for (Interval i : temp) {
+				int x3 = (int) (((i.te.getStart() / duration) * (double) getWidth()) + .5d);
+				int x4 = (int) ((((i.te.getStart() + i.te.getDuration()) / duration) * (double) getWidth()) + .5d);
+				if (x >= x3 && x <= x4 && y >= i.y && y <= i.y + 20) {
+					au.queue.remove(i);
+				}
+			}
+			if (au.currentlyPlaying != null) {
+				int x3 = (int) (((au.currentlyPlaying.te.getStart() / duration) * (double) getWidth()) + .5d);
+				int x4 = (int) ((((au.currentlyPlaying.te.getStart() + au.currentlyPlaying.te.getDuration()) / duration) * (double) getWidth()) + .5d);
+				if (x >= x3 && x <= x4 && y >= au.currentlyPlaying.y && y <= au.currentlyPlaying.y + 20) {
+					au.breakPlay = true;
+				}
+			}
+			return;
+		}
+
 		currPos = x;
 		double loc = ((double) x / (double) this.getWidth()) * duration;
 
@@ -520,8 +554,17 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if (e.getKeyChar()==' ')au.pause = !au.pause;
-		if (e.getKeyChar()=='l')au.loop = !au.loop;
+		if (e.getKeyChar() == ' ')
+			au.pause = !au.pause;
+		if (e.getKeyChar() == 'l')
+			au.loop = !au.loop;
+		if (e.getKeyChar() == 's') {
+			au.breakPlay = true;
+		}
+		if (e.getKeyChar() == 'c') {
+			au.queue.clear();
+			au.breakPlay = true;
+		}
 	}
 
 	@Override
@@ -532,13 +575,15 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		int notches = e.getWheelRotation();
-		int x = e.getX();
+		// int x = e.getX();
+		int x = currPos;
 		double percentage = (double) x / (double) getWidth();
 		int barvalue = js.getHorizontalScrollBar().getValue();
 		System.out.println(x);
 		System.out.println(barvalue);
-		jbar.setValue(jbar.getValue() + notches * -10);
 		js.getHorizontalScrollBar().setValue((int) (percentage * getWidth() - js.getViewport().getWidth() / 2d));
-		currPos=(int) (percentage * getWidth());
+		jbar.setValue(jbar.getValue() + notches * -jbar.getValue()/10);
+		currPos = (int) (percentage * getWidth());
+		js.getHorizontalScrollBar().setValue((int) (currPos - js.getViewport().getWidth() / 2d));
 	}
 }
