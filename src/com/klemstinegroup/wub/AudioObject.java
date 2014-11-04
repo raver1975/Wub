@@ -199,7 +199,7 @@ public class AudioObject implements Serializable {
 					} else
 						try {
 							currentlyPlaying = null;
-							mc.tempTimedEvent = null;
+							if (!mc.mouseDown)mc.tempTimedEvent = null;
 							line.drain();
 							Thread.sleep(100);
 						} catch (InterruptedException e) {
@@ -292,8 +292,8 @@ public class AudioObject implements Serializable {
 		return res;
 	}
 
-	public void play(TimedEvent te, int y) {
-		queue.add(new Interval(te, y));
+	public void play(Interval i) {
+		queue.add(i);
 	}
 
 	// public void play(double start, double duration) {
