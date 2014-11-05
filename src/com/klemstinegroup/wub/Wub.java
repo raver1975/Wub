@@ -10,7 +10,7 @@ public class Wub {
 		
 		
 		 AudioObject au1 =
-		 AudioObject.factory("songs/plumber.mp3");
+		 AudioObject.factory("songs/Zeds Dead - In The Beginning.mp3");
 		 
 		 //midi.add(au1);
 		 
