@@ -217,18 +217,24 @@ public class AudioObject implements Serializable {
 	}
 
 	public static TrackAnalysis echoNest(File file) {
-		try {
-			EchoNestAPI en = new EchoNestAPI();
-			Track track = en.uploadTrack(file);
-			System.out.println(track);
-			track.waitForAnalysis(30000);
-			if (track.getStatus() == Track.AnalysisStatus.COMPLETE) {
-				return track.getAnalysis();
+		while (true) {
+			try {
+				EchoNestAPI en = new EchoNestAPI();
+				Track track = en.uploadTrack(file);
+				System.out.println(track);
+				track.waitForAnalysis(30000);
+				if (track.getStatus() == Track.AnalysisStatus.COMPLETE) {
+					return track.getAnalysis();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				try {
+					Thread.sleep(30000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-		return null;
 	}
 
 	public void convert(File soundFile) {
@@ -307,28 +313,28 @@ public class AudioObject implements Serializable {
 			if (i == null) {
 				midiMap.put(keyName, mc.hovering);
 			} else {
-//				if (queue.size()>0){
-//					breakPlay = true;
-//				}
-//				while (breakPlay) {
-//					try {
-//						Thread.sleep(10);
-//					} catch (InterruptedException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//				}
-//				System.out.println("add");
+				// if (queue.size()>0){
+				// breakPlay = true;
+				// }
+				// while (breakPlay) {
+				// try {
+				// Thread.sleep(10);
+				// } catch (InterruptedException e) {
+				// // TODO Auto-generated catch block
+				// e.printStackTrace();
+				// }
+				// }
+				// System.out.println("add");
 				queue.add(i);
 			}
-		} 
-//		else {
-//			if (i != null) {
-//				if (i.equals(currentlyPlaying)) {
-//					breakPlay = true;
-//				}
-//			}
-//		}
+		}
+		// else {
+		// if (i != null) {
+		// if (i.equals(currentlyPlaying)) {
+		// breakPlay = true;
+		// }
+		// }
+		// }
 
 	}
 	// public void play(double start, double duration) {
