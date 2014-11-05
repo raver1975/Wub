@@ -39,6 +39,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 	BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
 	BufferedImage bufferedimage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
 	public Interval tempTimedEvent;
+	public Interval hovering;
 	public double selectedStart;
 	public int selectedStartX;
 	int currPos;
@@ -100,8 +101,10 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 		LinkedList<Interval> temp = new LinkedList<Interval>(au.queue);
 		temp.addAll(tempQueue);
 		for (Interval i : temp) {
-			int co = (int) (255 - (225d / ((double) temp.size())) * (c++));
-			g1.setColor(new Color(co, 255-co, co));
+			// int co = (int) (255 - (225d / ((double) temp.size())) * (c++));
+			double co = (double) c++ / (double) temp.size();
+			// g1.setColor(new Color(co, 255 - co, co));
+			g1.setColor(ColorHelper.numberToColorPercentage(co));
 
 			int x3 = (int) (((i.te.getStart() / duration) * (double) getWidth()) + .5d);
 			int x4 = (int) (((i.te.getDuration() / duration) * (double) getWidth()) + .5d);
@@ -116,8 +119,26 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 		// g1.fillRect(x3 + 1, tempTimedEvent.y + 1, x4 - 2, 18);
 		// }
 
+		if (hovering != null) {
+			if (hovering.y == 0)
+				g1.setColor(Color.red);
+			if (hovering.y == 20)
+				g1.setColor(Color.yellow);
+			if (hovering.y == 40)
+				g1.setColor(Color.green);
+			if (hovering.y == 60)
+				g1.setColor(Color.blue);
+			if (hovering.y == 80)
+				g1.setColor(Color.orange);
+			int x3 = (int) (((hovering.te.getStart() / duration) * (double) getWidth()) + .5d);
+			int x4 = (int) (((hovering.te.getDuration() / duration) * (double) getWidth()) + .5d);
+			g1.fillRect(x3 + 1, hovering.y + 1, x4 - 1, 18);
+		}
+
 		if (au.currentlyPlaying != null) {
 			g1.setColor(Color.magenta);
+			if (hovering != null && hovering.equals(au.currentlyPlaying))
+				g1.setColor(new Color(255, 127, 255));
 			int x3 = (int) (((au.currentlyPlaying.te.getStart() / duration) * (double) getWidth()) + .5d);
 			int x4 = (int) (((au.currentlyPlaying.te.getDuration() / duration) * (double) getWidth()) + .5d);
 			g1.fillRect(x3 + 1, au.currentlyPlaying.y + 1, x4 - 1, 18);
@@ -275,7 +296,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		mouseDown=true;
+		mouseDown = true;
 		int x = e.getX();
 		int y = e.getY();
 		double loc = ((double) x / (double) this.getWidth()) * duration;
@@ -299,7 +320,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			}
 			return;
 		}
-		
+
 		if (y >= 0 && y < 20) {
 			List<TimedEvent> list = au.analysis.getSections();
 			Collections.reverse(list);
@@ -364,7 +385,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		mouseDown=false;
+		mouseDown = false;
 		int x = e.getX();
 		int y = e.getY();
 		double loc = ((double) x / (double) this.getWidth()) * duration;
@@ -452,7 +473,6 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 
 		currPos = x;
 		double loc = ((double) x / (double) this.getWidth()) * duration;
-System.out.println(tempTimedEvent);
 		if (y >= 0 && y < 20) {
 			List<TimedEvent> list = au.analysis.getSections();
 			Collections.reverse(list);
@@ -516,8 +536,70 @@ System.out.println(tempTimedEvent);
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		currPos = e.getX();
+		int x = e.getX();
+		int y = e.getY();
+		currPos = x;
+		double loc = ((double) x / (double) this.getWidth()) * duration;
+		if (y >= 0 && y < 20) {
+			List<TimedEvent> list = au.analysis.getSections();
+			Collections.reverse(list);
+			for (int i = 0; i < list.size(); i++) {
+				if (list.get(i).getStart() <= loc) {
+					hovering = new Interval(list.get(i), 0);
+					break;
 
+				}
+
+			}
+		}
+		if (y >= 20 && y < 40) {
+			List<TimedEvent> list = au.analysis.getBars();
+			Collections.reverse(list);
+			for (int i = 0; i < list.size(); i++) {
+				if (list.get(i).getStart() <= loc) {
+					hovering = new Interval(list.get(i), 20);
+					break;
+				}
+
+			}
+		}
+		if (y >= 40 && y < 60) {
+			List<TimedEvent> list = au.analysis.getBeats();
+			Collections.reverse(list);
+			for (int i = 0; i < list.size(); i++) {
+				if (list.get(i).getStart() <= loc) {
+					hovering = new Interval(list.get(i), 40);
+					break;
+				}
+
+			}
+		}
+
+		if (y >= 60 && y < 80) {
+			List<TimedEvent> list = au.analysis.getTatums();
+			Collections.reverse(list);
+			for (int i = 0; i < list.size(); i++) {
+				if (list.get(i).getStart() <= loc) {
+					hovering = new Interval(list.get(i), 60);
+					break;
+				}
+			}
+		}
+
+		if (y >= 80 && y < 100) {
+			List<Interval> list1 = new LinkedList<Interval>(au.queue);
+			for (int i = 0; i < list1.size(); i++) {
+				System.out.println(list1.get(i).y);
+				if (list1.get(i).y == 80 && loc >= list1.get(i).te.getStart() && loc <= list1.get(i).te.getStart() + list1.get(i).te.getDuration()) {
+					hovering = list1.get(i);
+					System.out.println(hovering);
+					break;
+				}
+
+			}
+		}
+		if (y > 100)
+			hovering = null;
 	}
 
 	public void makeCanvas() {
@@ -577,9 +659,9 @@ System.out.println(tempTimedEvent);
 			au.queue.clear();
 			au.breakPlay = true;
 		}
-	    if(e.getKeyChar()=='d'){
-//	    	au.dumpSample();
-	    }
+		if (e.getKeyChar() == 'd') {
+			// au.dumpSample();
+		}
 	}
 
 	@Override

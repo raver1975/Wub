@@ -11,6 +11,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -56,10 +57,11 @@ public class AudioObject implements Serializable {
 	public static final int frameSize = channels * resolution / 8;
 	public static final int sampleRate = 44100;
 	public static final AudioFormat audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sampleRate, resolution, channels, frameSize, sampleRate, false);
-	static final int bufferSize = 8192;
+	static final int bufferSize = 4096;
 
 	public transient boolean pause = false;
 	public transient boolean loop = false;
+	public transient HashMap<String, Interval> midiMap;
 
 	public AudioObject(String file) {
 		this(new File(file));
@@ -152,6 +154,7 @@ public class AudioObject implements Serializable {
 	}
 
 	private void init() {
+		midiMap = new HashMap<String, Interval>();
 		queue = new LinkedList<Interval>();
 		mc = new MusicCanvas(this);
 		startPlaying();
@@ -166,16 +169,16 @@ public class AudioObject implements Serializable {
 					// System.out.println(queue.size());
 					if (!queue.isEmpty()) {
 						Interval i = queue.poll();
-						
+
 						currentlyPlaying = i;
 						int j = 0;
 						for (j = i.startBytes; j <= i.endBytes - bufferSize; j += bufferSize) {
 							while (pause || breakPlay) {
 								if (breakPlay) {
 									breakPlay = false;
-//									if (loop)
-//										queue.add(i);
-//									queue.clear();
+									// if (loop)
+									// queue.add(i);
+									// queue.clear();
 									continue top;
 								}
 								try {
@@ -199,7 +202,8 @@ public class AudioObject implements Serializable {
 					} else
 						try {
 							currentlyPlaying = null;
-							if (!mc.mouseDown)mc.tempTimedEvent = null;
+							if (!mc.mouseDown)
+								mc.tempTimedEvent = null;
 							line.drain();
 							Thread.sleep(100);
 						} catch (InterruptedException e) {
@@ -296,6 +300,37 @@ public class AudioObject implements Serializable {
 		queue.add(i);
 	}
 
+	public void sendMidi(String keyName, int vel) {
+		System.out.println(keyName + "\t" + vel);
+		Interval i = midiMap.get(keyName);
+		if (vel > 0) {
+			if (i == null) {
+				midiMap.put(keyName, mc.hovering);
+			} else {
+//				if (queue.size()>0){
+//					breakPlay = true;
+//				}
+//				while (breakPlay) {
+//					try {
+//						Thread.sleep(10);
+//					} catch (InterruptedException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//				}
+//				System.out.println("add");
+				queue.add(i);
+			}
+		} 
+//		else {
+//			if (i != null) {
+//				if (i.equals(currentlyPlaying)) {
+//					breakPlay = true;
+//				}
+//			}
+//		}
+
+	}
 	// public void play(double start, double duration) {
 	// int startInBytes = (int) (start * AudioObject.sampleRate *
 	// AudioObject.frameSize) - (int) (start * AudioObject.sampleRate *
