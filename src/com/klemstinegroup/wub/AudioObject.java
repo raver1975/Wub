@@ -57,7 +57,7 @@ public class AudioObject implements Serializable {
 	public static final int frameSize = channels * resolution / 8;
 	public static final int sampleRate = 44100;
 	public static final AudioFormat audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sampleRate, resolution, channels, frameSize, sampleRate, false);
-	static final int bufferSize = 4096;
+	static final int bufferSize = 8192;
 
 	public transient boolean pause = false;
 	public transient boolean loop = false;

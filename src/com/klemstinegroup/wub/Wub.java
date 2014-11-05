@@ -10,7 +10,7 @@ public class Wub {
 		
 		
 		 AudioObject au1 =
-		 AudioObject.factory("songs/Necessary Response - For All The Lost.mp3");
+		 AudioObject.factory("songs/heat.mp3");
 		 
 		 midi.add(au1);
 		 

@@ -102,9 +102,9 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 		temp.addAll(tempQueue);
 		for (Interval i : temp) {
 			// int co = (int) (255 - (225d / ((double) temp.size())) * (c++));
-			double co = (double) c++ / (double) temp.size();
+			double co = (double) c++ / ((double) temp.size() + 1d);
 			// g1.setColor(new Color(co, 255 - co, co));
-			g1.setColor(ColorHelper.numberToColorPercentage(co));
+			g1.setColor(ColorHelper.numberToColorPercentage(1d - co));
 
 			int x3 = (int) (((i.te.getStart() / duration) * (double) getWidth()) + .5d);
 			int x4 = (int) (((i.te.getDuration() / duration) * (double) getWidth()) + .5d);
