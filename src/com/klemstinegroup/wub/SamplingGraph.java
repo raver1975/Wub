@@ -109,7 +109,8 @@ class SamplingGraph {
 				int x2 = (int) (((s.getStart() + s.getDuration()) / duration) * (double) w + .5d);
 				float hc = (float) ((s.getTimbre()[1] - min[1]) / range[1]);
 				float sc = 1.0f;
-				float lc = (float) ((s.getTimbre()[0] - min[0]) / range[0]);
+				// float lc = (float) ((s.getTimbre()[0] - min[0]) / range[0]);
+				float lc = .7f;
 
 				Color c = HSLColor.toRGB(hc * 360, sc * 100, lc * 100);
 				for (int x3 = x1; x3 <= x2; x3++) {

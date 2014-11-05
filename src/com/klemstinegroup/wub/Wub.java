@@ -6,13 +6,13 @@ public class Wub {
 
 	public Wub() {
 
-		 MidiPumper midi = new MidiPumper();
+		 //MidiPumper midi = new MidiPumper();
 		
 		
 		 AudioObject au1 =
-		 AudioObject.factory("songs/heat.mp3");
+		 AudioObject.factory("songs/plumber.mp3");
 		 
-		 midi.add(au1);
+		 //midi.add(au1);
 		 
 		 
 		 
