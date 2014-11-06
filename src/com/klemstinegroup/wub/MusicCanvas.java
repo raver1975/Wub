@@ -88,7 +88,10 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 	void makeImage() {
 		image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
 		bufferedimage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
-
+		if (js != null && js.getHorizontalScrollBar() != null) {
+			js.getHorizontalScrollBar().setUnitIncrement(js.getViewport().getWidth()/3);
+			js.getHorizontalScrollBar().setBlockIncrement(js.getViewport().getWidth()/3);
+		}
 		paint1();
 	}
 
@@ -174,7 +177,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 
 		if (au.loop) {
 			g1.setColor(Color.CYAN);
-			g1.drawString("loop", 10, 14);
+			g1.drawString("loop", js.getHorizontalScrollBar().getValue() + 5, 14);
 		}
 
 		FontMetrics metrics = g1.getFontMetrics(g1.getFont());
@@ -666,7 +669,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 		// frame.setJMenuBar(menuBar);
 
 		oldWidth = 800;
-		setSize(new Dimension(oldWidth, 750));
+		setSize(new Dimension(oldWidth, 760));
 
 		js = new JScrollPane(this);
 		frame.addKeyListener(this);
@@ -688,6 +691,8 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 				setSize(50 * ae.getValue(), getHeight());
 				makeImage();
 				oldWidth = 50 * ae.getValue();
+				jbar.setUnitIncrement(jbar.getValue() / 5);
+				jbar.setBlockIncrement(jbar.getValue() / 5);
 
 			}
 		});
@@ -703,7 +708,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 
 		frame.getContentPane().add(jbar, "East");
 
-		frame.setBounds(100, 100, oldWidth + 50, 750);
+		frame.setBounds(100, 100, oldWidth + 50, 760);
 		frame.setVisible(true);
 		frame.validate();
 		frame.repaint();

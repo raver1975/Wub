@@ -146,7 +146,7 @@ public class AudioObject implements Serializable {
 		dialog.pack();
 		dialog.setSize(500, dialog.getHeight());
 		dialog.setLocationRelativeTo(null);
-		dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		dialog.setAlwaysOnTop(false);
 		dialog.setVisible(true);
 		msgLabel.setBackground(panel.getBackground());
