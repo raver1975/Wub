@@ -2,9 +2,8 @@ package com.klemstinegroup.wub;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.ComponentEvent;
@@ -23,13 +22,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Queue;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
@@ -91,7 +88,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 	void makeImage() {
 		image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
 		bufferedimage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
-		
+
 		paint1();
 	}
 
@@ -145,7 +142,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			int x1 = (int) ((hovering.te.getStart() / duration) * (double) getWidth() + .5d);
 			int x2 = (int) ((hovering.te.getDuration() / duration) * (double) getWidth() + .5d);
 			g1.setColor(new Color(255, 255, 0, 127));
-			g1.fillRect(x1 + 1, 101, x2 - 1, 198);
+			g1.fillRect(x1 + 1, 100, x2 - 1, 200);
 		}
 
 		if (au.currentlyPlaying != null) {
@@ -158,7 +155,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			int x1 = (int) ((au.currentlyPlaying.te.getStart() / duration) * (double) getWidth() + .5d);
 			int x2 = (int) ((au.currentlyPlaying.te.getDuration() / duration) * (double) getWidth() + .5d);
 			g1.setColor(new Color(255, 0, 0, 127));
-			g1.fillRect(x1 + 1, 101, x2 - 1, 198);
+			g1.fillRect(x1 + 1, 100, x2 - 1, 200);
 		}
 		if (selectedPress) {
 			g1.setColor(new Color(255, 0, 0, 127));
@@ -175,9 +172,27 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 		int x1 = (int) ((getWidth() * (double) au.position / (double) au.data.length) + .5d);
 		g1.drawLine(x1, 0, x1, getHeight());
 
+		if (au.loop) {
+			g1.setColor(Color.CYAN);
+			g1.drawString("loop", 10, 14);
+		}
+
+		FontMetrics metrics = g1.getFontMetrics(g1.getFont());
+		for (Entry<String, Interval> e : au.midiMap.entrySet()) {
+			int x5 = (int) ((e.getValue().te.getStart() / duration) * (double) getWidth() + .5d);
+			int x6 = (int) ((e.getValue().te.getDuration() / duration) * (double) getWidth() + .5d);
+			g1.setColor(new Color(0, 255, 255, 80));
+			g1.fillRect(x5 + 1, e.getValue().y + 1, x6, 18);
+			if (x6 > 5) {
+				g1.setColor(Color.CYAN);
+				g1.drawString(e.getKey(), x5 + x6 / 2 - metrics.stringWidth(e.getKey()) / 2, e.getValue().y + 14);
+			}
+		}
 		g1.setColor(Color.red);
 		g1.drawLine(currPos, 0, currPos, getHeight());
+
 		g.drawImage(bufferedimage, 0, 0, null);
+
 	}
 
 	public void paint1() {
@@ -633,22 +648,22 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 
 	public void makeCanvas() {
 		JFrame frame = new JFrame(au.getFileName());
-//		JMenuBar menuBar;
-//		JMenu fileMenu;
-//		JMenuItem fileMenuItem;
-//		menuBar = new JMenuBar();
-//		fileMenu = new JMenu("File");
-//		menuBar.add(fileMenu);
-//		fileMenuItem = new JMenuItem("Open");
-//		fileMenu.add(fileMenuItem);
-//		fileMenuItem.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				AudioObject.factory();
-//			}
-//
-//		});
-//		frame.setJMenuBar(menuBar);
+		// JMenuBar menuBar;
+		// JMenu fileMenu;
+		// JMenuItem fileMenuItem;
+		// menuBar = new JMenuBar();
+		// fileMenu = new JMenu("File");
+		// menuBar.add(fileMenu);
+		// fileMenuItem = new JMenuItem("Open");
+		// fileMenu.add(fileMenuItem);
+		// fileMenuItem.addActionListener(new ActionListener() {
+		// @Override
+		// public void actionPerformed(ActionEvent e) {
+		// AudioObject.factory();
+		// }
+		//
+		// });
+		// frame.setJMenuBar(menuBar);
 
 		oldWidth = 800;
 		setSize(new Dimension(oldWidth, 750));
@@ -705,8 +720,10 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyChar() == ' ')
 			au.pause = !au.pause;
-		else if (e.getKeyCode()==KeyEvent.VK_ESCAPE)
+		else if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
 			AudioObject.factory();
+		else if (e.getKeyCode() == KeyEvent.VK_F12)
+			System.exit(0);
 		else if (e.getKeyCode() == KeyEvent.VK_F1)
 			au.loop = !au.loop;
 		else if (e.getKeyCode() == KeyEvent.VK_F3)

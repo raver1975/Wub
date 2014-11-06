@@ -55,6 +55,7 @@ public class AudioObject implements Serializable {
 	public transient boolean pause = false;
 	public transient boolean loop = false;
 	public transient HashMap<String, Interval> midiMap;
+	public static double tolerance = .1d;
 
 	public static final int resolution = 16;
 	public static final int channels = 2;
@@ -393,7 +394,7 @@ public class AudioObject implements Serializable {
 		for (Interval i : ll) {
 
 			for (Segment e : analysis.getSegments()) {
-				if (e.getStart() >= i.te.getStart() - 1d && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + 1d) {
+				if (e.getStart() >= i.te.getStart() - tolerance && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + tolerance) {
 					Segment f = null;
 					try {
 						f = (Segment) Serializer.deepclone(e);
@@ -414,7 +415,7 @@ public class AudioObject implements Serializable {
 			fa.sections.add(new TimedEvent(hm1));
 
 			for (TimedEvent e : analysis.getBars()) {
-				if (e.getStart() >= i.te.getStart() - .01d && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + .01d) {
+				if (e.getStart() >= i.te.getStart() - tolerance && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + tolerance) {
 					HashMap<String, Double> hm = new HashMap<String, Double>();
 					hm.put("start", fa.duration - (e.getStart() - i.te.getStart() + convertByteToTime(i.newbytestart)));
 					hm.put("duration", e.getDuration());
@@ -424,7 +425,7 @@ public class AudioObject implements Serializable {
 			}
 
 			for (TimedEvent e : analysis.getBeats()) {
-				if (e.getStart() >= i.te.getStart() - .01d && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + .01d) {
+				if (e.getStart() >= i.te.getStart() - tolerance && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + tolerance) {
 					HashMap<String, Double> hm = new HashMap<String, Double>();
 					hm.put("start", fa.duration - (e.getStart() - i.te.getStart() + convertByteToTime(i.newbytestart)));
 					hm.put("duration", e.getDuration());
@@ -434,7 +435,7 @@ public class AudioObject implements Serializable {
 			}
 
 			for (TimedEvent e : analysis.getTatums()) {
-				if (e.getStart() >= i.te.getStart() - .01d && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + .01d) {
+				if (e.getStart() >= i.te.getStart() - tolerance && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + tolerance) {
 					HashMap<String, Double> hm = new HashMap<String, Double>();
 					hm.put("start", fa.duration - (e.getStart() - i.te.getStart() + convertByteToTime(i.newbytestart)));
 					hm.put("duration", e.getDuration());
@@ -507,11 +508,13 @@ public class AudioObject implements Serializable {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				ao.analysis = AudioObject.echoNest(newFile);
+				TrackAnalysis analysis1 = AudioObject.echoNest(newFile);
+				if (analysis1.getBars().size()==0||analysis1.getBeats().size()==0||analysis1.getTatums().size()==0||analysis1.getSections().size()==0){}
+				else ao.analysis=analysis1;
 				ao.mc.paint1();
 				try {
 					Serializer.store(ao, newFileWub);
-					
+
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -599,7 +602,7 @@ public class AudioObject implements Serializable {
 			fa.sections.add(new TimedEvent(hm1));
 
 			for (TimedEvent e : analysis.getBars()) {
-				if (e.getStart() >= i.te.getStart() - .01d && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + .01d) {
+				if (e.getStart() >= i.te.getStart() - tolerance && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + tolerance) {
 					HashMap<String, Double> hm = new HashMap<String, Double>();
 					hm.put("start", e.getStart() - i.te.getStart() + convertByteToTime(i.newbytestart));
 					hm.put("duration", e.getDuration());
@@ -609,7 +612,7 @@ public class AudioObject implements Serializable {
 			}
 
 			for (TimedEvent e : analysis.getBeats()) {
-				if (e.getStart() >= i.te.getStart() - .01d && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + .01d) {
+				if (e.getStart() >= i.te.getStart() - tolerance && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + tolerance) {
 					HashMap<String, Double> hm = new HashMap<String, Double>();
 					hm.put("start", e.getStart() - i.te.getStart() + convertByteToTime(i.newbytestart));
 					hm.put("duration", e.getDuration());
@@ -619,7 +622,7 @@ public class AudioObject implements Serializable {
 			}
 
 			for (TimedEvent e : analysis.getTatums()) {
-				if (e.getStart() >= i.te.getStart() - .01d && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + .01d) {
+				if (e.getStart() >= i.te.getStart() - tolerance && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + tolerance) {
 					HashMap<String, Double> hm = new HashMap<String, Double>();
 					hm.put("start", e.getStart() - i.te.getStart() + convertByteToTime(i.newbytestart));
 					hm.put("duration", e.getDuration());
@@ -683,11 +686,13 @@ public class AudioObject implements Serializable {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				ao.analysis = AudioObject.echoNest(newFile);
+				TrackAnalysis analysis1 = AudioObject.echoNest(newFile);
+				if (analysis1.getBars().size()==0||analysis1.getBeats().size()==0||analysis1.getTatums().size()==0||analysis1.getSections().size()==0){}
+				else ao.analysis=analysis1;
 				ao.mc.paint1();
 				try {
 					Serializer.store(ao, newFileWub);
-					
+
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
