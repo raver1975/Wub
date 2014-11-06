@@ -324,7 +324,8 @@ public class AudioObject implements Serializable {
 		Interval i = midiMap.get(keyName);
 		if (vel > 0) {
 			if (i == null) {
-				midiMap.put(keyName, mc.hovering);
+				if (mc.hovering != null)
+					midiMap.put(keyName, mc.hovering);
 			} else {
 				// if (queue.size()>0){
 				// breakPlay = true;

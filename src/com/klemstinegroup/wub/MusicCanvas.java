@@ -56,6 +56,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 	SamplingGraph samplingGraph = new SamplingGraph();
 	Queue<Interval> tempQueue = new LinkedList<Interval>();
 	public boolean mouseDown;
+	private JFrame frame;
 
 	public MusicCanvas(AudioObject au) {
 		this.au = au;
@@ -260,10 +261,10 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 		g.setColor(Color.red);
 		List<Segment> list1 = new ArrayList<Segment>(au.analysis.getSegments());
 		try {
-			Segment end = (Segment) Serializer.deepclone(list1.get(list.size() - 1));
+			Segment end = (Segment) Serializer.deepclone(list1.get(list1.size() - 1));
 
-			end.start = list1.get(list.size() - 1).start + list1.get(list.size() - 1).getDuration();
-			end.duration = duration - end.start;
+			end.start = list1.get(list1.size() - 1).start + list1.get(list1.size() - 1).getDuration();
+			//end.duration = duration - end.start - .2d;
 			list1.add(end);
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -295,6 +296,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			Segment teend = list1.get(i + 1);
 			int x1 = (int) ((testart.getStart() / duration) * (double) x + .5d);
 			int x2 = (int) ((teend.getStart() / duration) * (double) x + .5d);
+			if (x2>=getWidth())x2=getWidth();
 			// double loudstart = testart.getLoudnessStart()*2d;
 			// double loudend = teend.getLoudnessStart()*2d;
 			// g.setColor(Color.red);
@@ -595,6 +597,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 		int x = e.getX();
 		int y = e.getY();
 		currPos = x;
+		frame.toFront();
 		double loc = ((double) x / (double) this.getWidth()) * duration;
 		if (y >= 0 && y < 20) {
 			hovering = null;
@@ -665,7 +668,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 	}
 
 	public void makeCanvas() {
-		JFrame frame = new JFrame(au.getFileName());
+		frame = new JFrame(au.getFileName());
 		// JMenuBar menuBar;
 		// JMenu fileMenu;
 		// JMenuItem fileMenuItem;
@@ -688,6 +691,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 
 		js = new JScrollPane(this);
 		frame.addKeyListener(this);
+		this.addKeyListener(this);
 		js.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		frame.getContentPane().add(js, "Center");
 		jbar = new JScrollBar(JScrollBar.VERTICAL);
