@@ -44,7 +44,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 	public int selectedStartX;
 	int currPos;
 	public boolean selectedPress;
-	public transient int oldWidth;
+	public int oldWidth;
 	private JScrollBar jbar;
 	private JScrollPane js;
 	SamplingGraph samplingGraph = new SamplingGraph();
@@ -98,7 +98,9 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 		g1.drawImage(image, 0, 0, null);
 
 		int c = 1;
-		LinkedList<Interval> temp = new LinkedList<Interval>(au.queue);
+		LinkedList<Interval> temp = new LinkedList<Interval>();
+		if (!au.queue.isEmpty())
+			temp.addAll(au.queue);
 		temp.addAll(tempQueue);
 		for (Interval i : temp) {
 			if (i != null) {
@@ -119,19 +121,20 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 		// }
 
 		if (hovering != null) {
-			if (hovering.y == 0)
-				g1.setColor(Color.red);
-			if (hovering.y == 20)
-				g1.setColor(Color.yellow);
-			if (hovering.y == 40)
-				g1.setColor(Color.green);
-			if (hovering.y == 60)
-				g1.setColor(Color.blue);
-			if (hovering.y == 80)
-				g1.setColor(Color.orange);
+//			if (hovering.y == 0)
+//				g1.setColor(Color.red);
+//			if (hovering.y == 20)
+//				g1.setColor(Color.yellow);
+//			if (hovering.y == 40)
+//				g1.setColor(Color.green);
+//			if (hovering.y == 60)
+//				g1.setColor(Color.blue);
+//			if (hovering.y == 80)
+//				g1.setColor(Color.orange);
+			g1.setColor(Color.white);
 			int x3 = (int) (((hovering.te.getStart() / duration) * (double) getWidth()) + .5d);
 			int x4 = (int) (((hovering.te.getDuration() / duration) * (double) getWidth()) + .5d);
-			g1.fillRect(x3 + 1, hovering.y + 1, x4 - 1, 18);
+			g1.fillRect(x3 + 1, hovering.y + 1, x4, 18);
 		}
 
 		if (au.currentlyPlaying != null) {
@@ -634,7 +637,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 		});
 
 		frame.getContentPane().add(jbar, "East");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setBounds(100, 100, oldWidth + 50, 750);
 		frame.setVisible(true);
 		frame.validate();
@@ -661,6 +664,8 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			au.breakPlay = true;
 		} else if (e.getKeyCode() == KeyEvent.VK_F5) {
 			au.midiMap.clear();
+		} else if (e.getKeyCode() == KeyEvent.VK_F6) {
+			au.createAudioObject();
 		} else if (e.getKeyCode() == KeyEvent.VK_F2) {
 			Collections.reverse((LinkedList) au.queue);
 		} else {

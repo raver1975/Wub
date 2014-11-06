@@ -9,6 +9,7 @@ public class Interval {
 	int startBytes;
 	int lengthBytes;
 	int endBytes;
+	int newbytestart;
 
 	public Interval(TimedEvent te, int y) {
 		double start1 = te.getStart();
@@ -26,16 +27,17 @@ public class Interval {
 	public String toString() {
 		return startBytes + ":" + lengthBytes + ":" + y;
 	}
-	
+
 	@Override
-	public int hashCode(){
-		return startBytes*10001+lengthBytes*993+y;
+	public int hashCode() {
+		return startBytes * 10001 + lengthBytes * 993 + y;
 	}
-	
-	@Override 
-	public boolean equals(Object o){
-		if (!(o instanceof Interval))return false;
-		Interval i=(Interval)o;
-		return startBytes==i.startBytes&&endBytes==i.endBytes&&y==i.y;
-	} 
+
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof Interval))
+			return false;
+		Interval i = (Interval) o;
+		return startBytes == i.startBytes && endBytes == i.endBytes && y == i.y;
+	}
 }

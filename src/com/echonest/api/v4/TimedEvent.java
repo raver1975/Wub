@@ -7,7 +7,7 @@ import com.echonest.api.v4.util.MQuery;
 
 public class TimedEvent implements Serializable {
 
-    private double start;
+    public double start;
     private double duration;
     private double confidence;
 

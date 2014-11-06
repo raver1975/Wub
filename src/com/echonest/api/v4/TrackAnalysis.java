@@ -14,6 +14,7 @@ public class TrackAnalysis implements Serializable {
     private MQuery mq;
 
     @SuppressWarnings("unchecked")
+	protected
     TrackAnalysis(Map map) {
         this.map = map;
         this.mq = new MQuery(map);

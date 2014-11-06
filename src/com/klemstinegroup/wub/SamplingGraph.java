@@ -119,6 +119,7 @@ class SamplingGraph {
 			}
 
 		}
+		g2.setColor(Color.white);
 		for (int i = 1; i < lines.size(); i++) {
 			Line2D line = lines.get(i);
 

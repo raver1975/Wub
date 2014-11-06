@@ -1,16 +1,15 @@
 package com.klemstinegroup.wub;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Rectangle;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -29,28 +28,32 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.JScrollBar;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.echonest.api.v4.EchoNestAPI;
+import com.echonest.api.v4.Segment;
 import com.echonest.api.v4.TimedEvent;
 import com.echonest.api.v4.Track;
 import com.echonest.api.v4.TrackAnalysis;
+import com.sun.media.sound.WaveFileWriter;
 
 public class AudioObject implements Serializable {
 
+	transient int filecount = 0;
 	public byte[] data;
 	public File file;
 	TrackAnalysis analysis;
+
 	public transient MusicCanvas mc;
 	public transient SourceDataLine line;
 	public transient Queue<Interval> queue;
-
 	transient int position = 0;
 	transient Interval currentlyPlaying;
 	protected transient boolean breakPlay;
+	public transient boolean pause = false;
+	public transient boolean loop = false;
+	public transient HashMap<String, Interval> midiMap;
 
 	public static final int resolution = 16;
 	public static final int channels = 2;
@@ -58,10 +61,6 @@ public class AudioObject implements Serializable {
 	public static final int sampleRate = 44100;
 	public static final AudioFormat audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sampleRate, resolution, channels, frameSize, sampleRate, false);
 	static final int bufferSize = 8192;
-
-	public transient boolean pause = false;
-	public transient boolean loop = false;
-	public transient HashMap<String, Interval> midiMap;
 
 	public AudioObject(String file) {
 		this(new File(file));
@@ -153,6 +152,14 @@ public class AudioObject implements Serializable {
 		dialog.dispose();
 	}
 
+	public AudioObject(byte[] by, TrackAnalysis fa, File file) {
+		this.file = file;
+		analysis = fa;
+		data = by;
+		System.out.println(data.length);
+		init();
+	}
+
 	private void init() {
 		midiMap = new HashMap<String, Interval>();
 		queue = new LinkedList<Interval>();
@@ -204,7 +211,7 @@ public class AudioObject implements Serializable {
 							currentlyPlaying = null;
 							if (!mc.mouseDown)
 								mc.tempTimedEvent = null;
-							line.drain();
+							// line.drain();
 							Thread.sleep(100);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
@@ -337,6 +344,7 @@ public class AudioObject implements Serializable {
 		// }
 
 	}
+
 	// public void play(double start, double duration) {
 	// int startInBytes = (int) (start * AudioObject.sampleRate *
 	// AudioObject.frameSize) - (int) (start * AudioObject.sampleRate *
@@ -348,4 +356,131 @@ public class AudioObject implements Serializable {
 	// lengthInBytes, data.length)));
 	//
 	// }
+
+	public void createAudioObject() {
+		boolean savePause = pause;
+		pause = true;
+		FakeTrackAnalysis fa = new FakeTrackAnalysis();
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		LinkedList<Interval> ll = new LinkedList<Interval>();
+		if (currentlyPlaying != null) {
+			ll.add(currentlyPlaying);
+		}
+		ll.addAll(queue);
+		int bytecnt = 0;
+		if (ll.size() == 0)
+			return;
+		for (Interval i : ll) {
+			i.newbytestart = bytecnt;
+			baos.write(data, i.startBytes, i.lengthBytes);
+			bytecnt += i.lengthBytes;
+
+		}
+		byte[] by = baos.toByteArray();
+		fa.setDuration(convertByteToTime(by.length));
+		Collections.sort(ll, new Comparator<Interval>() {
+
+			@Override
+			public int compare(Interval o1, Interval o2) {
+				return Double.compare(o1.startBytes, o2.startBytes);
+			}
+
+		});
+		for (Interval i : ll) {
+
+			for (Segment e : analysis.getSegments()) {
+				if (e.getStart() >= i.te.getStart() - 1d && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + 1d) {
+					Segment f = null;
+					try {
+						f = (Segment) Serializer.deepclone(e);
+					} catch (ClassNotFoundException e1) {
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					f.start = e.getStart() - i.te.getStart() + convertByteToTime(i.newbytestart);
+					fa.segments.add(f);
+				}
+			}
+
+			HashMap<String, Double> hm1 = new HashMap<String, Double>();
+			hm1.put("start", 0d);
+			hm1.put("duration", fa.getDuration());
+			hm1.put("confidence", 1d);
+			fa.sections.add(new TimedEvent(hm1));
+
+			for (TimedEvent e : analysis.getBars()) {
+				if (e.getStart() >= i.te.getStart() - .01d && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + .01d) {
+					HashMap<String, Double> hm = new HashMap<String, Double>();
+					hm.put("start", e.getStart() - i.te.getStart() + convertByteToTime(i.newbytestart));
+					hm.put("duration", e.getDuration());
+					hm.put("confidence", e.getConfidence());
+					fa.bars.add(new TimedEvent(hm));
+				}
+			}
+
+			for (TimedEvent e : analysis.getBeats()) {
+				if (e.getStart() >= i.te.getStart() - .01d && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + .01d) {
+					HashMap<String, Double> hm = new HashMap<String, Double>();
+					hm.put("start", e.getStart() - i.te.getStart() + convertByteToTime(i.newbytestart));
+					hm.put("duration", e.getDuration());
+					hm.put("confidence", e.getConfidence());
+					fa.beats.add(new TimedEvent(hm));
+				}
+			}
+
+			for (TimedEvent e : analysis.getTatums()) {
+				if (e.getStart() >= i.te.getStart() - .01d && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + .01d) {
+					HashMap<String, Double> hm = new HashMap<String, Double>();
+					hm.put("start", e.getStart() - i.te.getStart() + convertByteToTime(i.newbytestart));
+					hm.put("duration", e.getDuration());
+					hm.put("confidence", e.getConfidence());
+					fa.tatums.add(new TimedEvent(hm));
+				}
+			}
+		}
+
+		System.out.println(fa.duration);
+
+		String fileName = file.getAbsolutePath();
+		String extension = "";
+		 String filePrefix = "";
+		int i = fileName.lastIndexOf('.');
+		if (i > 0) {
+			extension = fileName.substring(i + 1);
+			filePrefix = fileName.substring(0, i);
+		}
+		String filePrefix1 = null;
+		do {
+			filecount++;
+			filePrefix1 = filePrefix + String.format("%03d", filecount);
+		} while (new File(filePrefix1 + ".wav").exists());
+		ByteArrayInputStream bais = new ByteArrayInputStream(by);
+		long length = (long) (by.length / audioFormat.getFrameSize());
+		AudioInputStream audioInputStreamTemp = new AudioInputStream(bais, audioFormat, length);
+		WaveFileWriter writer = new WaveFileWriter();
+		FileOutputStream fos;
+		try {
+			fos = new FileOutputStream(filePrefix1 + ".wav");
+			writer.write(audioInputStreamTemp, AudioFileFormat.Type.WAVE, fos);
+			fos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		File newFile = new File(filePrefix1 + ".wub");
+		AudioObject ao = new AudioObject(by, fa, newFile);
+		try {
+			Serializer.store(ao, newFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		pause = savePause;
+
+	}
+
+	public double convertByteToTime(int pos) {
+		return (double) pos / (double) AudioObject.sampleRate / (double) AudioObject.frameSize;
+	}
 }
