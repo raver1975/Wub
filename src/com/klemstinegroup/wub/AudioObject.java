@@ -370,7 +370,8 @@ public class AudioObject implements Serializable {
 		}
 		ll.addAll(queue);
 		int bytecnt = 0;
-		if (ll.size() == 0&&mc.hovering!=null)ll.add(mc.hovering);
+		if (ll.size() == 0 && mc.hovering != null)
+			ll.add(mc.hovering);
 		if (ll.size() == 0)
 			return;
 		for (Interval i : ll) {
@@ -441,7 +442,7 @@ public class AudioObject implements Serializable {
 					fa.tatums.add(new TimedEvent(hm));
 				}
 			}
-			
+
 			Collections.sort(fa.segments, new Comparator<TimedEvent>() {
 				@Override
 				public int compare(TimedEvent o1, TimedEvent o2) {
@@ -449,7 +450,7 @@ public class AudioObject implements Serializable {
 				}
 
 			});
-			
+
 			Collections.sort(fa.bars, new Comparator<TimedEvent>() {
 				@Override
 				public int compare(TimedEvent o1, TimedEvent o2) {
@@ -500,14 +501,23 @@ public class AudioObject implements Serializable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		File newFile = new File(filePrefix1 + ".wub");
-		AudioObject ao = new AudioObject(by, fa, newFile);
-		try {
-			Serializer.store(ao, newFile);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		final File newFile = new File(filePrefix1 + ".wav");
+		final File newFileWub = new File(filePrefix1 + ".wub");
+		final AudioObject ao = new AudioObject(by, fa, newFile);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ao.analysis = AudioObject.echoNest(newFile);
+				ao.mc.paint1();
+				try {
+					Serializer.store(ao, newFileWub);
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}).start();
 		pause = savePause;
 
 	}
@@ -520,16 +530,16 @@ public class AudioObject implements Serializable {
 		int j = array.length - 2;
 		byte tmp1;
 		byte tmp2;
-		
+
 		while (j > i) {
 			tmp1 = array[j];
-			tmp2 = array[j+1];
+			tmp2 = array[j + 1];
 			array[j] = array[i];
-			array[j+1] = array[i+1];
+			array[j + 1] = array[i + 1];
 			array[i] = tmp1;
-			array[i+1] = tmp2;
-			j-=2;
-			i+=2;
+			array[i + 1] = tmp2;
+			j -= 2;
+			i += 2;
 		}
 	}
 
@@ -545,7 +555,8 @@ public class AudioObject implements Serializable {
 		}
 		ll.addAll(queue);
 		int bytecnt = 0;
-		if (ll.size() == 0&&mc.hovering!=null)ll.add(mc.hovering);
+		if (ll.size() == 0 && mc.hovering != null)
+			ll.add(mc.hovering);
 		if (ll.size() == 0)
 			return;
 		for (Interval i : ll) {
@@ -666,14 +677,24 @@ public class AudioObject implements Serializable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		File newFile = new File(filePrefix1 + ".wub");
-		AudioObject ao = new AudioObject(by, fa, newFile);
-		try {
-			Serializer.store(ao, newFile);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		final File newFile = new File(filePrefix1 + ".wav");
+		final File newFileWub = new File(filePrefix1 + ".wub");
+		final AudioObject ao = new AudioObject(by, fa, newFile);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ao.analysis = AudioObject.echoNest(newFile);
+				ao.mc.paint1();
+				try {
+					Serializer.store(ao, newFileWub);
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}).start();
+
 		pause = savePause;
 
 	}

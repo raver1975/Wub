@@ -91,8 +91,8 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 	void makeImage() {
 		image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
 		bufferedimage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
-		Graphics g = image.getGraphics();
-		paint1(g);
+		
+		paint1();
 	}
 
 	public void update(Graphics g) {
@@ -180,9 +180,10 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 		g.drawImage(bufferedimage, 0, 0, null);
 	}
 
-	public void paint1(Graphics g) {
+	public void paint1() {
 		if (au.analysis == null)
 			return;
+		Graphics g = image.getGraphics();
 		int x = this.getWidth();
 		int y = this.getHeight();
 		g.setColor(Color.black);
@@ -632,23 +633,23 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 
 	public void makeCanvas() {
 		JFrame frame = new JFrame(au.getFileName());
-		JMenuBar menuBar;
-		JMenu fileMenu;
-		JMenuItem fileMenuItem;
-		menuBar = new JMenuBar();
-		fileMenu = new JMenu("File");
-		menuBar.add(fileMenu);
-		fileMenuItem = new JMenuItem("Open");
-		fileMenu.add(fileMenuItem);
-		fileMenuItem.addActionListener(new ActionListener() {
+//		JMenuBar menuBar;
+//		JMenu fileMenu;
+//		JMenuItem fileMenuItem;
+//		menuBar = new JMenuBar();
+//		fileMenu = new JMenu("File");
+//		menuBar.add(fileMenu);
+//		fileMenuItem = new JMenuItem("Open");
+//		fileMenu.add(fileMenuItem);
+//		fileMenuItem.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				AudioObject.factory();
+//			}
+//
+//		});
+//		frame.setJMenuBar(menuBar);
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				AudioObject.factory();
-			}
-
-		});
-		frame.setJMenuBar(menuBar);
 		oldWidth = 800;
 		setSize(new Dimension(oldWidth, 750));
 
@@ -704,6 +705,8 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyChar() == ' ')
 			au.pause = !au.pause;
+		else if (e.getKeyCode()==KeyEvent.VK_ESCAPE)
+			AudioObject.factory();
 		else if (e.getKeyCode() == KeyEvent.VK_F1)
 			au.loop = !au.loop;
 		else if (e.getKeyCode() == KeyEvent.VK_F3)
