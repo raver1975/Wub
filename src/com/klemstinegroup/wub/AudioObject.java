@@ -4,14 +4,15 @@ import java.awt.BorderLayout;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 import javax.sound.sampled.AudioFileFormat;
@@ -179,7 +180,7 @@ public class AudioObject implements Serializable {
 
 						currentlyPlaying = i;
 						int j = 0;
-						for (j = i.startBytes; j <= i.endBytes - bufferSize; j += bufferSize) {
+						for (j = i.startBytes; j <= i.endBytes - bufferSize && j < data.length - bufferSize; j += bufferSize) {
 							while (pause || breakPlay) {
 								if (breakPlay) {
 									breakPlay = false;
@@ -199,7 +200,7 @@ public class AudioObject implements Serializable {
 
 						}
 
-						if (j < i.endBytes) {
+						if (j < i.endBytes && i.endBytes < data.length) {
 							position = j;
 							line.write(data, j, i.endBytes - j);
 							// line.drain();
@@ -357,7 +358,7 @@ public class AudioObject implements Serializable {
 	//
 	// }
 
-	public void createAudioObject() {
+	public void createReverseAudioObject() {
 		boolean savePause = pause;
 		pause = true;
 		FakeTrackAnalysis fa = new FakeTrackAnalysis();
@@ -369,6 +370,7 @@ public class AudioObject implements Serializable {
 		}
 		ll.addAll(queue);
 		int bytecnt = 0;
+		if (ll.size() == 0&&mc.hovering!=null)ll.add(mc.hovering);
 		if (ll.size() == 0)
 			return;
 		for (Interval i : ll) {
@@ -383,7 +385,182 @@ public class AudioObject implements Serializable {
 
 			@Override
 			public int compare(Interval o1, Interval o2) {
-				return Double.compare(o1.startBytes, o2.startBytes);
+				return Double.compare(o2.startBytes, o1.startBytes);
+			}
+
+		});
+		for (Interval i : ll) {
+
+			for (Segment e : analysis.getSegments()) {
+				if (e.getStart() >= i.te.getStart() - 1d && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + 1d) {
+					Segment f = null;
+					try {
+						f = (Segment) Serializer.deepclone(e);
+					} catch (ClassNotFoundException e1) {
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					f.start = fa.duration - (e.getStart() - i.te.getStart() + convertByteToTime(i.newbytestart));
+					fa.segments.add(f);
+				}
+			}
+
+			HashMap<String, Double> hm1 = new HashMap<String, Double>();
+			hm1.put("start", 0d);
+			hm1.put("duration", fa.getDuration());
+			hm1.put("confidence", 1d);
+			fa.sections.add(new TimedEvent(hm1));
+
+			for (TimedEvent e : analysis.getBars()) {
+				if (e.getStart() >= i.te.getStart() - .01d && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + .01d) {
+					HashMap<String, Double> hm = new HashMap<String, Double>();
+					hm.put("start", fa.duration - (e.getStart() - i.te.getStart() + convertByteToTime(i.newbytestart)));
+					hm.put("duration", e.getDuration());
+					hm.put("confidence", e.getConfidence());
+					fa.bars.add(new TimedEvent(hm));
+				}
+			}
+
+			for (TimedEvent e : analysis.getBeats()) {
+				if (e.getStart() >= i.te.getStart() - .01d && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + .01d) {
+					HashMap<String, Double> hm = new HashMap<String, Double>();
+					hm.put("start", fa.duration - (e.getStart() - i.te.getStart() + convertByteToTime(i.newbytestart)));
+					hm.put("duration", e.getDuration());
+					hm.put("confidence", e.getConfidence());
+					fa.beats.add(new TimedEvent(hm));
+				}
+			}
+
+			for (TimedEvent e : analysis.getTatums()) {
+				if (e.getStart() >= i.te.getStart() - .01d && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + .01d) {
+					HashMap<String, Double> hm = new HashMap<String, Double>();
+					hm.put("start", fa.duration - (e.getStart() - i.te.getStart() + convertByteToTime(i.newbytestart)));
+					hm.put("duration", e.getDuration());
+					hm.put("confidence", e.getConfidence());
+					fa.tatums.add(new TimedEvent(hm));
+				}
+			}
+			
+			Collections.sort(fa.segments, new Comparator<TimedEvent>() {
+				@Override
+				public int compare(TimedEvent o1, TimedEvent o2) {
+					return Double.compare(o1.getStart(), o2.getStart());
+				}
+
+			});
+			
+			Collections.sort(fa.bars, new Comparator<TimedEvent>() {
+				@Override
+				public int compare(TimedEvent o1, TimedEvent o2) {
+					return Double.compare(o1.getStart(), o2.getStart());
+				}
+
+			});
+			Collections.sort(fa.beats, new Comparator<TimedEvent>() {
+				@Override
+				public int compare(TimedEvent o1, TimedEvent o2) {
+					return Double.compare(o1.getStart(), o2.getStart());
+				}
+
+			});
+			Collections.sort(fa.tatums, new Comparator<TimedEvent>() {
+				@Override
+				public int compare(TimedEvent o1, TimedEvent o2) {
+					return Double.compare(o1.getStart(), o2.getStart());
+				}
+
+			});
+		}
+
+		reverse(by);
+
+		String fileName = file.getAbsolutePath();
+		String extension = "";
+		String filePrefix = "";
+		int i = fileName.lastIndexOf('.');
+		if (i > 0) {
+			extension = fileName.substring(i + 1);
+			filePrefix = fileName.substring(0, i);
+		}
+		String filePrefix1 = null;
+		do {
+			filecount++;
+			filePrefix1 = filePrefix + String.format("%03d", filecount);
+		} while (new File(filePrefix1 + ".wav").exists());
+		ByteArrayInputStream bais = new ByteArrayInputStream(by);
+		long length = (long) (by.length / audioFormat.getFrameSize());
+		AudioInputStream audioInputStreamTemp = new AudioInputStream(bais, audioFormat, length);
+		WaveFileWriter writer = new WaveFileWriter();
+		FileOutputStream fos;
+		try {
+			fos = new FileOutputStream(filePrefix1 + ".wav");
+			writer.write(audioInputStreamTemp, AudioFileFormat.Type.WAVE, fos);
+			fos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		File newFile = new File(filePrefix1 + ".wub");
+		AudioObject ao = new AudioObject(by, fa, newFile);
+		try {
+			Serializer.store(ao, newFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		pause = savePause;
+
+	}
+
+	public void reverse(byte[] array) {
+		if (array == null) {
+			return;
+		}
+		int i = 0;
+		int j = array.length - 2;
+		byte tmp1;
+		byte tmp2;
+		
+		while (j > i) {
+			tmp1 = array[j];
+			tmp2 = array[j+1];
+			array[j] = array[i];
+			array[j+1] = array[i+1];
+			array[i] = tmp1;
+			array[i+1] = tmp2;
+			j-=2;
+			i+=2;
+		}
+	}
+
+	public void createAudioObject() {
+		boolean savePause = pause;
+		pause = true;
+		FakeTrackAnalysis fa = new FakeTrackAnalysis();
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		LinkedList<Interval> ll = new LinkedList<Interval>();
+		if (currentlyPlaying != null) {
+			ll.add(currentlyPlaying);
+		}
+		ll.addAll(queue);
+		int bytecnt = 0;
+		if (ll.size() == 0&&mc.hovering!=null)ll.add(mc.hovering);
+		if (ll.size() == 0)
+			return;
+		for (Interval i : ll) {
+			i.newbytestart = bytecnt;
+			baos.write(data, i.startBytes, i.lengthBytes);
+			bytecnt += i.lengthBytes;
+
+		}
+		byte[] by = baos.toByteArray();
+		fa.setDuration(convertByteToTime(by.length));
+		Collections.sort(ll, new Comparator<Interval>() {
+
+			@Override
+			public int compare(Interval o1, Interval o2) {
+				return Double.compare(o2.startBytes, o1.startBytes);
 			}
 
 		});
@@ -439,13 +616,34 @@ public class AudioObject implements Serializable {
 					fa.tatums.add(new TimedEvent(hm));
 				}
 			}
+			Collections.sort(fa.bars, new Comparator<TimedEvent>() {
+				@Override
+				public int compare(TimedEvent o1, TimedEvent o2) {
+					return Double.compare(o1.getStart(), o2.getStart());
+				}
+
+			});
+			Collections.sort(fa.beats, new Comparator<TimedEvent>() {
+				@Override
+				public int compare(TimedEvent o1, TimedEvent o2) {
+					return Double.compare(o1.getStart(), o2.getStart());
+				}
+
+			});
+			Collections.sort(fa.tatums, new Comparator<TimedEvent>() {
+				@Override
+				public int compare(TimedEvent o1, TimedEvent o2) {
+					return Double.compare(o1.getStart(), o2.getStart());
+				}
+
+			});
 		}
 
 		System.out.println(fa.duration);
 
 		String fileName = file.getAbsolutePath();
 		String extension = "";
-		 String filePrefix = "";
+		String filePrefix = "";
 		int i = fileName.lastIndexOf('.');
 		if (i > 0) {
 			extension = fileName.substring(i + 1);

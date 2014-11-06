@@ -8,7 +8,7 @@ public class Wub {
 
 		// MidiPumper midi = new MidiPumper();
 
-		AudioObject au1 = AudioObject.factory("songs/plumber.mp3");
+		AudioObject au1 = AudioObject.factory("songs/Robert Miles - Children.mp3");
 
 		// midi.add(au1);
 

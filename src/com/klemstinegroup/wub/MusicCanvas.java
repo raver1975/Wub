@@ -3,6 +3,8 @@ package com.klemstinegroup.wub;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.ComponentEvent;
@@ -14,6 +16,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,6 +27,9 @@ import java.util.Queue;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
@@ -121,29 +128,37 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 		// }
 
 		if (hovering != null) {
-//			if (hovering.y == 0)
-//				g1.setColor(Color.red);
-//			if (hovering.y == 20)
-//				g1.setColor(Color.yellow);
-//			if (hovering.y == 40)
-//				g1.setColor(Color.green);
-//			if (hovering.y == 60)
-//				g1.setColor(Color.blue);
-//			if (hovering.y == 80)
-//				g1.setColor(Color.orange);
+			// if (hovering.y == 0)
+			// g1.setColor(Color.red);
+			// if (hovering.y == 20)
+			// g1.setColor(Color.yellow);
+			// if (hovering.y == 40)
+			// g1.setColor(Color.green);
+			// if (hovering.y == 60)
+			// g1.setColor(Color.blue);
+			// if (hovering.y == 80)
+			// g1.setColor(Color.orange);
 			g1.setColor(Color.white);
 			int x3 = (int) (((hovering.te.getStart() / duration) * (double) getWidth()) + .5d);
 			int x4 = (int) (((hovering.te.getDuration() / duration) * (double) getWidth()) + .5d);
 			g1.fillRect(x3 + 1, hovering.y + 1, x4, 18);
+			int x1 = (int) ((hovering.te.getStart() / duration) * (double) getWidth() + .5d);
+			int x2 = (int) ((hovering.te.getDuration() / duration) * (double) getWidth() + .5d);
+			g1.setColor(new Color(255, 255, 0, 127));
+			g1.fillRect(x1, 100, x2, 200);
 		}
 
 		if (au.currentlyPlaying != null) {
-			g1.setColor(Color.magenta);
+			g1.setColor(Color.red.darker().darker().darker());
 			if (hovering != null && hovering.equals(au.currentlyPlaying))
-				g1.setColor(new Color(255, 127, 255));
+				g1.setColor(new Color(150, 100, 100));
 			int x3 = (int) (((au.currentlyPlaying.te.getStart() / duration) * (double) getWidth()) + .5d);
 			int x4 = (int) (((au.currentlyPlaying.te.getDuration() / duration) * (double) getWidth()) + .5d);
 			g1.fillRect(x3 + 1, au.currentlyPlaying.y + 1, x4 - 1, 18);
+			int x1 = (int) ((au.currentlyPlaying.te.getStart() / duration) * (double) getWidth() + .5d);
+			int x2 = (int) ((au.currentlyPlaying.te.getDuration() / duration) * (double) getWidth() + .5d);
+			g1.setColor(new Color(255, 0, 0, 127));
+			g1.fillRect(x1, 100, x2, 200);
 		}
 		if (selectedPress) {
 			g1.setColor(new Color(255, 0, 0, 127));
@@ -401,8 +416,8 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			}
 			en = en - st;
 			HashMap<String, Double> hm = new HashMap<String, Double>();
-			hm.put("start", st);
-			hm.put("duration", en);
+			hm.put("start", Math.max(st, 0));
+			hm.put("duration", Math.min(duration - st, en));
 			hm.put("confidence", 1d);
 			au.play(new Interval(new TimedEvent(hm), 80));
 		}
@@ -609,6 +624,23 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 
 	public void makeCanvas() {
 		JFrame frame = new JFrame(au.getFileName());
+		JMenuBar menuBar;
+		JMenu fileMenu;
+		JMenuItem fileMenuItem;
+		menuBar = new JMenuBar();
+		fileMenu = new JMenu("File");
+		menuBar.add(fileMenu);
+		fileMenuItem = new JMenuItem("Open");
+		fileMenu.add(fileMenuItem);
+		fileMenuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				AudioObject.factory();
+			}
+
+		});
+		frame.setJMenuBar(menuBar);
 		oldWidth = 800;
 		setSize(new Dimension(oldWidth, 750));
 
@@ -635,9 +667,18 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 
 			}
 		});
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				au.pause = true;
+				au.breakPlay = true;
+				au.queue.clear();
+			}
+		});
 
 		frame.getContentPane().add(jbar, "East");
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
 		frame.setBounds(100, 100, oldWidth + 50, 750);
 		frame.setVisible(true);
 		frame.validate();
@@ -666,6 +707,8 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			au.midiMap.clear();
 		} else if (e.getKeyCode() == KeyEvent.VK_F6) {
 			au.createAudioObject();
+		} else if (e.getKeyCode() == KeyEvent.VK_F7) {
+			au.createReverseAudioObject();
 		} else if (e.getKeyCode() == KeyEvent.VK_F2) {
 			Collections.reverse((LinkedList) au.queue);
 		} else {
