@@ -63,6 +63,7 @@ public class AudioObject implements Serializable {
 	public static final int sampleRate = 44100;
 	public static final AudioFormat audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sampleRate, resolution, channels, frameSize, sampleRate, false);
 	static final int bufferSize = 8192;
+	static String key = null;
 
 	public AudioObject(String file) {
 		this(new File(file));
@@ -228,7 +229,9 @@ public class AudioObject implements Serializable {
 	public static TrackAnalysis echoNest(File file) {
 		while (true) {
 			try {
-				EchoNestAPI en = new EchoNestAPI();
+				EchoNestAPI en=null;
+				if (key!=null) en=new EchoNestAPI(key);
+				else en=new EchoNestAPI();
 				Track track = en.uploadTrack(file);
 				System.out.println(track);
 				track.waitForAnalysis(30000);
