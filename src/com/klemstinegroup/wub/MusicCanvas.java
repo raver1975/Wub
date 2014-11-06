@@ -18,6 +18,8 @@ import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -89,8 +91,8 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 		image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
 		bufferedimage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
 		if (js != null && js.getHorizontalScrollBar() != null) {
-			js.getHorizontalScrollBar().setUnitIncrement(js.getViewport().getWidth()/3);
-			js.getHorizontalScrollBar().setBlockIncrement(js.getViewport().getWidth()/3);
+			js.getHorizontalScrollBar().setUnitIncrement(js.getViewport().getWidth() / 3);
+			js.getHorizontalScrollBar().setBlockIncrement(js.getViewport().getWidth() / 3);
 		}
 		paint1();
 	}
@@ -256,7 +258,20 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 		}
 
 		g.setColor(Color.red);
-		List<Segment> list1 = au.analysis.getSegments();
+		List<Segment> list1 = new ArrayList<Segment>(au.analysis.getSegments());
+		try {
+			Segment end = (Segment) Serializer.deepclone(list1.get(list.size() - 1));
+
+			end.start = list1.get(list.size() - 1).start + list1.get(list.size() - 1).getDuration();
+			end.duration = duration - end.start;
+			list1.add(end);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		double[] min = new double[12];
 		double[] max = new double[12];
 		double[] range = new double[12];

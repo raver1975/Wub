@@ -7,12 +7,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 import javax.sound.sampled.AudioFileFormat;
@@ -229,15 +227,18 @@ public class AudioObject implements Serializable {
 	public static TrackAnalysis echoNest(File file) {
 		while (true) {
 			try {
-				EchoNestAPI en=null;
-				if (key!=null) en=new EchoNestAPI(key);
-				else en=new EchoNestAPI();
+				EchoNestAPI en = null;
+				if (key != null)
+					en = new EchoNestAPI(key);
+				else
+					en = new EchoNestAPI();
 				Track track = en.uploadTrack(file);
 				System.out.println(track);
 				track.waitForAnalysis(30000);
 				if (track.getStatus() == Track.AnalysisStatus.COMPLETE) {
 					return track.getAnalysis();
 				}
+
 			} catch (Exception e) {
 				e.printStackTrace();
 				try {
@@ -365,7 +366,7 @@ public class AudioObject implements Serializable {
 	public void createReverseAudioObject() {
 		boolean savePause = pause;
 		pause = true;
-		FakeTrackAnalysis fa = new FakeTrackAnalysis();
+		final FakeTrackAnalysis fa = new FakeTrackAnalysis();
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		LinkedList<Interval> ll = new LinkedList<Interval>();
@@ -397,7 +398,7 @@ public class AudioObject implements Serializable {
 		for (Interval i : ll) {
 
 			for (Segment e : analysis.getSegments()) {
-				if (e.getStart() >= i.te.getStart() - tolerance && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + tolerance) {
+				if (e.getStart() >= i.te.getStart() - 1d && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + 1d) {
 					Segment f = null;
 					try {
 						f = (Segment) Serializer.deepclone(e);
@@ -512,8 +513,26 @@ public class AudioObject implements Serializable {
 			@Override
 			public void run() {
 				TrackAnalysis analysis1 = AudioObject.echoNest(newFile);
-				if (analysis1.getBars().size()==0||analysis1.getBeats().size()==0||analysis1.getTatums().size()==0||analysis1.getSections().size()==0){}
-				else ao.analysis=analysis1;
+				if (analysis1.getSegments().size() > 0) {
+					fa.segments.clear();
+					fa.segments.addAll(analysis1.getSegments());
+				}
+				if (analysis1.getSections().size() > 0) {
+					fa.sections.clear();
+					fa.sections.addAll(analysis1.getSections());
+				}
+				if (analysis1.getBars().size() > 0) {
+					fa.bars.clear();
+					fa.bars.addAll(analysis1.getBars());
+				}
+				if (analysis1.getBeats().size() > 0) {
+					fa.beats.clear();
+					fa.beats.addAll(analysis1.getBeats());
+				}
+				if (analysis1.getTatums().size() > 0) {
+					fa.tatums.clear();
+					fa.tatums.addAll(analysis1.getTatums());
+				}
 				ao.mc.paint1();
 				try {
 					Serializer.store(ao, newFileWub);
@@ -552,7 +571,7 @@ public class AudioObject implements Serializable {
 	public void createAudioObject() {
 		boolean savePause = pause;
 		pause = true;
-		FakeTrackAnalysis fa = new FakeTrackAnalysis();
+		final FakeTrackAnalysis fa = new FakeTrackAnalysis();
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		LinkedList<Interval> ll = new LinkedList<Interval>();
@@ -633,6 +652,15 @@ public class AudioObject implements Serializable {
 					fa.tatums.add(new TimedEvent(hm));
 				}
 			}
+
+			Collections.sort(fa.segments, new Comparator<TimedEvent>() {
+				@Override
+				public int compare(TimedEvent o1, TimedEvent o2) {
+					return Double.compare(o1.getStart(), o2.getStart());
+				}
+
+			});
+
 			Collections.sort(fa.bars, new Comparator<TimedEvent>() {
 				@Override
 				public int compare(TimedEvent o1, TimedEvent o2) {
@@ -690,8 +718,26 @@ public class AudioObject implements Serializable {
 			@Override
 			public void run() {
 				TrackAnalysis analysis1 = AudioObject.echoNest(newFile);
-				if (analysis1.getBars().size()==0||analysis1.getBeats().size()==0||analysis1.getTatums().size()==0||analysis1.getSections().size()==0){}
-				else ao.analysis=analysis1;
+				if (analysis1.getSegments().size() > 0) {
+					fa.segments.clear();
+					fa.segments.addAll(analysis1.getSegments());
+				}
+				if (analysis1.getSections().size() > 0) {
+					fa.sections.clear();
+					fa.sections.addAll(analysis1.getSections());
+				}
+				if (analysis1.getBars().size() > 0) {
+					fa.bars.clear();
+					fa.bars.addAll(analysis1.getBars());
+				}
+				if (analysis1.getBeats().size() > 0) {
+					fa.beats.clear();
+					fa.beats.addAll(analysis1.getBeats());
+				}
+				if (analysis1.getTatums().size() > 0) {
+					fa.tatums.clear();
+					fa.tatums.addAll(analysis1.getTatums());
+				}
 				ao.mc.paint1();
 				try {
 					Serializer.store(ao, newFileWub);
