@@ -264,7 +264,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			Segment end = (Segment) Serializer.deepclone(list1.get(list1.size() - 1));
 
 			end.start = list1.get(list1.size() - 1).start + list1.get(list1.size() - 1).getDuration();
-			//end.duration = duration - end.start - .2d;
+			// end.duration = duration - end.start - .2d;
 			list1.add(end);
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -296,7 +296,8 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			Segment teend = list1.get(i + 1);
 			int x1 = (int) ((testart.getStart() / duration) * (double) x + .5d);
 			int x2 = (int) ((teend.getStart() / duration) * (double) x + .5d);
-			if (x2>=getWidth())x2=getWidth();
+			if (x2 >= getWidth())
+				x2 = getWidth();
 			// double loudstart = testart.getLoudnessStart()*2d;
 			// double loudend = teend.getLoudnessStart()*2d;
 			// g.setColor(Color.red);
@@ -722,6 +723,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 				au.pause = true;
 				au.breakPlay = true;
 				au.queue.clear();
+				CentralCommand.remove(au);
 			}
 		});
 
@@ -736,7 +738,6 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -746,8 +747,6 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			au.pause = !au.pause;
 		else if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
 			AudioObject.factory();
-		else if (e.getKeyCode() == KeyEvent.VK_F12)
-			System.exit(0);
 		else if (e.getKeyCode() == KeyEvent.VK_F1)
 			au.loop = !au.loop;
 		else if (e.getKeyCode() == KeyEvent.VK_F3)
@@ -764,13 +763,21 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 		} else if (e.getKeyCode() == KeyEvent.VK_F2) {
 			Collections.reverse((LinkedList) au.queue);
 		} else {
-			au.sendMidi(e.getKeyChar() + "", 127);
+			// au.sendMidi(e.getKeyChar() + "", 127);
+			if (Character.isAlphabetic((char) e.getKeyCode())) {
+				if (e.isAltDown()) {
+					au.midiMap.put((char) e.getKeyCode() + "", hovering);
+				} else if (e.isControlDown()) {
+					au.midiMap.remove((char) e.getKeyCode() + "");
+				} else
+					CentralCommand.key((char) e.getKeyCode() + "");
+			}
 		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		au.sendMidi(e.getKeyChar() + "", 0);
+		// au.sendMidi(e.getKeyChar() + "", 0);
 	}
 
 	@Override

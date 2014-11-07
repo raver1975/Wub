@@ -115,6 +115,7 @@ public class AudioObject implements Serializable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		return au;
 	}
 
@@ -165,6 +166,7 @@ public class AudioObject implements Serializable {
 		midiMap = new HashMap<String, Interval>();
 		queue = new LinkedList<Interval>();
 		mc = new MusicCanvas(this);
+		CentralCommand.add(this);
 		startPlaying();
 	}
 
@@ -319,38 +321,38 @@ public class AudioObject implements Serializable {
 		queue.add(i);
 	}
 
-	public void sendMidi(String keyName, int vel) {
-		System.out.println(keyName + "\t" + vel);
-		Interval i = midiMap.get(keyName);
-		if (vel > 0) {
-			if (i == null) {
-				if (mc.hovering != null)
-					midiMap.put(keyName, mc.hovering);
-			} else {
-				// if (queue.size()>0){
-				// breakPlay = true;
-				// }
-				// while (breakPlay) {
-				// try {
-				// Thread.sleep(10);
-				// } catch (InterruptedException e) {
-				// // TODO Auto-generated catch block
-				// e.printStackTrace();
-				// }
-				// }
-				// System.out.println("add");
-				queue.add(i);
-			}
-		}
-		// else {
-		// if (i != null) {
-		// if (i.equals(currentlyPlaying)) {
-		// breakPlay = true;
-		// }
-		// }
-		// }
-
-	}
+	// public void sendMidi(String keyName, int vel) {
+	// System.out.println(keyName + "\t" + vel);
+	// Interval i = midiMap.get(keyName);
+	// if (vel > 0) {
+	// if (i == null) {
+	// if (mc.hovering != null)
+	// midiMap.put(keyName, mc.hovering);
+	// } else {
+	// // if (queue.size()>0){
+	// // breakPlay = true;
+	// // }
+	// // while (breakPlay) {
+	// // try {
+	// // Thread.sleep(10);
+	// // } catch (InterruptedException e) {
+	// // // TODO Auto-generated catch block
+	// // e.printStackTrace();
+	// // }
+	// // }
+	// // System.out.println("add");
+	// queue.add(i);
+	// }
+	// }
+	// // else {
+	// // if (i != null) {
+	// // if (i.equals(currentlyPlaying)) {
+	// // breakPlay = true;
+	// // }
+	// // }
+	// // }
+	//
+	// }
 
 	// public void play(double start, double duration) {
 	// int startInBytes = (int) (start * AudioObject.sampleRate *
