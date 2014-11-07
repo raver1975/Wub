@@ -18,10 +18,8 @@ public class CentralCommand {
 	}
 
 	public static void key(String s) {
-		System.out.println(s);
 		for (AudioObject au : aolist) {
 			if (au.midiMap.containsKey(s)) {
-				System.out.println("found");
 				au.queue.add(au.midiMap.get(s));
 			}
 		}
