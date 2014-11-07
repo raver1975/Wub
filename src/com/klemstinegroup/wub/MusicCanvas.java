@@ -88,9 +88,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 
 	}
 
-	void makeImage() {
-		image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
-		bufferedimage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
+	synchronized void makeImage() {
 		if (js != null && js.getHorizontalScrollBar() != null) {
 			js.getHorizontalScrollBar().setUnitIncrement(js.getViewport().getWidth() / 3);
 			js.getHorizontalScrollBar().setBlockIncrement(js.getViewport().getWidth() / 3);
@@ -98,6 +96,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 		paint1();
 	}
 
+	@Override
 	public void update(Graphics g) {
 		paint(g);
 	}
@@ -194,7 +193,10 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 				g1.drawString(e.getKey(), x5 + x6 / 2 - metrics.stringWidth(e.getKey()) / 2, e.getValue().y + 14);
 			}
 		}
-		g1.setColor(Color.red);
+		if (au.pause)
+			g1.setColor(Color.red);
+		else
+			g1.setColor(Color.cyan);
 		g1.drawLine(currPos, 0, currPos, getHeight());
 
 		g.drawImage(bufferedimage, 0, 0, null);
@@ -204,7 +206,8 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 	public void paint1() {
 		if (au.analysis == null)
 			return;
-		Graphics g = image.getGraphics();
+		BufferedImage bi = new BufferedImage(getWidth(), getHeight(), image.getType());
+		Graphics g = bi.getGraphics();
 		int x = this.getWidth();
 		int y = this.getHeight();
 		g.setColor(Color.black);
@@ -331,7 +334,10 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 
 			// g.drawLine(x3, (int)(70-loudmax), x2, (int)(70-loudend));
 		}
-
+		image = bi;
+		bufferedimage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
+		Graphics g1 = bufferedimage.getGraphics();
+		g1.drawImage(image, 0, 0, null);
 	}
 
 	public Dimension getPreferredSize() {
@@ -480,7 +486,8 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 	@Override
 	public void componentResized(ComponentEvent e) {
 		makeImage();
-		jbar.setMinimum(js.getViewport().getWidth() / 50);
+		if (jbar != null && js != null)
+			jbar.setMinimum(js.getViewport().getWidth() / 50);
 
 	}
 
@@ -598,6 +605,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 		int x = e.getX();
 		int y = e.getY();
 		currPos = x;
+		frame.requestFocus();
 		frame.toFront();
 		double loc = ((double) x / (double) this.getWidth()) * duration;
 		if (y >= 0 && y < 20) {
@@ -782,13 +790,13 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		int notches = e.getWheelRotation();
-		// int x = e.getX();
+		int mouseWheelNotchCount = e.getWheelRotation();
 		int x = currPos;
 		double percentage = (double) x / (double) getWidth();
 		int barvalue = js.getHorizontalScrollBar().getValue();
 		js.getHorizontalScrollBar().setValue((int) (percentage * getWidth() - js.getViewport().getWidth() / 2d));
-		jbar.setValue(jbar.getValue() + notches * -jbar.getValue() / 10);
+		jbar.setValue(jbar.getValue() + mouseWheelNotchCount * (-jbar.getValue() / 10));
+		mouseWheelNotchCount = 0;
 		currPos = (int) (percentage * getWidth());
 		js.getHorizontalScrollBar().setValue((int) (currPos - js.getViewport().getWidth() / 2d));
 	}
