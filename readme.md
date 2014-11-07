@@ -1,4 +1,4 @@
 Wub
 ==============
 
-java -jar Wub.jar "echnonest API key"
+java -jar Wub.jar *Echnonest API key*
