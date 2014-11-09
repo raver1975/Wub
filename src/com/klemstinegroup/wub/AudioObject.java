@@ -1,6 +1,8 @@
 package com.klemstinegroup.wub;
 
 import java.awt.BorderLayout;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -62,6 +64,9 @@ public class AudioObject implements Serializable {
 	public static final AudioFormat audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sampleRate, resolution, channels, frameSize, sampleRate, false);
 	static final int bufferSize = 8192;
 	static String key = null;
+
+	transient Rectangle PlayFieldPosition;
+	transient BufferedImage playFieldImage;
 
 	public AudioObject(String file) {
 		this(new File(file));
@@ -150,6 +155,7 @@ public class AudioObject implements Serializable {
 		dialog.setVisible(true);
 		msgLabel.setBackground(panel.getBackground());
 		analysis = echoNest(file);
+		System.out.println(PlayFieldPosition);
 		init();
 		dialog.dispose();
 	}
@@ -163,6 +169,10 @@ public class AudioObject implements Serializable {
 	}
 
 	private void init() {
+		PlayFieldPosition = new Rectangle(0, 0, 100, 40);
+		// playFieldImage = new
+		// SamplingGraph().createWaveForm(analysis.getSegments(),
+		// analysis.getDuration(), data, AudioObject.audioFormat, 100, 40);
 		midiMap = new HashMap<String, Interval>();
 		queue = new LinkedList<Interval>();
 		mc = new MusicCanvas(this);

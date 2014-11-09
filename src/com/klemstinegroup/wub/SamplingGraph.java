@@ -77,10 +77,10 @@ class SamplingGraph {
 			double y_new1 = (double) (h * (128 - max) / 256);
 			lines.add(new Line2D.Double(x, h - y_new1, x, y_new1));
 		}
-		BufferedImage bufferedImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+		BufferedImage bufferedImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = bufferedImage.createGraphics();
 
-		g2.setBackground(Color.black);
+		g2.setBackground(new Color(0,0,0,0));
 		g2.clearRect(0, 0, w, h);
 		g2.setColor(Color.black);
 
