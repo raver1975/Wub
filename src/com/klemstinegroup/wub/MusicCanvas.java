@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.ComponentEvent;
@@ -605,8 +606,16 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 		int x = e.getX();
 		int y = e.getY();
 		currPos = x;
-		frame.requestFocus();
-		frame.toFront();
+		if (!frame.isActive()) {
+			frame.requestFocus();
+			frame.toFront();
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
 		double loc = ((double) x / (double) this.getWidth()) * duration;
 		if (y >= 0 && y < 20) {
 			hovering = null;
@@ -770,6 +779,16 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			au.createReverseAudioObject();
 		} else if (e.getKeyCode() == KeyEvent.VK_F2) {
 			Collections.reverse((LinkedList) au.queue);
+		} else if (e.getKeyCode() == KeyEvent.VK_UP) {
+			jbar.setValue(jbar.getValue() - jbar.getUnitIncrement());
+		} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+			jbar.setValue(jbar.getValue() + jbar.getUnitIncrement());
+		} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+			js.getHorizontalScrollBar().setValue(js.getHorizontalScrollBar().getValue() - js.getHorizontalScrollBar().getUnitIncrement());
+		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+			js.getHorizontalScrollBar().setValue(js.getHorizontalScrollBar().getValue() + js.getHorizontalScrollBar().getUnitIncrement());
+		} else if (e.getKeyCode() == KeyEvent.VK_F8) {
+			au.playFieldPosition.add(CentralCommand.getRectangle(au));
 		} else {
 			// au.sendMidi(e.getKeyChar() + "", 127);
 			if (Character.isAlphabetic((char) e.getKeyCode())) {

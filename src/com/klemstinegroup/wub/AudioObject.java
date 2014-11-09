@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -65,7 +66,7 @@ public class AudioObject implements Serializable {
 	static final int bufferSize = 8192;
 	static String key = null;
 
-	transient Rectangle PlayFieldPosition;
+	transient ArrayList<Rectangle> playFieldPosition;
 	transient BufferedImage playFieldImage;
 
 	public AudioObject(String file) {
@@ -155,7 +156,7 @@ public class AudioObject implements Serializable {
 		dialog.setVisible(true);
 		msgLabel.setBackground(panel.getBackground());
 		analysis = echoNest(file);
-		System.out.println(PlayFieldPosition);
+		System.out.println(playFieldPosition);
 		init();
 		dialog.dispose();
 	}
@@ -169,7 +170,8 @@ public class AudioObject implements Serializable {
 	}
 
 	private void init() {
-		PlayFieldPosition = new Rectangle(0, 0, 100, 40);
+		playFieldPosition = new ArrayList<Rectangle>();
+		playFieldPosition.add(CentralCommand.getRectangle(this));
 		// playFieldImage = new
 		// SamplingGraph().createWaveForm(analysis.getSegments(),
 		// analysis.getDuration(), data, AudioObject.audioFormat, 100, 40);

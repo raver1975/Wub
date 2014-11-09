@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.ComponentEvent;
@@ -25,12 +27,18 @@ import javax.swing.JScrollBar;
 
 public class PlayingField extends Canvas implements MouseListener, MouseMotionListener, KeyListener, ComponentListener, MouseWheelListener {
 
-	private int oldWidth;
+	int oldWidth;
 	private JFrame frame;
 	private JScrollBar jverticalbar;
 	private JScrollBar jhorizontalbar;
 	private Image bufferedImage;
 	private int offset;
+	private Rectangle mover;
+	private int movex;
+	private int movey;
+	private int movex1;
+	private int movey1;
+	private int currPos;
 
 	@Override
 	public void update(Graphics g) {
@@ -39,7 +47,22 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 
 	@Override
 	public void paint(Graphics g) {
+		bufferedImage = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		Graphics g1 = bufferedImage.getGraphics();
+		g1.setColor(Color.black);
+		g1.fillRect(0, 0, getWidth(), getHeight());
+
+		for (AudioObject au : CentralCommand.aolist) {
+			for (Rectangle r : au.playFieldPosition) {
+				g1.drawImage(au.playFieldImage, r.x - offset, r.y, null);
+				g1.setColor(Color.cyan);
+				g1.drawRect(r.x - offset, r.y, r.width, r.height);
+			}
+		}
+		g1.setColor(Color.red);
+		g1.drawLine(currPos, 0, currPos, getHeight());
 		g.drawImage(bufferedImage, 0, 0, null);
+
 	}
 
 	public PlayingField() {
@@ -95,7 +118,6 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 					return;
 				offset = ae.getValue();
 				System.out.println(offset);
-				makeImage();
 			}
 		});
 		// jhorizontalbar.addAdjustmentListener(new AdjustmentListener() {
@@ -148,24 +170,9 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 			}
 		}
 		for (AudioObject au : CentralCommand.aolist) {
-			au.playFieldImage = new SamplingGraph().createWaveForm(au.analysis.getSegments(), au.analysis.getDuration(), au.data, AudioObject.audioFormat, (int) (au.analysis.getDuration() * (double)oldWidth / (max)), 40);
-			au.PlayFieldPosition.width = (int) (au.analysis.getDuration() * (double)oldWidth / max);
-		}
-		makeImage();
-	}
-
-	public void makeImage() {
-		System.out.println(this.getWidth());
-		bufferedImage = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
-		Graphics g1 = bufferedImage.getGraphics();
-		g1.setColor(Color.black);
-		g1.fillRect(0, 0, getWidth(), getHeight());
-
-		for (AudioObject au : CentralCommand.aolist) {
-			if (au.playFieldImage != null) {
-				g1.drawImage(au.playFieldImage, au.PlayFieldPosition.x - offset, au.PlayFieldPosition.y, null);
-				g1.setColor(Color.cyan);
-				g1.drawRect(au.PlayFieldPosition.x - offset, au.PlayFieldPosition.y,au.PlayFieldPosition.width,au.PlayFieldPosition.height);
+			au.playFieldImage = new SamplingGraph().createWaveForm(au.analysis.getSegments(), au.analysis.getDuration(), au.data, AudioObject.audioFormat, (int) (au.analysis.getDuration() * (double) oldWidth / (max)), 40);
+			for (Rectangle r : au.playFieldPosition) {
+				r.width = (int) (au.analysis.getDuration() * (double) oldWidth / max);
 			}
 		}
 	}
@@ -190,13 +197,39 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
+		int x = e.getX();
+		int y = e.getY();
+		Point p = new Point(x, y);
+		if (mover != null) {
+			mover.x = x - movex1 + movex;
+			mover.y = y - movey1 + movey;
+		}
+		// for (AudioObject au : CentralCommand.aolist) {
+		// for (Rectangle r : au.playFieldPosition) {
+		// if (r.contains(p)) {
+		// mover = r;
+		// break;
+		// }
+		// }
+		// }
 
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		// TODO Auto-generated method stub
+
+		if (!frame.isActive()) {
+			frame.requestFocus();
+			frame.toFront();
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
+		currPos = e.getX();
 
 	}
 
@@ -208,7 +241,22 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
+		int x = e.getX();
+		int y = e.getY();
+		Point p = new Point(x, y);
+		mover=null;
+		for (AudioObject au : CentralCommand.aolist) {
+			for (Rectangle r : au.playFieldPosition) {
+				if (r.contains(p)) {
+					mover = r;
+					movex = mover.x;
+					movey = mover.y;
+					movex1 = x;
+					movey1 = y;
+					break;
+				}
+			}
+		}
 
 	}
 
@@ -232,8 +280,6 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 
 	@Override
 	public void componentResized(ComponentEvent e) {
-		makeImage();
-
 	}
 
 	@Override
