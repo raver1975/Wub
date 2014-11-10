@@ -22,6 +22,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
 import javax.swing.JFrame;
 import javax.swing.JScrollBar;
 
@@ -39,6 +43,9 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 	private int movex1;
 	private int movey1;
 	private int currPos;
+	public transient SourceDataLine line;
+	byte[] data;
+	static private int bufferSize=8192;
 
 	@Override
 	public void update(Graphics g) {
@@ -80,7 +87,7 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 		// js.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		// frame.getContentPane().add(js, "Center");
 		jverticalbar = new JScrollBar(JScrollBar.VERTICAL);
-		jverticalbar.setMinimum(oldWidth / 50);
+		jverticalbar.setMinimum(1);
 		jverticalbar.setMaximum(2000);
 		jverticalbar.setValue(oldWidth / 50);
 		jverticalbar.addAdjustmentListener(new AdjustmentListener() {
@@ -159,7 +166,21 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 				}
 			}
 		}).start();
+        startPlaying();
+	}
+	
+	private void startPlaying() {
+		line = getLine();
+		new Thread(new Runnable() {
 
+
+			public void run() {
+				top: while (true) {
+
+						
+				}
+			}
+		}).start();
 	}
 
 	protected void makeImageResize() {
@@ -175,6 +196,18 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 				r.width = (int) (au.analysis.getDuration() * (double) oldWidth / max);
 			}
 		}
+		makeData();
+	}
+	
+	public void makeData(){
+		int min=Integer.MAX_VALUE;
+		int max=Integer.MIN_VALUE;
+		for (AudioObject au : CentralCommand.aolist) {
+			for (Rectangle r:au.playFieldPosition){
+				if (r.x<min)min=r.x;
+				if (r.y>max)max=r.y;
+			}
+		}
 	}
 
 	@Override
@@ -185,7 +218,27 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
+		if (e.getKeyCode() == KeyEvent.VK_UP) {
+			if (mover != null)
+				mover.y--;
+			// jverticalbar.setValue(jverticalbar.getValue() -
+			// jverticalbar.getUnitIncrement());
+		} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+			// jverticalbar.setValue(jverticalbar.getValue() +
+			// jverticalbar.getUnitIncrement());
+			if (mover != null)
+				mover.y++;
+		} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+			// jhorizontalbar.setValue(jhorizontalbar.getValue() -
+			// jhorizontalbar.getUnitIncrement());
+			if (mover != null)
+				mover.x--;
+		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+			// jhorizontalbar.setValue(jhorizontalbar.getValue() +
+			// jhorizontalbar.getUnitIncrement());
+			if (mover != null)
+				mover.x++;
+		}
 
 	}
 
@@ -217,7 +270,9 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-
+		int x = e.getX();
+		int y = e.getY();
+		Point p = new Point(x, y);
 		if (!frame.isActive()) {
 			frame.requestFocus();
 			frame.toFront();
@@ -226,6 +281,18 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 			} catch (InterruptedException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
+			}
+		}
+		for (AudioObject au : CentralCommand.aolist) {
+			for (Rectangle r : au.playFieldPosition) {
+				if (r.contains(p)) {
+					mover = r;
+					movex = mover.x;
+					movey = mover.y;
+					movex1 = x;
+					movey1 = y;
+					break;
+				}
 			}
 		}
 
@@ -244,7 +311,7 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 		int x = e.getX();
 		int y = e.getY();
 		Point p = new Point(x, y);
-		mover=null;
+		mover = null;
 		for (AudioObject au : CentralCommand.aolist) {
 			for (Rectangle r : au.playFieldPosition) {
 				if (r.contains(p)) {
@@ -305,5 +372,16 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 		// TODO Auto-generated method stub
 		jverticalbar.setValue(jverticalbar.getValue() + e.getWheelRotation() * (-jverticalbar.getValue() / 10));
 	}
-
+	public SourceDataLine getLine() {
+		SourceDataLine res = null;
+		DataLine.Info info = new DataLine.Info(SourceDataLine.class, AudioObject.audioFormat);
+		try {
+			res = (SourceDataLine) AudioSystem.getLine(info);
+			res.open(AudioObject.audioFormat);
+			res.start();
+		} catch (LineUnavailableException e) {
+			e.printStackTrace();
+		}
+		return res;
+	}
 }
