@@ -45,7 +45,7 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 	private int currPos;
 	public transient SourceDataLine line;
 	byte[] data;
-	static private int bufferSize=8192;
+	static private int bufferSize = 8192;
 
 	@Override
 	public void update(Graphics g) {
@@ -166,18 +166,16 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 				}
 			}
 		}).start();
-        startPlaying();
+		startPlaying();
 	}
-	
+
 	private void startPlaying() {
 		line = getLine();
 		new Thread(new Runnable() {
 
-
 			public void run() {
 				top: while (true) {
 
-						
 				}
 			}
 		}).start();
@@ -198,16 +196,26 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 		}
 		makeData();
 	}
-	
-	public void makeData(){
-		int min=Integer.MAX_VALUE;
-		int max=Integer.MIN_VALUE;
+
+	public void makeData() {
+		double minx = Integer.MAX_VALUE;
+		double maxx = Integer.MIN_VALUE;
 		for (AudioObject au : CentralCommand.aolist) {
-			for (Rectangle r:au.playFieldPosition){
-				if (r.x<min)min=r.x;
-				if (r.y>max)max=r.y;
+			for (Rectangle r : au.playFieldPosition) {
+				if (r.x < minx)
+					minx = r.x;
+				if (r.y > maxx)
+					maxx = r.y;
+				System.out.println((double) au.data.length / (double) r.width);
 			}
 		}
+		double length = maxx - minx;
+		for (AudioObject au : CentralCommand.aolist) {
+			for (Rectangle r : au.playFieldPosition) {
+
+			}
+		}
+
 	}
 
 	@Override
@@ -372,6 +380,7 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 		// TODO Auto-generated method stub
 		jverticalbar.setValue(jverticalbar.getValue() + e.getWheelRotation() * (-jverticalbar.getValue() / 10));
 	}
+
 	public SourceDataLine getLine() {
 		SourceDataLine res = null;
 		DataLine.Info info = new DataLine.Info(SourceDataLine.class, AudioObject.audioFormat);
