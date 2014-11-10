@@ -246,7 +246,7 @@ public class PlayingField extends Canvas implements MouseListener,
 		System.out.println("length=" + lengthInBytes);
 		for (Node node : CentralCommand.nodes) {
 			System.out.println(node.ao.data.length);
-			int start = (int) ((node.rect.x - minx) / lengthInBytes * data.length);
+			int start = (int) ((node.rect.x - minx) / lengthInPixels * data.length);
 			start += start % AudioObject.frameSize;
 			for (int i = 0; i < node.ao.data.length; i++) {
 				short g = data[i + start];
