@@ -1,12 +1,12 @@
 package com.klemstinegroup.wub;
 
-import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 public class CentralCommand {
 
 	static ArrayList<AudioObject> aolist = new ArrayList<AudioObject>();
-
+	static ArrayList<Node> nodes = new ArrayList<Node>();
 	static PlayingField pf = new PlayingField();
 
 	public static void add(AudioObject ao) {
@@ -14,7 +14,7 @@ public class CentralCommand {
 		aolist.add(ao);
 		// ao.PlayFieldPosition.y = y;
 		// advanceY();
-		pf.makeImageResize();
+		addRectangle(ao);
 
 	}
 
@@ -32,7 +32,7 @@ public class CentralCommand {
 		}
 	}
 
-	public static Rectangle getRectangle(AudioObject audioObject) {
+	public static Rectangle2D.Double getRectangle(AudioObject audioObject) {
 
 		double max = Double.MIN_VALUE;
 		for (AudioObject au : CentralCommand.aolist) {
@@ -40,20 +40,50 @@ public class CentralCommand {
 				max = au.analysis.getDuration();
 			}
 		}
-		Rectangle r = new Rectangle(0, 0, (int) (audioObject.analysis.getDuration() * (double) pf.oldWidth / max), 40);
-		top:while (true) {
-			for (AudioObject au : aolist) {
-				for (Rectangle rect : au.playFieldPosition) {
-					if (r.intersects(rect)) {
-						r.y += 1;
-						continue top;
-					}
-				}
+		Rectangle2D.Double r = new Rectangle2D.Double(
+				0,
+				0,
+				(audioObject.analysis.getDuration() * (double) pf.oldWidth / max),
+				40);
+		top: while (true) {
+			if (intersects(r)) {
+				r.y += 1;
+				continue top;
 			}
 			break;
 		}
 		return r;
 
+	}
+
+	public static Node addRectangle(AudioObject ao) {
+		Node n = new Node(getRectangle(ao), ao);
+		nodes.add(n);
+		pf.makeImageResize();
+		pf.makeData();
+		return n;
+	}
+
+	public static void removeRectangle(Node mover) {
+		nodes.remove(mover);
+		pf.makeData();
+	}
+
+	public static boolean intersects(Rectangle2D.Double r) {
+		
+		for (Node n : nodes) {
+			if (r.intersects(n.rect))
+				return true;
+		}
+		return false;
+	}
+
+	public static boolean intersects(Node mover) {
+		for (Node n : nodes) {
+			if (mover != n && mover.rect.intersects(n.rect))
+				return true;
+		}
+		return false;
 	}
 
 	// public static void advanceY() {
