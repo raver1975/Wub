@@ -84,6 +84,8 @@ public class PlayingField extends Canvas implements MouseListener,
 		g1.setColor(Color.red);
 		g1.drawLine(currPos, 0, currPos, getHeight());
 		g1.setColor(Color.white);
+		playPos = (int) (((double) playByte / (double) lengthInBytes)
+				* lengthInPixels - offset);
 		g1.drawLine(playPos, 0, playPos, getHeight());
 		g.drawImage(bufferedImage, 0, 0, null);
 	}
@@ -138,10 +140,7 @@ public class PlayingField extends Canvas implements MouseListener,
 		jhorizontalbar.setValue(0);
 		jhorizontalbar.addAdjustmentListener(new AdjustmentListener() {
 			public void adjustmentValueChanged(AdjustmentEvent ae) {
-				if (ae.getValueIsAdjusting())
-					return;
 				offset = ae.getValue();
-				System.out.println(offset);
 			}
 		});
 		// jhorizontalbar.addAdjustmentListener(new AdjustmentListener() {
@@ -169,6 +168,7 @@ public class PlayingField extends Canvas implements MouseListener,
 		frame.setVisible(true);
 		frame.validate();
 		frame.repaint();
+		oldWidth = this.getWidth();
 		// makeImageResize();
 		// makeData();
 
@@ -202,10 +202,7 @@ public class PlayingField extends Canvas implements MouseListener,
 						}
 						continue top;
 					}
-					playPos = (int) (((double) playByte / (double) lengthInBytes)
-							* lengthInPixels - offset);
 					playByte += bufferSize;
-
 					if (playByte + bufferSize >= data.length) {
 						line.write(data, playByte, data.length - playByte);
 						pause = true;
@@ -445,7 +442,7 @@ public class PlayingField extends Canvas implements MouseListener,
 			// playPos = (int) (((double) playByte / (double) lengthInBytes) *
 			// getWidth());
 			// lengthinbytes*playpos/width=playbyte
-			playByte = (int) (lengthInBytes * (double) (x + offset) / lengthInPixels);
+			playByte = (int) (lengthInBytes * (double)x/ lengthInPixels);
 			playByte += playByte % AudioObject.frameSize;
 			if (playByte < 0)
 				playByte = 0;
@@ -516,10 +513,14 @@ public class PlayingField extends Canvas implements MouseListener,
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		// TODO Auto-generated method stub
+		
+		
+		jhorizontalbar.setValue(jhorizontalbar.getValue()-oldWidth/2);
 		jverticalbar.setValue(jverticalbar.getValue()
 				+ e.getWheelRotation()
 				* ((-jverticalbar.getValue() / 10) + -jverticalbar.getValue()
 						/ jverticalbar.getValue()));
+		jhorizontalbar.setValue(jhorizontalbar.getValue()+oldWidth/2);
 	}
 
 	public SourceDataLine getLine() {
