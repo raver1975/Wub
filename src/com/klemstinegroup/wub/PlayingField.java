@@ -69,6 +69,21 @@ public class PlayingField extends Canvas implements MouseListener,
 		g1.setColor(Color.black);
 		g1.fillRect(0, 0, getWidth(), getHeight());
 
+//		double minx=Double.MAX_VALUE;
+//		double maxx=Double.MIN_VALUE;
+//		for (Node node : CentralCommand.nodes) {
+//			if (node.rect.x < minx)
+//				minx = node.rect.x;
+//			if (node.rect.width + node.rect.x > maxx)
+//				maxx = node.rect.width + node.rect.x;
+//		}
+//		g1.setColor(Color.yellow);
+//		minx-=offset;
+//		maxx-=offset;
+//		System.out.println(minx+"\t"+maxx);
+//		g1.drawLine((int)minx, 0, (int)minx, getHeight());
+//		g1.drawLine((int)maxx, 0, (int)maxx, getHeight());
+//		
 		for (Node node : CentralCommand.nodes) {
 			g1.drawImage(node.image, (int) (node.rect.x - offset),
 					(int) node.rect.y, null);
@@ -364,7 +379,7 @@ public class PlayingField extends Canvas implements MouseListener,
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		int x = e.getX();
+		int x = (int) (e.getX()+offset);
 		int y = e.getY();
 		Point p = new Point(x, y);
 		if (mover != null) {
