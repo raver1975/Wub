@@ -15,13 +15,14 @@ public class CentralCommand {
 		// ao.PlayFieldPosition.y = y;
 		// advanceY();
 		addRectangle(ao);
+		pf.makeImageResize();
 
 	}
 
 	public static void remove(AudioObject ao) {
 		aolist.remove(ao);
-		if (aolist.size() == 0)
-			System.exit(0);
+//		if (aolist.size() == 0)
+//			System.exit(0);
 	}
 
 	public static void key(String s) {
@@ -36,14 +37,14 @@ public class CentralCommand {
 
 		double max = Double.MIN_VALUE;
 		for (AudioObject au : CentralCommand.aolist) {
-			if (au.analysis.getDuration() > max) {
-				max = au.analysis.getDuration();
+			if (au.data.length > max) {
+				max = au.data.length;
 			}
 		}
 		Rectangle2D.Double r = new Rectangle2D.Double(
 				0,
 				0,
-				(audioObject.analysis.getDuration() * (double) pf.oldWidth / max),
+				(audioObject.data.length * (double) pf.oldWidth / max),
 				40);
 		top: while (true) {
 			if (intersects(r)) {
@@ -59,14 +60,11 @@ public class CentralCommand {
 	public static Node addRectangle(AudioObject ao) {
 		Node n = new Node(getRectangle(ao), ao);
 		nodes.add(n);
-		pf.makeImageResize();
-		pf.makeData();
 		return n;
 	}
 
 	public static void removeRectangle(Node mover) {
 		nodes.remove(mover);
-		pf.makeData();
 	}
 
 	public static boolean intersects(Rectangle2D.Double r) {

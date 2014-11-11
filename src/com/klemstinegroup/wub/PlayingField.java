@@ -52,6 +52,7 @@ public class PlayingField extends Canvas implements MouseListener,
 	private int lengthInBytes;
 	static private int bufferSize = 8192;
 	boolean pause = true;
+	protected int playByte;
 
 	@Override
 	public void update(Graphics g) {
@@ -87,6 +88,7 @@ public class PlayingField extends Canvas implements MouseListener,
 		oldWidth = 800;
 		setSize(new Dimension(oldWidth, 760));
 		frame = new JFrame("Field Of Play");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// js = new JScrollPane(this);
 		frame.getContentPane().add(this, "Center");
 		frame.addKeyListener(this);
@@ -145,16 +147,16 @@ public class PlayingField extends Canvas implements MouseListener,
 		//
 		// }
 		// });
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				// au.pause = true;
-				// au.breakPlay = true;
-				// au.queue.clear();
-				// CentralCommand.remove(au);
-			}
-		});
+		// frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		// frame.addWindowListener(new WindowAdapter() {
+		// @Override
+		// public void windowClosing(WindowEvent e) {
+		// // au.pause = true;
+		// // au.breakPlay = true;
+		// // au.queue.clear();
+		// // CentralCommand.remove(au);
+		// }
+		// });
 
 		frame.getContentPane().add(jverticalbar, "East");
 		frame.getContentPane().add(jhorizontalbar, "South");
@@ -164,7 +166,7 @@ public class PlayingField extends Canvas implements MouseListener,
 		frame.validate();
 		frame.repaint();
 		// makeImageResize();
-		makeData();
+		// makeData();
 
 		new Thread(new Runnable() {
 			public void run() {
@@ -186,7 +188,6 @@ public class PlayingField extends Canvas implements MouseListener,
 		new Thread(new Runnable() {
 
 			public void run() {
-				int j = 0;
 				top: while (true) {
 					if (pause) {
 						try {
@@ -197,30 +198,39 @@ public class PlayingField extends Canvas implements MouseListener,
 						}
 						continue top;
 					}
-					j += bufferSize;
-					playPos=(int) (((double)j/(double)lengthInBytes)*getWidth());
-					line.write(data, j, bufferSize);
+					playPos = (int) (((double) playByte / (double) lengthInBytes)
+							* lengthInPixels - offset);
+					playByte += bufferSize;
+
+					if (playByte + bufferSize >= data.length) {
+						line.write(data, playByte, data.length - playByte);
+						pause = true;
+						continue top;
+					}
+
+					line.write(data, playByte, bufferSize);
 				}
 			}
 		}).start();
 	}
 
 	protected void makeImageResize() {
+		System.out.println("makeimage");
 		double max = Double.MIN_VALUE;
-		for (AudioObject au : CentralCommand.aolist) {
-			if (au.analysis.getDuration() > max) {
-				max = au.analysis.getDuration();
+		for (Node node : CentralCommand.nodes) {
+			if (node.ao.data.length > max) {
+				max = node.ao.data.length;
 			}
 		}
 		for (Node node : CentralCommand.nodes) {
-			node.image = new SamplingGraph()
-					.createWaveForm(node.ao.analysis.getSegments(),
-							node.ao.analysis.getDuration(), node.ao.data,
-							AudioObject.audioFormat,
-							(int) (node.ao.analysis.getDuration()
-									* (double) oldWidth / (max)), 40);
-			node.rect.width = (node.ao.analysis.getDuration()
-					* (double) oldWidth / max);
+			node.image = new SamplingGraph().createWaveForm(
+					node.ao.analysis.getSegments(),
+					node.ao.analysis.getDuration(), node.ao.data,
+					AudioObject.audioFormat, (int) (node.ao.data.length
+							* (double) oldWidth / (max)), 40);
+			double oldbb = node.rect.width;
+			node.rect.width = (node.ao.data.length * (double) oldWidth / max);
+			node.rect.x /= oldbb / node.rect.width;
 		}
 		makeData();
 	}
@@ -237,6 +247,8 @@ public class PlayingField extends Canvas implements MouseListener,
 				maxx = node.rect.width + node.rect.x;
 
 		}
+		// minx--;
+		// maxx--;
 		lengthInPixels = maxx - minx;
 		bytesPerPixel = CentralCommand.nodes.get(0).ao.data.length
 				/ CentralCommand.nodes.get(0).rect.width;
@@ -246,8 +258,12 @@ public class PlayingField extends Canvas implements MouseListener,
 		System.out.println("length=" + lengthInBytes);
 		for (Node node : CentralCommand.nodes) {
 			System.out.println(node.ao.data.length);
-			int start = (int) ((node.rect.x - minx) / lengthInPixels * data.length);
-			start += start % AudioObject.frameSize;
+			System.out.println(node.rect.x);
+			System.out.println((node.rect.x - minx));
+			int start = (int) ((double) (node.rect.x - minx)
+					/ (double) lengthInPixels * (double) lengthInBytes);
+			start -= start % AudioObject.frameSize;
+			System.out.println(node.rect.x + "\t" + "start=" + start);
 			for (int i = 0; i < node.ao.data.length; i++) {
 				short g = data[i + start];
 				g += node.ao.data[i];
@@ -257,7 +273,8 @@ public class PlayingField extends Canvas implements MouseListener,
 					g = -127;
 				data[i + start] = (byte) g;
 			}
-			//System.arraycopy(node.ao.data, 0, data, start, node.ao.data.length);
+			// System.arraycopy(node.ao.data, 0, data, start,
+			// node.ao.data.length);
 
 			// System.out.println("dur=" + duration + "\t"
 			// + node.ao.analysis.getDuration());
@@ -298,10 +315,11 @@ public class PlayingField extends Canvas implements MouseListener,
 			// jhorizontalbar.getUnitIncrement());
 			if (mover != null)
 				mover.rect.x++;
-		} else if (e.getKeyCode() == KeyEvent.VK_INSERT) {
+		} else if (e.getKeyCode() == KeyEvent.VK_INSERT && mover.ao != null) {
 			Node n = CentralCommand.addRectangle(mover.ao);
 			n.rect.y = mover.rect.y;
 			n.rect.x = mover.rect.x + mover.rect.width;
+			makeImageResize();
 			while (CentralCommand.intersects(n)) {
 				n.rect.x++;
 			}
@@ -310,6 +328,7 @@ public class PlayingField extends Canvas implements MouseListener,
 		else if (e.getKeyCode() == KeyEvent.VK_DELETE) {
 			CentralCommand.removeRectangle(mover);
 			mover = null;
+			makeImageResize();
 		} else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 			pause = !pause;
 		}
@@ -383,6 +402,17 @@ public class PlayingField extends Canvas implements MouseListener,
 		int x = e.getX();
 		int y = e.getY();
 		Point p = new Point(x, y);
+		if (e.getButton() == MouseEvent.BUTTON3) {
+			pause = false;
+			// playPos = (int) (((double) playByte / (double) lengthInBytes) *
+			// getWidth());
+			// lengthinbytes*playpos/width=playbyte
+			playByte = (int) (lengthInBytes * (double) (x + offset) / lengthInPixels);
+			playByte += playByte % AudioObject.frameSize;
+			if (playByte < 0)
+				playByte = 0;
+			pause = false;
+		}
 		mover = null;
 		for (Node node : CentralCommand.nodes) {
 			if (node.rect.contains(p)) {
@@ -391,6 +421,9 @@ public class PlayingField extends Canvas implements MouseListener,
 				movey = mover.rect.y;
 				movex1 = x;
 				movey1 = y;
+				if (e.getClickCount() == 2) {
+					mover.ao.mc.frame.setVisible(true);
+				}
 				break;
 			}
 		}

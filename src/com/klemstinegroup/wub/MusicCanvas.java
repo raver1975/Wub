@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.ComponentEvent;
@@ -57,7 +56,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 	SamplingGraph samplingGraph = new SamplingGraph();
 	Queue<Interval> tempQueue = new LinkedList<Interval>();
 	public boolean mouseDown;
-	private JFrame frame;
+	public JFrame frame;
 
 	public MusicCanvas(AudioObject au) {
 		this.au = au;
@@ -733,14 +732,14 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 
 			}
 		});
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				au.pause = true;
 				au.breakPlay = true;
-				au.queue.clear();
-				CentralCommand.remove(au);
+//				au.queue.clear();
+//				CentralCommand.remove(au);
 			}
 		});
 
