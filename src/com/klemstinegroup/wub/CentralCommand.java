@@ -14,15 +14,15 @@ public class CentralCommand {
 		aolist.add(ao);
 		// ao.PlayFieldPosition.y = y;
 		// advanceY();
-		addRectangle(ao);
+		addRectangle(new Node(new Rectangle2D.Double(0,0,1,40),ao));
 		pf.makeImageResize();
 
 	}
 
 	public static void remove(AudioObject ao) {
 		aolist.remove(ao);
-//		if (aolist.size() == 0)
-//			System.exit(0);
+		// if (aolist.size() == 0)
+		// System.exit(0);
 	}
 
 	public static void key(String s) {
@@ -33,34 +33,46 @@ public class CentralCommand {
 		}
 	}
 
-	public static Rectangle2D.Double getRectangle(AudioObject audioObject) {
+	// public static Rectangle2D.Double getRectangle(AudioObject audioObject) {
+	//
+	// double minx = Double.MAX_VALUE;
+	// double maxx = Double.MIN_VALUE;
+	// for (Node node : CentralCommand.nodes) {
+	// if (node.rect.x < minx)
+	// minx = node.rect.x;
+	// if (node.rect.width + node.rect.x > maxx)
+	// maxx = node.rect.width + node.rect.x;
+	//
+	// }
+	// double lengthInPixels = maxx - minx;
+	// double bytesPerPixel = audioObject.data.length
+	// / CentralCommand.nodes.get(0).rect.width;
+	// double lengthInBytes = (int) (lengthInPixels * bytesPerPixel);
+	// lengthInBytes += lengthInBytes % AudioObject.frameSize;
+	// // minx--;
+	// // maxx--;
+	// Rectangle2D.Double r = new Rectangle2D.Double(
+	// 0,
+	// 0,
+	// (audioObject.data.length * (double) pf.oldWidth / lengthInBytes),
+	// 40);
+	// top: while (true) {
+	// if (intersects(r)) {
+	// r.y += 1;
+	// continue top;
+	// }
+	// break;
+	// }
+	// return r;
+	//
+	// }
 
-		double max = Double.MIN_VALUE;
-		for (AudioObject au : CentralCommand.aolist) {
-			if (au.data.length > max) {
-				max = au.data.length;
-			}
-		}
-		Rectangle2D.Double r = new Rectangle2D.Double(
-				0,
-				0,
-				(audioObject.data.length * (double) pf.oldWidth / max),
-				40);
-		top: while (true) {
-			if (intersects(r)) {
-				r.y += 1;
-				continue top;
-			}
-			break;
-		}
-		return r;
-
-	}
-
-	public static Node addRectangle(AudioObject ao) {
-		Node n = new Node(getRectangle(ao), ao);
+	public static void addRectangle(Node n) {
 		nodes.add(n);
-		return n;
+		while (intersects(n)){
+			n.rect.y++;
+		}
+		pf.makeImageResize();
 	}
 
 	public static void removeRectangle(Node mover) {
@@ -68,7 +80,7 @@ public class CentralCommand {
 	}
 
 	public static boolean intersects(Rectangle2D.Double r) {
-		
+
 		for (Node n : nodes) {
 			if (r.intersects(n.rect))
 				return true;

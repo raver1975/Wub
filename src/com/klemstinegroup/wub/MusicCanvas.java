@@ -17,6 +17,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -787,7 +788,8 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			js.getHorizontalScrollBar().setValue(js.getHorizontalScrollBar().getValue() + js.getHorizontalScrollBar().getUnitIncrement());
 		} else if (e.getKeyCode() == KeyEvent.VK_F8) {
-			CentralCommand.addRectangle(au);
+			CentralCommand.addRectangle(new Node(new Rectangle2D.Double(0,0,1,40),this.au));
+			
 		} else {
 			// au.sendMidi(e.getKeyChar() + "", 127);
 			if (Character.isAlphabetic((char) e.getKeyCode())) {
