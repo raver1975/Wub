@@ -8,7 +8,7 @@ URL: https://developer.echonest.com/account/register
 
 Wub it hard!
 
-java -jar Wub.jar *Echnonest API key*
+java -jar Wub.jar *EchnoNestAPIkey*
 
 Sequencer Window
 ----

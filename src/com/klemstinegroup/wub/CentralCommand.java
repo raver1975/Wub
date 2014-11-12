@@ -31,7 +31,7 @@ public class CentralCommand {
 
 	public synchronized static void addRectangleNoMoveY(Node n) {
 		nodes.add(n);
-		pf.makeImageResize();
+		//pf.makeImageResize();
 	}
 
 	public synchronized static void addRectangle(Node n) {

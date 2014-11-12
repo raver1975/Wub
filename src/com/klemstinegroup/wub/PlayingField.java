@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.ComponentEvent;
@@ -151,6 +152,8 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 		frame.getContentPane().add(jverticalbar, "East");
 		frame.getContentPane().add(jhorizontalbar, "South");
 		frame.setBounds(100, 100, oldWidth + 50, 760);
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		frame.setLocation(dim.width / 2 - this.getSize().width / 2 + 50, dim.height / 2 - this.getSize().height / 2 + 50);
 		frame.setVisible(true);
 		frame.validate();
 		frame.repaint();
@@ -402,6 +405,7 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 	}
 
 	public void push(Node n, double d) {
+		if (d==0)d=1;
 		push(n, Math.signum(d) / 100d, new ArrayList<Node>());
 	}
 

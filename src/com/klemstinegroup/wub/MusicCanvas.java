@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Toolkit;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.ComponentEvent;
@@ -687,23 +688,6 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 
 	public void makeCanvas() {
 		frame = new JFrame(au.getFileName());
-		// JMenuBar menuBar;
-		// JMenu fileMenu;
-		// JMenuItem fileMenuItem;
-		// menuBar = new JMenuBar();
-		// fileMenu = new JMenu("File");
-		// menuBar.add(fileMenu);
-		// fileMenuItem = new JMenuItem("Open");
-		// fileMenu.add(fileMenuItem);
-		// fileMenuItem.addActionListener(new ActionListener() {
-		// @Override
-		// public void actionPerformed(ActionEvent e) {
-		// AudioObject.factory();
-		// }
-		//
-		// });
-		// frame.setJMenuBar(menuBar);
-
 		oldWidth = 800;
 		setSize(new Dimension(oldWidth, 760));
 
@@ -739,14 +723,16 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			public void windowClosing(WindowEvent e) {
 				au.pause = true;
 				au.breakPlay = true;
-//				au.queue.clear();
-//				CentralCommand.remove(au);
+				// au.queue.clear();
+				// CentralCommand.remove(au);
 			}
 		});
 
 		frame.getContentPane().add(jbar, "East");
 
 		frame.setBounds(100, 100, oldWidth + 50, 760);
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		frame.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
 		frame.setVisible(true);
 		frame.validate();
 		frame.repaint();
@@ -788,9 +774,9 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			js.getHorizontalScrollBar().setValue(js.getHorizontalScrollBar().getValue() + js.getHorizontalScrollBar().getUnitIncrement());
 		} else if (e.getKeyCode() == KeyEvent.VK_F8) {
-			Node n=new Node(new Rectangle2D.Double(0,0,1,40),this.au);
+			Node n = new Node(new Rectangle2D.Double(0, 0, 1, 40), this.au);
 			CentralCommand.addRectangle(n);
-			
+
 		} else {
 			// au.sendMidi(e.getKeyChar() + "", 127);
 			if (Character.isAlphabetic((char) e.getKeyCode())) {
