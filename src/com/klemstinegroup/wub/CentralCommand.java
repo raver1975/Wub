@@ -9,23 +9,23 @@ public class CentralCommand {
 	static ArrayList<Node> nodes = new ArrayList<Node>();
 	static PlayingField pf = new PlayingField();
 
-	public static void add(AudioObject ao) {
+	public synchronized static void add(AudioObject ao) {
 
 		aolist.add(ao);
 		// ao.PlayFieldPosition.y = y;
 		// advanceY();
-		addRectangle(new Node(new Rectangle2D.Double(0,0,1,40),ao));
-		pf.makeImageResize();
+		addRectangle(new Node(new Rectangle2D.Double(0, 0, 1, 40), ao));
+		// pf.makeImageResize();
 
 	}
 
-	public static void remove(AudioObject ao) {
+	public synchronized static void remove(AudioObject ao) {
 		aolist.remove(ao);
 		// if (aolist.size() == 0)
 		// System.exit(0);
 	}
 
-	public static void key(String s) {
+	public synchronized static void key(String s) {
 		for (AudioObject au : aolist) {
 			if (au.midiMap.containsKey(s)) {
 				au.queue.add(au.midiMap.get(s));
@@ -67,19 +67,19 @@ public class CentralCommand {
 	//
 	// }
 
-	public static void addRectangle(Node n) {
+	public synchronized static void addRectangle(Node n) {
 		nodes.add(n);
-		while (intersects(n)){
+		pf.makeImageResize();
+		while (CentralCommand.intersects(n)) {
 			n.rect.y++;
 		}
-		pf.makeImageResize();
 	}
 
-	public static void removeRectangle(Node mover) {
+	public synchronized static void removeRectangle(Node mover) {
 		nodes.remove(mover);
 	}
 
-	public static boolean intersects(Rectangle2D.Double r) {
+	public synchronized static boolean intersects(Rectangle2D.Double r) {
 
 		for (Node n : nodes) {
 			if (r.intersects(n.rect))
@@ -88,12 +88,20 @@ public class CentralCommand {
 		return false;
 	}
 
-	public static boolean intersects(Node mover) {
+	public synchronized static boolean intersects(Node mover) {
 		for (Node n : nodes) {
 			if (mover != n && mover.rect.intersects(n.rect))
 				return true;
 		}
 		return false;
+	}
+
+	public synchronized static Node whichIntersects(Node mover, ArrayList<Node> copy) {
+		for (Node n : nodes) {
+			if (mover != n && mover.rect.intersects(n.rect) && !copy.contains(n))
+				return n;
+		}
+		return null;
 	}
 
 	// public static void advanceY() {
