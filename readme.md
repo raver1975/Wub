@@ -11,8 +11,9 @@ java -jar Wub.jar *Echnonest API key*
 Sequencer Window
 ----
 
-----------------|-----------------------------------------
+
 Left Mouse 		|Move tracks
+----------------|-----------------------------------------
 Right Mouse		|Play from position
 Scroll Wheel	|Zoom
 
@@ -24,8 +25,9 @@ Enter			|Save to file
 File Window
 ----
 
-----------------|-----------------------------------------
+
 Left Mouse		|Add piece to queue
+----------------|-----------------------------------------
 Right Mouse		|Remove piece from queue
 Scroll Wheel	|Zoom
 
@@ -33,8 +35,9 @@ Alt+Key			|Bind key to selected piece
 Ctrl+Key		|Clear key binding
 Key				|Play piece
 
-----------------|-----------------------------------------
+
 *SPACE			|Pause/Play
+----------------|-----------------------------------------
 *ESC			|Load new audio
 *F1				|Loop toggle, queue does not clear after piece plays
 *F2         	|Reverse order of queue
