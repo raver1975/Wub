@@ -83,14 +83,14 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 			int w = (int) (node.rect.width + .5d);
 			if (w == 0)
 				w = 1;
-			g1.drawRect((int) (node.rect.x - offset + .5d), (int) (node.rect.y + .5d), w, (int) 39);
+			g1.drawRect((int) (node.rect.x - offset + .5d), (int) (node.rect.y + .5d), w, (int) CentralCommand.yOffset-1);
 		}
 		if (mover != null) {
 			g1.setColor(Color.red);
 			int w = (int) (mover.rect.width + .5d);
 			if (w == 0)
 				w = 1;
-			g1.drawRect((int) (mover.rect.x - offset + .5d), (int) (mover.rect.y + .5d), w, 39);
+			g1.drawRect((int) (mover.rect.x - offset + .5d), (int) (mover.rect.y + .5d), w, CentralCommand.yOffset-1);
 		}
 		g1.setColor(Color.red);
 		g1.drawLine(currPos, 0, currPos, getHeight());
