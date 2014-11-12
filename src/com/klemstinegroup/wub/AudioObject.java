@@ -167,9 +167,6 @@ public class AudioObject implements Serializable {
 	}
 
 	private void init() {
-		// playFieldImage = new
-		// SamplingGraph().createWaveForm(analysis.getSegments(),
-		// analysis.getDuration(), data, AudioObject.audioFormat, 100, 40);
 		midiMap = new HashMap<String, Interval>();
 		queue = new LinkedList<Interval>();
 		mc = new MusicCanvas(this);

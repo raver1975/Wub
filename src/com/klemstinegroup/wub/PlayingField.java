@@ -3,6 +3,7 @@ package com.klemstinegroup.wub;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
@@ -25,7 +26,9 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 
 public class PlayingField extends Canvas implements MouseListener, MouseMotionListener, KeyListener, ComponentListener, MouseWheelListener {
@@ -34,7 +37,7 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 	private JFrame frame;
 	private JScrollBar jverticalbar;
 	private JScrollBar jhorizontalbar;
-	private Image bufferedImage;
+	private BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 	private double offset;
 	private Node mover;
 	private double movex;
@@ -68,35 +71,36 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 		g1.setColor(Color.black);
 		g1.fillRect(0, 0, getWidth(), getHeight());
 		for (Node node : CentralCommand.nodes) {
-			g1.drawImage(node.image, (int) (node.rect.x - offset), (int) node.rect.y, null);
+			g1.drawImage(node.image, (int) (node.rect.x - offset + .5d), (int) (node.rect.y + .5d), null);
 			g1.setColor(Color.cyan);
-			int w = (int) (node.rect.width);
+			int w = (int) (node.rect.width + .5d);
 			if (w == 0)
 				w = 1;
-			g1.drawRect((int) (node.rect.x - offset), (int) node.rect.y, w, (int) node.rect.height);
+			g1.drawRect((int) (node.rect.x - offset + .5d), (int) (node.rect.y + .5d), w, (int) 39);
 		}
 		if (mover != null) {
 			g1.setColor(Color.red);
-			int w = (int) (mover.rect.width);
+			int w = (int) (mover.rect.width + .5d);
 			if (w == 0)
 				w = 1;
-			g1.drawRect((int) (mover.rect.x - offset), (int) mover.rect.y, w, (int) mover.rect.height);
+			g1.drawRect((int) (mover.rect.x - offset + .5d), (int) (mover.rect.y + .5d), w, 39);
 		}
 		g1.setColor(Color.red);
 		g1.drawLine(currPos, 0, currPos, getHeight());
 		g1.setColor(Color.white);
-		playPos = (int) (((double) playByte / (double) lengthInBytes) * lengthInPixels - offset);
-		g1.drawLine(playPos, 0, playPos, getHeight());
+		playPos = (int) (((double) (playByte) / (double) lengthInBytes) * lengthInPixels - offset + .5d);
+		g1.drawLine((int) (playPos), 0, (int) (playPos), getHeight());
 		g.drawImage(bufferedImage, 0, 0, null);
 	}
 
 	public PlayingField() {
 		oldWidth = 800;
 		setSize(new Dimension(oldWidth, 760));
-		frame = new JFrame("Field Of Play");
+		frame = new JFrame("Wub");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 		// js = new JScrollPane(this);
-		frame.getContentPane().add(this, "Center");
+
 		frame.addKeyListener(this);
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
@@ -106,14 +110,14 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 		// js.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		// frame.getContentPane().add(js, "Center");
 		jverticalbar = new JScrollBar(JScrollBar.VERTICAL);
-		jverticalbar.setMinimum(1);
-		jverticalbar.setMaximum(2000);
-		jverticalbar.setValue(oldWidth / 50);
+		jverticalbar.setMinimum(oldWidth);
+		jverticalbar.setMaximum(2000 * 1000);
+		jverticalbar.setValue(oldWidth);
 		jverticalbar.addAdjustmentListener(new AdjustmentListener() {
 			public void adjustmentValueChanged(AdjustmentEvent ae) {
 				if (ae.getValueIsAdjusting())
 					return;
-				oldWidth = 50 * ae.getValue();
+				oldWidth = ae.getValue();
 				jverticalbar.revalidate();
 				PlayingField.this.revalidate();
 
@@ -121,43 +125,25 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 				jverticalbar.setBlockIncrement((jverticalbar.getValue() / 5) + 1);
 				jhorizontalbar.setUnitIncrement(getWidth() / 5);
 				jhorizontalbar.setBlockIncrement(getWidth() / 5);
-				jhorizontalbar.setMinimum(-oldWidth);
-				jhorizontalbar.setMaximum(oldWidth);
+				jhorizontalbar.setMinimum(0);
+				jhorizontalbar.setMaximum(oldWidth - getWidth());
 				makeImageResize();
 
 			}
 		});
 
 		jhorizontalbar = new JScrollBar(JScrollBar.HORIZONTAL);
-		jhorizontalbar.setMinimum(-oldWidth);
-		jhorizontalbar.setMaximum(oldWidth);
+		jhorizontalbar.setMinimum(0);
+		jhorizontalbar.setMaximum(0);
 		jhorizontalbar.setValue(0);
 		jhorizontalbar.addAdjustmentListener(new AdjustmentListener() {
 			public void adjustmentValueChanged(AdjustmentEvent ae) {
 				offset = ae.getValue();
 			}
 		});
-		// jhorizontalbar.addAdjustmentListener(new AdjustmentListener() {
-		// public void adjustmentValueChanged(AdjustmentEvent ae) {
-		// if (ae.getValueIsAdjusting())
-		// return;
-		//
-		// }
-		// });
-		// frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		// frame.addWindowListener(new WindowAdapter() {
-		// @Override
-		// public void windowClosing(WindowEvent e) {
-		// // au.pause = true;
-		// // au.breakPlay = true;
-		// // au.queue.clear();
-		// // CentralCommand.remove(au);
-		// }
-		// });
-
+		frame.getContentPane().add(this, "Center");
 		frame.getContentPane().add(jverticalbar, "East");
 		frame.getContentPane().add(jhorizontalbar, "South");
-
 		frame.setBounds(100, 100, oldWidth + 50, 760);
 		frame.setVisible(true);
 		frame.validate();
@@ -201,8 +187,11 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 					playByte += bufferSize;
 					if (playByte + bufferSize >= data.length) {
 
-						if (playByte < data.length)
-							line.write(data, playByte, data.length - playByte - (data.length - playByte) % AudioObject.frameSize);
+						if (playByte < data.length) {
+							int b = data.length - playByte - (data.length - playByte) % AudioObject.frameSize;
+							line.write(data, playByte, b);
+							playByte += bufferSize + b;
+						}
 						pause = true;
 						continue top;
 					}
@@ -233,7 +222,7 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 		lengthInBytes += lengthInBytes % AudioObject.frameSize;
 
 		for (Node node : CentralCommand.nodes) {
-			node.image = new SamplingGraph().createWaveForm(node.ao.analysis.getSegments(), node.ao.analysis.getDuration(), node.ao.data, AudioObject.audioFormat, (int) (node.ao.data.length * (double) oldWidth / lengthInBytes), 40);
+			node.image = new SamplingGraph().createWaveForm(node.ao.analysis.getSegments(), node.ao.analysis.getDuration(), node.ao.data, AudioObject.audioFormat, (int) (node.ao.data.length * (double) oldWidth / lengthInBytes), CentralCommand.yOffset);
 			double oldbb = node.rect.width;
 			node.rect.width = (node.ao.data.length * (double) oldWidth / lengthInBytes);
 			if (node.rect.width < 1)
@@ -250,7 +239,6 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 		}
 		// minx--;
 		// maxx--;
-
 		lengthInPixels = maxx - minx;
 		bytesPerPixel = CentralCommand.nodes.get(0).ao.data.length / CentralCommand.nodes.get(0).rect.width;
 		lengthInBytes = (int) (lengthInPixels * bytesPerPixel);
@@ -258,7 +246,8 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 		data = new byte[lengthInBytes];
 
 		for (Node node : CentralCommand.nodes) {
-			int start = (int) ((double) (node.rect.x - minx) / (double) lengthInPixels * (double) lengthInBytes);
+			node.rect.x -= minx;
+			int start = (int) ((double) (node.rect.x) / (double) lengthInPixels * (double) lengthInBytes);
 			start -= start % AudioObject.frameSize;
 			for (int i = 0; i < node.ao.data.length; i++) {
 				short g = data[i + start];
@@ -270,6 +259,8 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 				data[i + start] = (byte) g;
 			}
 		}
+
+		//north.image = new SamplingGraph().createWaveForm(null, data.length / AudioObject.frameSize / AudioObject.channels / AudioObject.resolution, data, AudioObject.audioFormat, getWidth(), CentralCommand.yOffset);
 	}
 
 	@Override
@@ -302,13 +293,11 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 			// mover.rect.x++;
 		} else if (e.getKeyCode() == KeyEvent.VK_INSERT && mover != null) {
 			Node n = new Node(new Rectangle2D.Double(mover.rect.x, mover.rect.y, mover.rect.width, mover.rect.height), mover.ao);
-			n.rect.y = mover.rect.y;
-			n.rect.x = mover.rect.x + mover.rect.width;
-			while (CentralCommand.intersects(n)) {
-				n.rect.x++;
+			CentralCommand.addRectangleNoMoveY(n);
+			if (CentralCommand.intersects(n)) {
+				push(n, mover.rect.width);
 			}
-			CentralCommand.addRectangle(n);
-
+			makeImageResize();
 		}
 
 		else if (e.getKeyCode() == KeyEvent.VK_DELETE) {
@@ -339,12 +328,12 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 	public void mouseDragged(MouseEvent e) {
 		int x = (int) (e.getX() + offset);
 		int y = e.getY();
-		y -= y % 40;
+		y -= y % CentralCommand.yOffset;
 		Point p = new Point(x, y);
 		if (mover != null) {
 			if (moverpush && CentralCommand.intersects(mover)) {
 				double newx = (x - movex1 + movex);
-				push(mover, newx - lastmoverx, new ArrayList<Node>());
+				push(mover, newx - lastmoverx);
 			} else {
 				mover.rect.x = x - movex1 + movex;
 
@@ -371,13 +360,19 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 
 	}
 
+	public void push(Node n, double d) {
+		push(n, Math.signum(d) / 100d, new ArrayList<Node>());
+	}
+
 	public void push(Node n, double d, ArrayList<Node> pushed) {
-		n.rect.x += d;
-		ArrayList<Node> copy = new ArrayList<Node>(pushed);
-		copy.add(n);
-		Node f = CentralCommand.whichIntersects(n, copy);
-		if (f != null) {
-			push(f, d, copy);
+		while (CentralCommand.intersects(n)) {
+			n.rect.x += d;
+			ArrayList<Node> copy = new ArrayList<Node>(pushed);
+			copy.add(n);
+			Node f = null;
+			while ((f = CentralCommand.whichIntersects(n, copy)) != null) {
+				push(f, d, copy);
+			}
 		}
 	}
 
@@ -385,7 +380,7 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 	public void mouseMoved(MouseEvent e) {
 		int x = (int) (e.getX() + offset);
 		int y = e.getY();
-		y -= y % 40;
+		y -= y % CentralCommand.yOffset;
 		Point p = new Point(x, y);
 		if (!frame.isActive()) {
 			frame.requestFocus();
@@ -422,14 +417,14 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 	public void mousePressed(MouseEvent e) {
 		int x = (int) (e.getX() + offset);
 		int y = e.getY();
-		y -= y % 40;
+		y -= y % CentralCommand.yOffset;
 		Point p = new Point(x, y);
 		if (e.getButton() == MouseEvent.BUTTON3) {
 			pause = false;
 			// playPos = (int) (((double) playByte / (double) lengthInBytes) *
 			// getWidth());
 			// lengthinbytes*playpos/width=playbyte
-			playByte = (int) (lengthInBytes * (double) x / lengthInPixels);
+			playByte = (int) (lengthInBytes * (double) (x) / lengthInPixels);
 			playByte += playByte % AudioObject.frameSize;
 			if (playByte < 0)
 				playByte = 0;
@@ -444,8 +439,6 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 				movey = mover.rect.y;
 				movex1 = x;
 				movey1 = y;
-				lastmoverx = movex;
-				lastmovery = movey;
 
 				if (e.getClickCount() == 2) {
 					mover.ao.mc.frame.setVisible(true);
@@ -453,6 +446,8 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 				break;
 			}
 		}
+		lastmoverx = x;
+		lastmovery = y;
 
 	}
 
@@ -477,6 +472,11 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 	@Override
 	public void componentResized(ComponentEvent e) {
 		bufferedImage = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		oldWidth = getWidth();
+		jverticalbar.setMinimum(oldWidth);
+		if (jverticalbar.getValue() < oldWidth)
+			jverticalbar.setValue(oldWidth);
+		makeImageResize();
 	}
 
 	@Override
