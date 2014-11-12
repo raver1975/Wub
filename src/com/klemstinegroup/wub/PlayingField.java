@@ -3,9 +3,7 @@ package com.klemstinegroup.wub;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
@@ -20,16 +18,24 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
-import javax.swing.BoxLayout;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JScrollBar;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import com.sun.media.sound.WaveFileWriter;
 
 public class PlayingField extends Canvas implements MouseListener, MouseMotionListener, KeyListener, ComponentListener, MouseWheelListener {
 
@@ -96,7 +102,7 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 	public PlayingField() {
 		oldWidth = 800;
 		setSize(new Dimension(oldWidth, 760));
-		frame = new JFrame("Wub");
+		frame = new JFrame("Sequencer");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// js = new JScrollPane(this);
@@ -260,7 +266,10 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 			}
 		}
 
-		//north.image = new SamplingGraph().createWaveForm(null, data.length / AudioObject.frameSize / AudioObject.channels / AudioObject.resolution, data, AudioObject.audioFormat, getWidth(), CentralCommand.yOffset);
+		// north.image = new SamplingGraph().createWaveForm(null, data.length /
+		// AudioObject.frameSize / AudioObject.channels /
+		// AudioObject.resolution, data, AudioObject.audioFormat, getWidth(),
+		// CentralCommand.yOffset);
 	}
 
 	@Override
@@ -313,8 +322,40 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 			playByte = mousePos;
 			pause = !pause;
 
+		} else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+			save();
 		}
 
+	}
+
+	private void save() {
+		final JFileChooser fc = new JFileChooser();
+		fc.setFileFilter(new FileNameExtensionFilter("wav", "wav", "WAV"));
+		int returnVal = fc.showSaveDialog(frame);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			File fileToBeSaved = fc.getSelectedFile();
+
+			if (!fc.getSelectedFile().getAbsolutePath().endsWith(".wav")) {
+				fileToBeSaved = new File(fc.getSelectedFile() + ".wav");
+			}
+			save(fileToBeSaved);
+			// do something with the file
+		}
+	}
+
+	private void save(File file) {
+		ByteArrayInputStream bais = new ByteArrayInputStream(data);
+		long length = (long) (data.length / AudioObject.frameSize);
+		AudioInputStream audioInputStreamTemp = new AudioInputStream(bais, AudioObject.audioFormat, length);
+		WaveFileWriter writer = new WaveFileWriter();
+		FileOutputStream fos;
+		try {
+			fos = new FileOutputStream(file);
+			writer.write(audioInputStreamTemp, AudioFileFormat.Type.WAVE, fos);
+			fos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
