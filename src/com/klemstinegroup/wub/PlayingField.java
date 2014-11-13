@@ -83,14 +83,14 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 			int w = (int) (node.rect.width + .5d);
 			if (w == 0)
 				w = 1;
-			g1.drawRect((int) (node.rect.x - offset + .5d), (int) (node.rect.y + .5d), w, (int) CentralCommand.yOffset-1);
+			g1.drawRect((int) (node.rect.x - offset + .5d), (int) (node.rect.y + .5d), w, (int) CentralCommand.yOffset - 1);
 		}
 		if (mover != null) {
 			g1.setColor(Color.red);
 			int w = (int) (mover.rect.width + .5d);
 			if (w == 0)
 				w = 1;
-			g1.drawRect((int) (mover.rect.x - offset + .5d), (int) (mover.rect.y + .5d), w, CentralCommand.yOffset-1);
+			g1.drawRect((int) (mover.rect.x - offset + .5d), (int) (mover.rect.y + .5d), w, CentralCommand.yOffset - 1);
 		}
 		g1.setColor(Color.red);
 		g1.drawLine(currPos, 0, currPos, getHeight());
@@ -377,6 +377,7 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 		if (mover != null) {
 			if (moverpush && CentralCommand.intersects(mover)) {
 				double newx = (x - movex1 + movex);
+				mover.rect.x = newx;
 				push(mover, newx - lastmoverx);
 			} else {
 				mover.rect.x = x - movex1 + movex;
@@ -385,7 +386,7 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 					mover.rect.x = lastmoverx;
 				}
 				mover.rect.y = y - movey1 + movey;
-				if (moverlock && CentralCommand.intersects(mover)) {
+				if (y < 0 || moverlock && CentralCommand.intersects(mover)) {
 					mover.rect.y = lastmovery;
 				}
 			}
@@ -405,20 +406,29 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 	}
 
 	public void push(Node n, double d) {
-		if (d==0)d=1;
-		push(n, Math.signum(d) / 100d, new ArrayList<Node>());
+		if (d == 0)
+			d = 1;
+		push(n, Math.signum(d), new ArrayList<Node>());
 	}
 
 	public void push(Node n, double d, ArrayList<Node> pushed) {
-		while (CentralCommand.intersects(n)) {
-			n.rect.x += d;
-			ArrayList<Node> copy = new ArrayList<Node>(pushed);
-			copy.add(n);
-			Node f = null;
-			while ((f = CentralCommand.whichIntersects(n, copy)) != null) {
-				push(f, d, copy);
-			}
+		ArrayList<Node> copy = new ArrayList<Node>(pushed);
+		copy.add(n);
+		// System.out.println(CentralCommand.whichIntersects(n, copy));
+		Node f = null;
+		// while (CentralCommand.intersects(n)) {
+
+		// n.rect.x += d;
+
+		if ((f = CentralCommand.whichIntersects(n, copy)) != null) {
+			if (d > 0)
+				f.rect.x = n.rect.x + n.rect.width;
+			if (d < 0)
+				f.rect.x = n.rect.x - f.rect.width;
+			push(f, d, copy);
+
 		}
+		// }
 	}
 
 	@Override

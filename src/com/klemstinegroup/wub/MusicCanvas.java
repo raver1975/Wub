@@ -766,9 +766,9 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 		} else if (e.getKeyCode() == KeyEvent.VK_F2) {
 			Collections.reverse((LinkedList) au.queue);
 		} else if (e.getKeyCode() == KeyEvent.VK_UP) {
-			jbar.setValue(jbar.getValue() - jbar.getUnitIncrement());
-		} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 			jbar.setValue(jbar.getValue() + jbar.getUnitIncrement());
+		} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+			jbar.setValue(jbar.getValue() - jbar.getUnitIncrement());
 		} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 			js.getHorizontalScrollBar().setValue(js.getHorizontalScrollBar().getValue() - js.getHorizontalScrollBar().getUnitIncrement());
 		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {

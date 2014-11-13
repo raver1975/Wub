@@ -18,7 +18,7 @@ Action			|Result
 Left Mouse 		|Arrange tracks
 Shift+Left Mouse|Keep tracks from overlapping
 Ctrl+Left Mouse |Push tracks out of the way
-Left Mouse 		|Move tracks
+Double click	|reopen tracks audio window
 Right Mouse		|Play from position
 Scroll Wheel	|Zoom
 Space			|Pause/Play
