@@ -134,7 +134,10 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 			public void adjustmentValueChanged(AdjustmentEvent ae) {
 				if (ae.getValueIsAdjusting())
 					return;
+				
+				double percent=(double)(jhorizontalbar.getValue()+currPos)/oldWidth; 
 				oldWidth = ae.getValue();
+				
 				jverticalbar.revalidate();
 				PlayingField.this.revalidate();
 
@@ -144,6 +147,7 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 				jhorizontalbar.setBlockIncrement(getWidth() / 5);
 				jhorizontalbar.setMinimum(0);
 				jhorizontalbar.setMaximum(oldWidth - getWidth());
+				jhorizontalbar.setValue((int) (oldWidth*percent)-currPos);
 				makeImageResize();
 
 			}
@@ -565,12 +569,11 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		// TODO Auto-generated method stub
 
-		double oldWidthp = oldWidth;
-		// jhorizontalbar.setValue(jhorizontalbar.getValue()-e.getX()/2);
 		jverticalbar.setValue(jverticalbar.getValue() + e.getWheelRotation() * ((-jverticalbar.getValue() / 10) + -jverticalbar.getValue() / jverticalbar.getValue()));
 		// jhorizontalbar
 		// .setValue((int) (jhorizontalbar.getValue()+
 		// (getWidth()-getWidth()*2*oldWidthp / (double) oldWidth)));
+		
 	}
 
 	public SourceDataLine getLine() {
