@@ -401,10 +401,10 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 			if (moverlock && CentralCommand.intersects(mover)) {
 				mover.rect.x = lastmoverx;
 			}
-
+			lastmoverx = mover.rect.x;
+			lastmovery = mover.rect.y;
 		}
-		lastmoverx = mover.rect.x;
-		lastmovery = mover.rect.y;
+
 		// for (AudioObject au : CentralCommand.aolist) {
 		// for (Rectangle r : au.playFieldPosition) {
 		// if (r.contains(p)) {
@@ -419,25 +419,20 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 	public void push(Node n, double d) {
 		if (d == 0)
 			d = 1;
-		ArrayList<Node> copy = new ArrayList<Node>();
-		copy.add(n);
-		push(n, Math.signum(d), copy);
-		System.out.println(d);
+		push(n, Math.signum(d), new ArrayList<Node>());
 	}
 
 	public void push(Node n, double d, ArrayList<Node> pushed) {
-
 		ArrayList<Node> copy = new ArrayList<Node>(pushed);
-
+		copy.add(n);
 		Node f = null;
 		while ((f = CentralCommand.whichIntersects(n, copy)) != null) {
 			if (d > 0)
 				f.rect.x = n.rect.x + n.rect.width;
 			if (d < 0)
 				f.rect.x = n.rect.x - f.rect.width;
-			copy.add(f);
 			push(f, d, copy);
-
+			// copy.add(f);
 		}
 
 		// }
