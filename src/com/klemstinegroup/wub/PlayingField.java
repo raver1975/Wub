@@ -66,6 +66,7 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 	private double lastmovery;
 	private double lastmoverx;
 	int mousePos = 0;
+	float hue = 0;
 
 	@Override
 	public void update(Graphics g) {
@@ -77,20 +78,29 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 		Graphics g1 = bufferedImage.getGraphics();
 		g1.setColor(Color.black);
 		g1.fillRect(0, 0, getWidth(), getHeight());
+
+		hue += .01f;
+		final float saturation = 1.0f;// 1.0 for brilliant, 0.0 for dull
+		final float luminance = 1f; // 1.0 for brighter, 0.0 for black
+		Color nowColor = Color.getHSBColor(hue, saturation, luminance);
+		g1.setColor(nowColor);
 		for (Node node : CentralCommand.nodes) {
 			g1.drawImage(node.image, (int) (node.rect.x - offset + .5d), (int) (node.rect.y + .5d), null);
-			g1.setColor(Color.cyan);
 			int w = (int) (node.rect.width + .5d);
 			if (w == 0)
 				w = 1;
 			g1.drawRect((int) (node.rect.x - offset + .5d), (int) (node.rect.y + .5d), w, (int) CentralCommand.yOffset - 1);
+			// if (w > 2)
+			// g1.drawRect((int) (node.rect.x - offset + .5d) + 1, (int)
+			// (node.rect.y + .5d) + 1, w - 2, (int) CentralCommand.yOffset -
+			// 3);
 		}
 		if (mover != null) {
-			g1.setColor(Color.red);
+			g1.setColor(new Color(nowColor.getRed(), nowColor.getGreen(), nowColor.getBlue(), 150));
 			int w = (int) (mover.rect.width + .5d);
 			if (w == 0)
 				w = 1;
-			g1.drawRect((int) (mover.rect.x - offset + .5d), (int) (mover.rect.y + .5d), w, CentralCommand.yOffset - 1);
+			g1.fillRect((int) (mover.rect.x - offset + .5d), (int) (mover.rect.y + .5d), w, CentralCommand.yOffset);
 		}
 		g1.setColor(Color.red);
 		g1.drawLine(currPos, 0, currPos, getHeight());
@@ -231,7 +241,7 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 		lengthInBytes += lengthInBytes % AudioObject.frameSize;
 
 		for (Node node : CentralCommand.nodes) {
-			node.image = new SamplingGraph().createWaveForm(node.ao.analysis.getSegments(), node.ao.analysis.getDuration(), node.ao.data, AudioObject.audioFormat, (int) (node.ao.data.length * (double) oldWidth / lengthInBytes), CentralCommand.yOffset);
+			node.image = new SamplingGraph().createWaveForm(node.ao.analysis.getSegments(), node.ao.analysis.getDuration(), node.ao.data, AudioObject.audioFormat, (int) (node.ao.data.length * (double) oldWidth / lengthInBytes), CentralCommand.yOffset - 1);
 			double oldbb = node.rect.width;
 			node.rect.width = (node.ao.data.length * (double) oldWidth / lengthInBytes);
 			if (node.rect.width < 1)
@@ -261,10 +271,10 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 			for (int i = 0; i < node.ao.data.length; i++) {
 				short g = data[i + start];
 				g += node.ao.data[i];
-				if (g > 128)
-					g = 128;
-				else if (g < -127)
-					g = -127;
+				if (g > 127)
+					g = 127;
+				else if (g < -128)
+					g = -128;
 				data[i + start] = (byte) g;
 			}
 		}
@@ -375,25 +385,26 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 		y -= y % CentralCommand.yOffset;
 		Point p = new Point(x, y);
 		if (mover != null) {
+			mover.rect.y = y - movey1 + movey;
 			if (moverpush && CentralCommand.intersects(mover)) {
-				double newx = (x - movex1 + movex);
-				mover.rect.x = newx;
-				push(mover, newx - lastmoverx);
-			} else {
-				mover.rect.x = x - movex1 + movex;
-
-				if (moverlock && CentralCommand.intersects(mover)) {
-					mover.rect.x = lastmoverx;
-				}
-				mover.rect.y = y - movey1 + movey;
-				if (y < 0 || moverlock && CentralCommand.intersects(mover)) {
-					mover.rect.y = lastmovery;
-				}
+				push(mover, 1);
 			}
-			lastmoverx = mover.rect.x;
-			lastmovery = mover.rect.y;
-		}
 
+			if (y < 0 || (moverlock && CentralCommand.intersects(mover))) {
+				mover.rect.y = lastmovery;
+			}
+
+			mover.rect.x = x - movex1 + movex;
+			if (moverpush && CentralCommand.intersects(mover)) {
+				push(mover, mover.rect.x - lastmoverx);
+			}
+			if (moverlock && CentralCommand.intersects(mover)) {
+				mover.rect.x = lastmoverx;
+			}
+
+		}
+		lastmoverx = mover.rect.x;
+		lastmovery = mover.rect.y;
 		// for (AudioObject au : CentralCommand.aolist) {
 		// for (Rectangle r : au.playFieldPosition) {
 		// if (r.contains(p)) {
@@ -408,27 +419,29 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 	public void push(Node n, double d) {
 		if (d == 0)
 			d = 1;
-		push(n, Math.signum(d), new ArrayList<Node>());
+		ArrayList<Node> copy = new ArrayList<Node>();
+		copy.add(n);
+		push(n, Math.signum(d), copy);
+		System.out.println(d);
 	}
 
 	public void push(Node n, double d, ArrayList<Node> pushed) {
+
 		ArrayList<Node> copy = new ArrayList<Node>(pushed);
-		copy.add(n);
-		// System.out.println(CentralCommand.whichIntersects(n, copy));
+
 		Node f = null;
-		// while (CentralCommand.intersects(n)) {
-
-		// n.rect.x += d;
-
-		if ((f = CentralCommand.whichIntersects(n, copy)) != null) {
+		while ((f = CentralCommand.whichIntersects(n, copy)) != null) {
 			if (d > 0)
 				f.rect.x = n.rect.x + n.rect.width;
 			if (d < 0)
 				f.rect.x = n.rect.x - f.rect.width;
+			copy.add(f);
 			push(f, d, copy);
 
 		}
+
 		// }
+
 	}
 
 	@Override
@@ -454,6 +467,8 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 				movey = mover.rect.y;
 				movex1 = x;
 				movey1 = y;
+				lastmoverx = mover.rect.x;
+				lastmovery = mover.rect.y;
 				break;
 			}
 		}
@@ -494,15 +509,14 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 				movey = mover.rect.y;
 				movex1 = x;
 				movey1 = y;
-
+				lastmoverx = mover.rect.x;
+				lastmovery = mover.rect.y;
 				if (e.getClickCount() == 2) {
 					mover.ao.mc.frame.setVisible(true);
 				}
 				break;
 			}
 		}
-		lastmoverx = x;
-		lastmovery = y;
 
 	}
 

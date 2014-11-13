@@ -366,10 +366,12 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 		if (e.getButton() == MouseEvent.BUTTON3) {
 			List<Interval> temp = new LinkedList<Interval>(au.queue);
 			for (Interval i : temp) {
-				int x3 = (int) (((i.te.getStart() / duration) * (double) getWidth()) + .5d);
-				int x4 = (int) ((((i.te.getStart() + i.te.getDuration()) / duration) * (double) getWidth()) + .5d);
-				if (x >= x3 && x <= x4 && y >= i.y && y <= i.y + 20) {
-					au.queue.remove(i);
+				if (i != null) {
+					int x3 = (int) (((i.te.getStart() / duration) * (double) getWidth()) + .5d);
+					int x4 = (int) ((((i.te.getStart() + i.te.getDuration()) / duration) * (double) getWidth()) + .5d);
+					if (x >= x3 && x <= x4 && y >= i.y && y <= i.y + 20) {
+						au.queue.remove(i);
+					}
 				}
 			}
 			if (au.currentlyPlaying != null) {
