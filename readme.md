@@ -2,13 +2,14 @@ Wub
 ==============
 Break a song into beats and bars using Echo Nest, mix and match the pieces, and save the results as wave files.
 
-Get an Echo Nest API key
-https://developer.echonest.com/account/register
+Get an Echo Nest API key:https://developer.echonest.com/account/register
 
 Wub it in!
 ----
 java -jar Wub.jar *EchnoNestAPIkey*
+
 Alternatively, set an environment variable: ECHO_NEST_API_KEY=*EchnoNestAPIkey*
+
 java -jar Wub.jar (or double click the jar file)
 
 Pressing F5 or F6 will autosave resulting file as a .wav file, and a .wub file. The wub file saves the Echno Nest analysis with the audio. The whole state can also be saved from the Play window, as a .play file.
