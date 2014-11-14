@@ -13,18 +13,18 @@ public class CentralCommand {
 	static int yOffset = 40;
 	static File lastDirectory = new File(System.getProperty("user.dir"));
 
-	public synchronized static void add(AudioObject ao) {
+	public static void add(AudioObject ao) {
 
 		aolist.add(ao);
 		addRectangle(new Node(new Rectangle2D.Double(0, 0, 1, yOffset), ao));
 
 	}
 
-	public synchronized static void remove(AudioObject ao) {
+	public static void remove(AudioObject ao) {
 		aolist.remove(ao);
 	}
 
-	public synchronized static void key(String s) {
+	public static void key(String s) {
 		for (AudioObject au : aolist) {
 			if (au.midiMap.containsKey(s)) {
 				au.queue.add(au.midiMap.get(s));
@@ -32,12 +32,12 @@ public class CentralCommand {
 		}
 	}
 
-	public synchronized static void addRectangleNoMoveY(Node n) {
+	public static void addRectangleNoMoveY(Node n) {
 		ccn.nodes.add(n);
 		// pf.makeImageResize();
 	}
 
-	public synchronized static void addRectangle(Node n) {
+	public static void addRectangle(Node n) {
 		ccn.nodes.add(n);
 		pf.makeData();
 		while (CentralCommand.intersects(n)) {
@@ -45,11 +45,11 @@ public class CentralCommand {
 		}
 	}
 
-	public synchronized static void removeRectangle(Node mover) {
+	public static void removeRectangle(Node mover) {
 		ccn.nodes.remove(mover);
 	}
 
-	public synchronized static boolean intersects(Rectangle2D.Double r) {
+	public static boolean intersects(Rectangle2D.Double r) {
 
 		for (Node n : ccn.nodes) {
 			if (r.intersects(n.rect))
@@ -58,7 +58,7 @@ public class CentralCommand {
 		return false;
 	}
 
-	public synchronized static boolean intersects(Node mover) {
+	public static boolean intersects(Node mover) {
 		for (Node n : ccn.nodes) {
 			if (mover != n && mover.rect.intersects(n.rect))
 				return true;
@@ -66,7 +66,7 @@ public class CentralCommand {
 		return false;
 	}
 
-	public synchronized static Node whichIntersects(Node mover, ArrayList<Node> copy) {
+	public static Node whichIntersects(Node mover, ArrayList<Node> copy) {
 		for (Node n : ccn.nodes) {
 			if (mover != n && mover.rect.intersects(n.rect) && !copy.contains(n))
 				return n;

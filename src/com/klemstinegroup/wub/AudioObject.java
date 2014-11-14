@@ -236,7 +236,7 @@ public class AudioObject implements Serializable {
 		}).start();
 	}
 
-	public synchronized TrackAnalysis echoNest(File file) {
+	public TrackAnalysis echoNest(File file) {
 		while (true) {
 			try {
 				EchoNestAPI en = null;
@@ -376,7 +376,7 @@ public class AudioObject implements Serializable {
 	//
 	// }
 
-	public synchronized void createReverseAudioObject() {
+	public void createReverseAudioObject() {
 		boolean savePause = pause;
 		pause = true;
 		final FakeTrackAnalysis fa = new FakeTrackAnalysis();
@@ -581,7 +581,7 @@ public class AudioObject implements Serializable {
 		}
 	}
 
-	public synchronized void createAudioObject() {
+	public void createAudioObject() {
 		boolean savePause = pause;
 		pause = true;
 		final FakeTrackAnalysis fa = new FakeTrackAnalysis();

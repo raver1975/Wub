@@ -18,6 +18,7 @@ Pressing F5 or F6 will autosave resulting file as a .wav file, and a .wub file. 
 
 Play Window
 ----
+!(https://cloud.githubusercontent.com/assets/385280/5042056/4338c13c-6b94-11e4-866d-cba77885aef5.png)
 
 Action			|Result
 ----------------|-----------------------------------------
@@ -38,6 +39,7 @@ Arrows			|Pan and zoom
 
 Audio Window
 ----
+!(https://cloud.githubusercontent.com/assets/385280/5041990/d08c4182-6b92-11e4-975e-d96523ddd970.png)
 
 Action			|Result
 ----------------|-----------------------------------------

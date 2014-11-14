@@ -92,7 +92,7 @@ public class MusicCanvas extends JComponent implements MouseListener,
 
 	}
 
-	synchronized void makeImage() {
+	void makeImage() {
 		if (js != null && js.getHorizontalScrollBar() != null) {
 			js.getHorizontalScrollBar().setUnitIncrement(
 					js.getViewport().getWidth() / 3);

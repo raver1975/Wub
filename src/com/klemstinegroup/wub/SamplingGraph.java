@@ -20,7 +20,7 @@ class SamplingGraph {
 	public SamplingGraph() {
 	}
 
-	public synchronized BufferedImage createWaveForm(List<Segment> segment, double duration, byte[] audioBytes, AudioFormat format, int w, int h) {
+	public BufferedImage createWaveForm(List<Segment> segment, double duration, byte[] audioBytes, AudioFormat format, int w, int h) {
 
 		int[] audioData = null;
 		if (format.getSampleSizeInBits() == 16) {
