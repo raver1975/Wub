@@ -68,12 +68,17 @@ public class AudioObject implements Serializable {
 	}
 
 	public static AudioObject factory() {
-		JFileChooser chooser = new JFileChooser();
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("Audio", "mp3", "wav", "wub");
+		JFileChooser chooser = new JFileChooser(CentralCommand.lastDirectory);
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Audio", "mp3", "wav", "wub", "play");
 		chooser.setFileFilter(filter);
 		int returnVal = chooser.showOpenDialog(new JFrame());
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			// System.out.println("You chose to open this file: " +
+			CentralCommand.lastDirectory = chooser.getSelectedFile();
+			if (chooser.getSelectedFile().getAbsolutePath().endsWith(".play")) {
+				CentralCommand.loadPlay(chooser.getSelectedFile());
+				return null;
+			}
 			return factory(chooser.getSelectedFile());
 		}
 		return null;
@@ -93,6 +98,11 @@ public class AudioObject implements Serializable {
 			extension = fileName.substring(i + 1);
 			filePrefix = fileName.substring(0, i);
 		}
+		if (extension.equals("play")) {
+			CentralCommand.lastDirectory = file;
+			CentralCommand.loadPlay(file);
+			return null;
+		}
 		if (!extension.equals("wub")) {
 			newFile = new File(file.getParent() + File.separator + filePrefix + ".wub");
 			System.out.println(newFile.getAbsolutePath());
@@ -100,7 +110,7 @@ public class AudioObject implements Serializable {
 		if (newFile.exists()) {
 			try {
 				AudioObject au = (AudioObject) Serializer.load(newFile);
-				au.init();
+				au.init(true);
 				return au;
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
@@ -150,7 +160,7 @@ public class AudioObject implements Serializable {
 		dialog.setVisible(true);
 		msgLabel.setBackground(panel.getBackground());
 		analysis = echoNest(file);
-		init();
+		init(true);
 		dialog.dispose();
 	}
 
@@ -159,14 +169,14 @@ public class AudioObject implements Serializable {
 		analysis = fa;
 		data = by;
 		System.out.println(data.length);
-		init();
+		init(true);
 	}
 
-	private void init() {
+	void init(boolean addtoCentral) {
 		midiMap = new HashMap<String, Interval>();
 		queue = new LinkedList<Interval>();
 		mc = new MusicCanvas(this);
-		CentralCommand.add(this);
+		if (addtoCentral)CentralCommand.add(this);
 		startPlaying();
 	}
 

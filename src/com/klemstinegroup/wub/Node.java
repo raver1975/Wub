@@ -2,10 +2,11 @@ package com.klemstinegroup.wub;
 
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
-public class Node {
+public class Node implements Serializable{
 	Rectangle2D.Double rect;
-	BufferedImage image;
+	transient BufferedImage image;
 	AudioObject ao;
 	long random;
 

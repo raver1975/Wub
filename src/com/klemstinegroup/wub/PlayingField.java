@@ -84,7 +84,7 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 		final float luminance = 1f; // 1.0 for brighter, 0.0 for black
 		Color nowColor = Color.getHSBColor(hue, saturation, luminance);
 		g1.setColor(nowColor);
-		for (Node node : CentralCommand.nodes) {
+		for (Node node : CentralCommand.ccn.nodes) {
 			g1.drawImage(node.image, (int) (node.rect.x - offset + .5d), (int) (node.rect.y + .5d), null);
 			int w = (int) (node.rect.width + .5d);
 			if (w == 0)
@@ -113,7 +113,7 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 	public PlayingField() {
 		oldWidth = 800;
 		setSize(new Dimension(oldWidth, 760));
-		frame = new JFrame("Sequencer");
+		frame = new JFrame("Play");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// js = new JScrollPane(this);
@@ -134,10 +134,10 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 			public void adjustmentValueChanged(AdjustmentEvent ae) {
 				if (ae.getValueIsAdjusting())
 					return;
-				
-				double percent=(double)(jhorizontalbar.getValue()+currPos)/oldWidth; 
+
+				double percent = (double) (jhorizontalbar.getValue() + currPos) / oldWidth;
 				oldWidth = ae.getValue();
-				
+
 				jverticalbar.revalidate();
 				PlayingField.this.revalidate();
 
@@ -147,8 +147,8 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 				jhorizontalbar.setBlockIncrement(getWidth() / 5);
 				jhorizontalbar.setMinimum(0);
 				jhorizontalbar.setMaximum(oldWidth - getWidth());
-				jhorizontalbar.setValue((int) (oldWidth*percent)-currPos);
-				makeImageResize();
+				jhorizontalbar.setValue((int) (oldWidth * percent) - currPos);
+				makeData();
 
 			}
 		});
@@ -225,12 +225,12 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 		}).start();
 	}
 
-	protected void makeImageResize() {
-		if (CentralCommand.nodes.size() == 0)
+	protected void makeData() {
+		if (CentralCommand.ccn.nodes.size() == 0)
 			return;
 		double minx = Double.MAX_VALUE;
 		double maxx = Double.MIN_VALUE;
-		for (Node node : CentralCommand.nodes) {
+		for (Node node : CentralCommand.ccn.nodes) {
 			if (node.rect.x < minx)
 				minx = node.rect.x;
 			if (node.rect.width + node.rect.x > maxx)
@@ -240,11 +240,11 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 		// minx--;
 		// maxx--;
 		lengthInPixels = maxx - minx;
-		bytesPerPixel = CentralCommand.nodes.get(0).ao.data.length / CentralCommand.nodes.get(0).rect.width;
+		bytesPerPixel = CentralCommand.ccn.nodes.get(0).ao.data.length / CentralCommand.ccn.nodes.get(0).rect.width;
 		lengthInBytes = (int) (lengthInPixels * bytesPerPixel);
 		lengthInBytes += lengthInBytes % AudioObject.frameSize;
 
-		for (Node node : CentralCommand.nodes) {
+		for (Node node : CentralCommand.ccn.nodes) {
 			node.image = new SamplingGraph().createWaveForm(node.ao.analysis.getSegments(), node.ao.analysis.getDuration(), node.ao.data, AudioObject.audioFormat, (int) (node.ao.data.length * (double) oldWidth / lengthInBytes), CentralCommand.yOffset - 1);
 			double oldbb = node.rect.width;
 			node.rect.width = (node.ao.data.length * (double) oldWidth / lengthInBytes);
@@ -254,7 +254,7 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 		}
 		minx = Double.MAX_VALUE;
 		maxx = Double.MIN_VALUE;
-		for (Node node : CentralCommand.nodes) {
+		for (Node node : CentralCommand.ccn.nodes) {
 			if (node.rect.x < minx)
 				minx = node.rect.x;
 			if (node.rect.width + node.rect.x > maxx)
@@ -263,12 +263,12 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 		// minx--;
 		// maxx--;
 		lengthInPixels = maxx - minx;
-		bytesPerPixel = CentralCommand.nodes.get(0).ao.data.length / CentralCommand.nodes.get(0).rect.width;
+		bytesPerPixel = CentralCommand.ccn.nodes.get(0).ao.data.length / CentralCommand.ccn.nodes.get(0).rect.width;
 		lengthInBytes = (int) (lengthInPixels * bytesPerPixel);
 		lengthInBytes += lengthInBytes % AudioObject.frameSize;
 		data = new byte[lengthInBytes];
 
-		for (Node node : CentralCommand.nodes) {
+		for (Node node : CentralCommand.ccn.nodes) {
 			node.rect.x -= minx;
 			int start = (int) ((double) (node.rect.x) / (double) lengthInPixels * (double) lengthInBytes);
 			start -= start % AudioObject.frameSize;
@@ -323,13 +323,13 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 			if (CentralCommand.intersects(n)) {
 				push(n, mover.rect.width);
 			}
-			makeImageResize();
+			makeData();
 		}
 
 		else if (e.getKeyCode() == KeyEvent.VK_DELETE) {
 			CentralCommand.removeRectangle(mover);
 			mover = null;
-			makeImageResize();
+			makeData();
 		} else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 			// playByte = (int) (lengthInBytes * (double)
 			// MouseInfo.getPointerInfo().getLocation().x / lengthInPixels);
@@ -340,19 +340,45 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 			pause = !pause;
 
 		} else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-			save();
+			if (e.isShiftDown()) {
+				savePlay();
+			} else
+				saveWave();
+		} else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+			AudioObject.factory();
 		}
 
 	}
 
-	private void save() {
-		final JFileChooser fc = new JFileChooser();
-		fc.setFileFilter(new FileNameExtensionFilter("wav", "wav", "WAV"));
+	private void savePlay() {
+		final JFileChooser fc = new JFileChooser(CentralCommand.lastDirectory);
+		fc.setFileFilter(new FileNameExtensionFilter("Play File", "play", "Play"));
 		int returnVal = fc.showSaveDialog(frame);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File fileToBeSaved = fc.getSelectedFile();
+			CentralCommand.lastDirectory = fc.getSelectedFile();
+			if (!fc.getSelectedFile().getAbsolutePath().endsWith(".play")) {
+				fileToBeSaved = new File(fc.getSelectedFile() + ".play");
+			}
+			try {
+				Serializer.store(CentralCommand.ccn, fileToBeSaved);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// do something with the file
+		}
+	}
 
+	private void saveWave() {
+		final JFileChooser fc = new JFileChooser(CentralCommand.lastDirectory);
+		fc.setFileFilter(new FileNameExtensionFilter("Wav File", "wav", "WAV"));
+		int returnVal = fc.showSaveDialog(frame);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			File fileToBeSaved = fc.getSelectedFile();
+			CentralCommand.lastDirectory = fc.getSelectedFile();
 			if (!fc.getSelectedFile().getAbsolutePath().endsWith(".wav")) {
+				
 				fileToBeSaved = new File(fc.getSelectedFile() + ".wav");
 			}
 			save(fileToBeSaved);
@@ -459,7 +485,7 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 				e1.printStackTrace();
 			}
 		}
-		for (Node node : CentralCommand.nodes) {
+		for (Node node : CentralCommand.ccn.nodes) {
 			if (node.rect.contains(p)) {
 				mover = node;
 				movex = mover.rect.x;
@@ -501,7 +527,7 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 			mousePos = playByte;
 		}
 		mover = null;
-		for (Node node : CentralCommand.nodes) {
+		for (Node node : CentralCommand.ccn.nodes) {
 			if (node.rect.contains(p)) {
 				mover = node;
 				movex = mover.rect.x;
@@ -521,7 +547,7 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		makeImageResize();
+		makeData();
 
 	}
 
@@ -544,7 +570,7 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 		jverticalbar.setMinimum(oldWidth);
 		if (jverticalbar.getValue() < oldWidth)
 			jverticalbar.setValue(oldWidth);
-		makeImageResize();
+		makeData();
 	}
 
 	@Override
@@ -573,7 +599,7 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 		// jhorizontalbar
 		// .setValue((int) (jhorizontalbar.getValue()+
 		// (getWidth()-getWidth()*2*oldWidthp / (double) oldWidth)));
-		
+
 	}
 
 	public SourceDataLine getLine() {
