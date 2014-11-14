@@ -182,7 +182,7 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 				while (true) {
 					repaint();
 					try {
-						Thread.sleep(20);
+						Thread.sleep(100);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -281,8 +281,8 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 					g = -128;
 				data[i + start] = (byte) g;
 			}
+			
 		}
-
 		// north.image = new SamplingGraph().createWaveForm(null, data.length /
 		// AudioObject.frameSize / AudioObject.channels /
 		// AudioObject.resolution, data, AudioObject.audioFormat, getWidth(),

@@ -21,7 +21,8 @@ class SamplingGraph {
 	}
 
 	public BufferedImage createWaveForm(List<Segment> segment, double duration, byte[] audioBytes, AudioFormat format, int w, int h) {
-
+		if (w < 2)
+			return new BufferedImage(1, h, BufferedImage.TYPE_INT_ARGB);
 		int[] audioData = null;
 		if (format.getSampleSizeInBits() == 16) {
 			int nlengthInSamples = audioBytes.length / 2;
@@ -77,10 +78,10 @@ class SamplingGraph {
 			double y_new1 = (double) (h * (128 - max) / 256);
 			lines.add(new Line2D.Double(x, h - y_new1, x, y_new1));
 		}
-		BufferedImage bufferedImage = new BufferedImage(w+1, h+1, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage bufferedImage = new BufferedImage(w + 1, h + 1, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = bufferedImage.createGraphics();
 
-		g2.setBackground(new Color(0,0,0,0));
+		g2.setBackground(new Color(0, 0, 0, 0));
 		g2.clearRect(0, 0, w, h);
 		g2.setColor(Color.black);
 

@@ -176,7 +176,8 @@ public class AudioObject implements Serializable {
 		midiMap = new HashMap<String, Interval>();
 		queue = new LinkedList<Interval>();
 		mc = new MusicCanvas(this);
-		if (addtoCentral)CentralCommand.add(this);
+		if (addtoCentral)
+			CentralCommand.add(this);
 		startPlaying();
 	}
 
@@ -199,6 +200,12 @@ public class AudioObject implements Serializable {
 									// if (loop)
 									// queue.add(i);
 									// queue.clear();
+									try {
+										Thread.sleep(10);
+									} catch (InterruptedException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
 									continue top;
 								}
 								try {
@@ -220,24 +227,23 @@ public class AudioObject implements Serializable {
 						if (loop)
 							queue.add(i);
 					} else
-						try {
-							currentlyPlaying = null;
-							if (!mc.mouseDown)
-								mc.tempTimedEvent = null;
-							// line.drain();
-							Thread.sleep(100);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					// if (!off)line.write(data, 0, read);
+
+						currentlyPlaying = null;
+					if (!mc.mouseDown)
+						mc.tempTimedEvent = null;
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}).start();
 	}
 
 	public TrackAnalysis echoNest(File file) {
-		while (true) {
+		int cnt = 0;
+		while (cnt < 5) {
 			try {
 				EchoNestAPI en = null;
 				if (key != null)
@@ -253,13 +259,15 @@ public class AudioObject implements Serializable {
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				try {
-					Thread.sleep(30000);
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-				}
+			}
+			try {
+				Thread.sleep(30000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
+		return analysis;
 	}
 
 	public void convert(File soundFile) {
