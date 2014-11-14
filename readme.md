@@ -41,6 +41,13 @@ Audio Window
 ----
 ![](https://cloud.githubusercontent.com/assets/385280/5041990/d08c4182-6b92-11e4-975e-d96523ddd970.png)
 
+blue bars   - sections
+green bars  - bars
+yellow bars - beats
+red bars    - tatums
+Then waveform, pitch analyis, and timbre analysis
+
+
 Action			|Result
 ----------------|-----------------------------------------
 Left Mouse		|Add piece to queue
