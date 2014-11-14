@@ -272,14 +272,28 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 			node.rect.x -= minx;
 			int start = (int) ((double) (node.rect.x) / (double) lengthInPixels * (double) lengthInBytes);
 			start -= start % AudioObject.frameSize;
-			for (int i = 0; i < node.ao.data.length; i++) {
-				short g = data[i + start];
+			short g,h;
+			for (int i = 0; i < node.ao.data.length; i+=2) {
+				g = data[i + start];
+				h = data[i + start+1];
 				g += node.ao.data[i];
-				if (g > 127)
+				if (g > 127){
 					g = 127;
-				else if (g < -128)
+					h+=1;
+				}
+				else if (g < -128){
 					g = -128;
+					h-=1;
+				}
+				h += node.ao.data[i+1];
+				if (h > 127){
+					h = 127;
+				}
+				else if (h < -128){
+					h = -128;
+				}
 				data[i + start] = (byte) g;
+				data[i + start+1] = (byte) h;
 			}
 			
 		}
