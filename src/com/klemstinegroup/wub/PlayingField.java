@@ -461,21 +461,20 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 	public void push(Node n, double d) {
 		if (d == 0)
 			d = 1;
-		push(n, Math.signum(d), new ArrayList<Node>());
+		push(n, Math.signum(d), new ArrayList<Node>(),0);
 	}
 
-	public void push(Node n, double d, ArrayList<Node> pushed) {
+	public void push(Node n, double d, ArrayList<Node> pushed,int cnt) {
+		if (cnt>1000)return;
 		ArrayList<Node> copy = new ArrayList<Node>(pushed);
-		 copy.add(n);
+		copy.add(n);
 		Node f = null;
-		if ((f = CentralCommand.whichIntersects(n, copy)) != null) {
-			
+		while ((f = CentralCommand.whichIntersects(n, copy)) != null) {
 			if (d > 0)
 				f.rect.x = n.rect.x + n.rect.width;
 			if (d < 0)
 				f.rect.x = n.rect.x - f.rect.width;
-			push(f, d, copy);
-
+			push(f, d, copy,cnt++);
 		}
 
 		// }
