@@ -41,6 +41,7 @@ Audio Window
 ----
 ![](https://cloud.githubusercontent.com/assets/385280/5041990/d08c4182-6b92-11e4-975e-d96523ddd970.png)
 
+From top to bottom:<br>
 blue bars   - sections<br>
 green bars  - bars<br>
 yellow bars - beats<br>
@@ -56,14 +57,14 @@ Scroll Wheel	|Zoom
 Alt+Key			|Bind key to selected piece
 Ctrl+Key		|Clear key binding
 Key				|Play piece
-Space			|Pause/Play
+Space			|Pause/Play queue
 Escape 			|Load new audio
 F1				|Toggle loop mode, queue does not clear after piece plays
 F2         		|Reverse order of play queue
 F3				|Skip currently playing piece in queue
 F4				|Clear queue
-F5              |Clear key bindings
-F6              |Create new audio track from queued pieces
-F7				|Create new track, and reverse the audio
-F8				|Add copy of track to sequencer
+F5              |Clear all key bindings
+F6              |Create/save new audio track from queued pieces
+F7				|Create/save new track, and reverse the audio
+F8				|Add copy of full track to sequencer
 Arrows			|Pan and zoom
