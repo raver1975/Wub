@@ -272,30 +272,28 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 			node.rect.x -= minx;
 			int start = (int) ((double) (node.rect.x) / (double) lengthInPixels * (double) lengthInBytes);
 			start -= start % AudioObject.frameSize;
-			short g,h;
-			for (int i = 0; i < node.ao.data.length; i+=2) {
+			short g, h;
+			for (int i = 0; i < node.ao.data.length; i += 2) {
 				g = data[i + start];
-				h = data[i + start+1];
+				h = data[i + start + 1];
 				g += node.ao.data[i];
-				if (g > 127){
+				if (g > 127) {
 					g = 127;
-					h+=1;
-				}
-				else if (g < -128){
+					h += 1;
+				} else if (g < -128) {
 					g = -128;
-					h-=1;
+					h -= 1;
 				}
-				h += node.ao.data[i+1];
-				if (h > 127){
+				h += node.ao.data[i + 1];
+				if (h > 127) {
 					h = 127;
-				}
-				else if (h < -128){
+				} else if (h < -128) {
 					h = -128;
 				}
 				data[i + start] = (byte) g;
-				data[i + start+1] = (byte) h;
+				data[i + start + 1] = (byte) h;
 			}
-			
+
 		}
 		// north.image = new SamplingGraph().createWaveForm(null, data.length /
 		// AudioObject.frameSize / AudioObject.channels /
@@ -392,7 +390,7 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 			File fileToBeSaved = fc.getSelectedFile();
 			CentralCommand.lastDirectory = fc.getSelectedFile();
 			if (!fc.getSelectedFile().getAbsolutePath().endsWith(".wav")) {
-				
+
 				fileToBeSaved = new File(fc.getSelectedFile() + ".wav");
 			}
 			save(fileToBeSaved);
@@ -468,15 +466,16 @@ public class PlayingField extends Canvas implements MouseListener, MouseMotionLi
 
 	public void push(Node n, double d, ArrayList<Node> pushed) {
 		ArrayList<Node> copy = new ArrayList<Node>(pushed);
-		copy.add(n);
+		 copy.add(n);
 		Node f = null;
-		while ((f = CentralCommand.whichIntersects(n, copy)) != null) {
+		if ((f = CentralCommand.whichIntersects(n, copy)) != null) {
+			
 			if (d > 0)
 				f.rect.x = n.rect.x + n.rect.width;
 			if (d < 0)
 				f.rect.x = n.rect.x - f.rect.width;
 			push(f, d, copy);
-			// copy.add(f);
+
 		}
 
 		// }
