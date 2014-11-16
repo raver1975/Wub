@@ -8,6 +8,9 @@ Wub it in!
 ----
 Get an Echo Nest API key:https://developer.echonest.com/account/register
 
+Download Jar:<br>
+https://github.com/raver1975/Wub/blob/master/Wub.jar?raw=true
+
 Start Wub from a command line:<br>
 java -jar Wub.jar *EchnoNestAPIkey*
 
