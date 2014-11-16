@@ -193,7 +193,7 @@ public class AudioObject implements Serializable {
 
 						currentlyPlaying = i;
 						int j = 0;
-						for (j = i.startBytes; j <= i.endBytes - bufferSize && j < data.length - bufferSize; j += bufferSize) {
+						for (j = Math.max(0,i.startBytes); j <= i.endBytes - bufferSize && j < data.length - bufferSize; j += bufferSize) {
 							while (pause || breakPlay) {
 								if (breakPlay) {
 									breakPlay = false;
