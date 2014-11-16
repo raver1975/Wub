@@ -3,7 +3,7 @@ Wub
 Break a song into beats and bars using Echo Nest, mix and match the pieces, and save the results as wave files.
 
 [![Wub Video](http://img.youtube.com/vi/ZnIUgSVO0Cs/0.jpg)](http://www.youtube.com/watch?v=ZnIUgSVO0Cs)<br>
-*Video*
+[*Video*](http://www.youtube.com/watch?v=ZnIUgSVO0Cs)
 
 
 Wub it in!
