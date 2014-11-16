@@ -46,7 +46,7 @@ blue bars   - sections<br>
 green bars  - bars<br>
 yellow bars - beats<br>
 red bars    - tatums<br>
-Then waveform, pitch analyis, and timbre analysis<br>
+Then waveform, pitch analysis, and timbre analysis<br>
 
 
 Action			|Result
