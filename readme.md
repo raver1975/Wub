@@ -59,13 +59,13 @@ Action			|Result
 Left Mouse 		|Arrange tracks
 Shift+Left Mouse|Keep tracks from overlapping
 Ctrl+Left Mouse |Push tracks out of the way
-Double click	|reopen tracks audio window
-Right Mouse		|Play from position
+Double click	|Reopen tracks audio window
+Right Mouse		|Play from current mous position
 Scroll Wheel	|Zoom
 Space			|Pause/Play
 Insert			|Insert copy of selected track
 Delete			|Delete selected track
 Enter			|Save to file
-Shift-Enter		|Save state
-Escape			|Load state
+Shift-Enter		|Save Play window
+Escape			|Load Play window
 Arrows			|Pan and zoom
