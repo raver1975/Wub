@@ -17,27 +17,6 @@ java -jar Wub.jar (or double click the jar file)
 
 Pressing F6 or F7(reverse audio) will autosave resulting file as a .wav file, and a .wub file. The wub file saves the Echno Nest analysis with the audio. The Play window state can also be saved from the Play window, as a .play file.
 
-Play Window
-----
-![](https://cloud.githubusercontent.com/assets/385280/5042056/4338c13c-6b94-11e4-866d-cba77885aef5.png)
-
-Action			|Result
-----------------|-----------------------------------------
-Left Mouse 		|Arrange tracks
-Shift+Left Mouse|Keep tracks from overlapping
-Ctrl+Left Mouse |Push tracks out of the way
-Double click	|reopen tracks audio window
-Right Mouse		|Play from position
-Scroll Wheel	|Zoom
-Space			|Pause/Play
-Insert			|Insert copy of selected track
-Delete			|Delete selected track
-Enter			|Save to file
-Shift-Enter		|Save state
-Escape			|Load state
-Arrows			|Pan and zoom
-
-
 Audio Window
 ----
 ![](https://cloud.githubusercontent.com/assets/385280/5041990/d08c4182-6b92-11e4-975e-d96523ddd970.png)
@@ -68,4 +47,24 @@ F5              |Clear all key bindings
 F6              |Create/save new audio track from queued pieces
 F7				|Create/save new track, and reverse the audio
 F8				|Add copy of full track to sequencer
+Arrows			|Pan and zoom
+
+Play Window
+----
+![](https://cloud.githubusercontent.com/assets/385280/5042056/4338c13c-6b94-11e4-866d-cba77885aef5.png)
+
+Action			|Result
+----------------|-----------------------------------------
+Left Mouse 		|Arrange tracks
+Shift+Left Mouse|Keep tracks from overlapping
+Ctrl+Left Mouse |Push tracks out of the way
+Double click	|reopen tracks audio window
+Right Mouse		|Play from position
+Scroll Wheel	|Zoom
+Space			|Pause/Play
+Insert			|Insert copy of selected track
+Delete			|Delete selected track
+Enter			|Save to file
+Shift-Enter		|Save state
+Escape			|Load state
 Arrows			|Pan and zoom
