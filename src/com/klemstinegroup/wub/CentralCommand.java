@@ -39,10 +39,10 @@ public class CentralCommand {
 
 	public static void addRectangle(Node n) {
 		ccn.nodes.add(n);
-		pf.makeData();
 		while (CentralCommand.intersects(n)) {
 			n.rect.y += yOffset;
 		}
+		pf.makeData();
 	}
 
 	public static void removeRectangle(Node mover) {
