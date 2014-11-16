@@ -6,15 +6,15 @@ Break a song into beats and bars using Echo Nest, mix and match the pieces, and 
 
 Wub it in!
 ----
-Get an Echo Nest API key:https://developer.echonest.com/account/register
+1. [Get an Echo Nest API key](https://developer.echonest.com/account/register)
 
-Download Jar:<br>
+2. (Download jar)[]
 https://github.com/raver1975/Wub/blob/master/Wub.jar?raw=true
 
-Start Wub from a command line:<br>
+3. Start Wub from a command line:<br>
 java -jar Wub.jar *EchnoNestAPIkey*
 
-Alternatively, set an environment variable: ECHO_NEST_API_KEY=*EchnoNestAPIkey*<br>
+3. Alternatively, set an environment variable: ECHO_NEST_API_KEY=*EchnoNestAPIkey*<br>
 Then start with:<br>
 java -jar Wub.jar (or double click the jar file)
 
