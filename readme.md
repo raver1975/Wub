@@ -8,9 +8,11 @@ Wub it in!
 ----
 Get an Echo Nest API key:https://developer.echonest.com/account/register
 
+Start Wub from a command line:<br>
 java -jar Wub.jar *EchnoNestAPIkey*
 
 Alternatively, set an environment variable: ECHO_NEST_API_KEY=*EchnoNestAPIkey*<br>
+Then start with:<br>
 java -jar Wub.jar (or double click the jar file)
 
 Pressing F6 or F7(reverse audio) will autosave resulting file as a .wav file, and a .wub file. The wub file saves the Echno Nest analysis with the audio. The whole state can also be saved from the Play window, as a .play file.
