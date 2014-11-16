@@ -28,6 +28,7 @@ yellow bars - beats<br>
 red bars    - tatums<br>
 Then waveform, pitch analysis, and timbre analysis<br>
 
+Click on the sections at the top to queue up that section to be played. Loop mode will keep the queue from emptying as it plays. Press F6 or F7 to autosave the queue to a new WAV, and also insert that audio into the Play window.
 
 Action			|Result
 ----------------|-----------------------------------------
