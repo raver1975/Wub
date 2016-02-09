@@ -7,6 +7,10 @@
 	<classpathentry kind="lib" path="libs/tritonus_aos-0.3.6.jar"/>
 	<classpathentry kind="lib" path="libs/tritonus_remaining-0.3.6.jar"/>
 	<classpathentry kind="lib" path="libs/tritonus_share.jar"/>
+	<classpathentry kind="lib" path="libs/sqljet/antlr-runtime-3.4.jar"/>
+	<classpathentry kind="lib" path="libs/sqljet/org-netbeans-swing-outline-RELEASE68.jar"/>
+	<classpathentry kind="lib" path="libs/sqljet/sqljet-1.1.10.jar"/>
+	<classpathentry kind="lib" path="libs/sqljet/sqljet-browser-1.1.10.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
