@@ -6,9 +6,9 @@ public class Interval {
 
 	TimedEvent te;
 	int y;
-	int startBytes;
-	int lengthBytes;
-	int endBytes;
+	public int startBytes;
+	public int lengthBytes;
+	public int endBytes;
 	int newbytestart;
 
 	public Interval(TimedEvent te, int y) {

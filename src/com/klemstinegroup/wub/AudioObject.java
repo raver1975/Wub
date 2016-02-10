@@ -39,10 +39,15 @@ import com.sun.media.sound.WaveFileWriter;
 
 public class AudioObject implements Serializable {
 
+	/**
+	 * 
+	 
+	 */
+	private static final long serialVersionUID = 379377752113122689L;
 	transient int filecount = 0;
 	public byte[] data;
 	public File file;
-	TrackAnalysis analysis;
+	public TrackAnalysis analysis;
 
 	public transient MusicCanvas mc;
 	public transient SourceDataLine line;
