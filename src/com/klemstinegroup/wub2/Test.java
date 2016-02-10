@@ -49,7 +49,7 @@ public class Test {
 				attrs.addElement(timbre12);
 				Instances dataset = new Instances("my_dataset", attrs, 0);
 				try {
-					kmeans.setNumClusters(20);
+					kmeans.setNumClusters(2000);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
