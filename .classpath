@@ -11,6 +11,7 @@
 	<classpathentry kind="lib" path="libs/sqljet/org-netbeans-swing-outline-RELEASE68.jar"/>
 	<classpathentry kind="lib" path="libs/sqljet/sqljet-1.1.10.jar"/>
 	<classpathentry kind="lib" path="libs/sqljet/sqljet-browser-1.1.10.jar"/>
+	<classpathentry kind="lib" path="libs/weka-3-6-13/weka.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
