@@ -9,7 +9,7 @@ public class CentralCommand {
 
 	static ArrayList<AudioObject> aolist = new ArrayList<AudioObject>();
 	static PlayingField pf = new PlayingField();
-	static CentralCommandNode ccn = new CentralCommandNode();
+	static public CentralCommandNode ccn = new CentralCommandNode();
 	static int yOffset = 40;
 	static File lastDirectory = new File(System.getProperty("user.dir"));
 

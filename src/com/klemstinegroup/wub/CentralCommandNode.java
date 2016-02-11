@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class CentralCommandNode implements Serializable{
 
-	ArrayList<Node> nodes = new ArrayList<Node>();
+	public ArrayList<Node> nodes = new ArrayList<Node>();
 
 	public CentralCommandNode() {
 	}
