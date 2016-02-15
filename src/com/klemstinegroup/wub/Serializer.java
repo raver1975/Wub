@@ -1,5 +1,7 @@
 package com.klemstinegroup.wub;
 
+import java.io.ByteArrayOutputStream;
+
 /*
  * Copyright (c) 2000 David Flanagan.  All rights reserved.
  * This code is from the book Java Examples in a Nutshell, 2nd Edition.
@@ -35,6 +37,15 @@ public class Serializer {
 		out.close();
 	}
 
+	public static byte[] toByteArray(Serializable o) throws IOException {
+		ByteArrayOutputStream ba=new ByteArrayOutputStream();
+		ObjectOutputStream out = // The class for serialization
+		new ObjectOutputStream(ba);
+		out.writeObject(o); // This method serializes an object graph
+		out.close();
+		return ba.toByteArray();
+	}
+	
 	/**
 	 * Deserialize the contents of File f and return the resulting object
 	 */
