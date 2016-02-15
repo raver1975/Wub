@@ -92,13 +92,14 @@ public class WubConvert {
 			} catch (SqlJetException e) {
 				e.printStackTrace();
 			}
+			try {
+				restart();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		try {
-			restart();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 	}
 	
 	public static void restart() throws IOException {
@@ -108,7 +109,7 @@ public class WubConvert {
 			cmd.append(jvmArg + " ");
 		}
 		cmd.append("-jar ").append(ManagementFactory.getRuntimeMXBean().getClassPath()).append(" ");
-		cmd.append(DirectoryConvert.class.getName()).append(" ");
+		cmd.append(WubConvert.class.getName()).append(" ");
 		// for (String arg : args) {
 		// cmd.append(arg).append(" ");
 		// }
