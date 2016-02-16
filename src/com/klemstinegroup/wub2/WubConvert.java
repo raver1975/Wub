@@ -1,6 +1,8 @@
 package com.klemstinegroup.wub2;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.lang.management.ManagementFactory;
@@ -14,15 +16,15 @@ import java.util.Map;
 import org.json.simple.JSONObject;
 import org.tmatesoft.sqljet.core.SqlJetException;
 import org.tmatesoft.sqljet.core.SqlJetTransactionMode;
-import org.tmatesoft.sqljet.core.table.ISqlJetCursor;
 import org.tmatesoft.sqljet.core.table.ISqlJetTable;
 import org.tmatesoft.sqljet.core.table.SqlJetDb;
 
 import com.klemstinegroup.wub.AudioObject;
 import com.klemstinegroup.wub.Serializer;
-import com.sun.glass.ui.Cursor;
 
 public class WubConvert {
+	
+	static SessionIdentifierGenerator sig=new SessionIdentifierGenerator();
 
 	public WubConvert() {
 		File file = new File("Q:");
@@ -47,6 +49,12 @@ public class WubConvert {
 	}
 
 	public static void process(Path path) {
+//		if (path.toString().toLowerCase().endsWith(".dub")) {
+//			path.toFile().renameTo(new File(path.toString().replaceAll("dub","wub")));
+//		}
+//		if (true)return;
+		
+		
 		if (path.toString().toLowerCase().endsWith(".wub")) {
 			System.out.println("Converting:" + path);
 			AudioObject au = AudioObject.factory(path.toFile());
@@ -73,13 +81,24 @@ public class WubConvert {
 					map.put("bitrate", json.get("bitrate"));
 					map.put("sample_rate", json.get("sample_rate"));
 					map.put("seconds", json.get("seconds"));
-					map.put("data", au.data);
+//					map.put("data", au.data);
+//					try {
+//						map.put("analysis", Serializer.toByteArray(au.analysis));
+//					} catch (IOException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+					String index=sig.nextSessionId();
+					map.put("index",index);
+					
 					try {
-						map.put("analysis", Serializer.toByteArray(au.analysis));
+						writeBytes("Q:\\"+index+".au",au.data);
+						writeBytes("Q:\\"+index+".an",Serializer.toByteArray(au.analysis));
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					
 					db.beginTransaction(SqlJetTransactionMode.WRITE);
 					System.out.print("inserting record\t");
 					table.insertByFieldNames(map);
@@ -102,6 +121,12 @@ public class WubConvert {
 		
 	}
 	
+	public static void writeBytes(String file, byte[] bytes) throws IOException{
+		FileOutputStream fos = new FileOutputStream(file);
+		fos.write(bytes);
+		fos.close();
+	}
+	
 	public static void restart() throws IOException {
 		StringBuilder cmd = new StringBuilder();
 		cmd.append(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java ");
@@ -117,4 +142,6 @@ public class WubConvert {
 		Runtime.getRuntime().exec(cmd.toString());
 		System.exit(0);
 	}
+	
+	
 }
