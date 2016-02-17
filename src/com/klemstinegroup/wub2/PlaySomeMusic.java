@@ -5,18 +5,20 @@ import java.util.Random;
 public class PlaySomeMusic {
 
 	public PlaySomeMusic() {
-		Song song = LoadFromFile.loadSong("q:\\2a42n08tem87s4vs9cirt8d6t1.au");
+		Song song1 = LoadFromFile.loadSong("q:\\5doprumaifi4p93b8qs7p0pari.an");
+		Song song2 = LoadFromFile.loadSong("q:\\7mgcakup2rr54vt3oqv1bp882s.an");
 		Audio audio = new Audio();
-		System.out.println(song.analysis.getSections().size());
+		System.out.println(song1.analysis.getSections().size());
 		//audio.play(song.getAudioInterval(song.analysis.getSections().get(13)));
 //		for (int i = 0; i < song.analysis.getSections().size(); i++) {
 //			audio.play(song.getAudioInterval(song.analysis.getSections().get(i)));
 //		}
 		Random rand=new Random();
-		int n=song.analysis.getBars().size();
-		for (int i=0;i<100;i++){
-			int j=rand.nextInt(n);
-			audio.play(song.getAudioInterval(song.analysis.getBars().get(j)));
+		int n1=song1.analysis.getBars().size();
+		int n2=song2.analysis.getBars().size();
+		for (int i=0;i<1000;i++){
+			if (rand.nextBoolean())audio.play(song1.getAudioInterval(song1.analysis.getBars().get(rand.nextInt(n1))));
+			else audio.play(song2.getAudioInterval(song2.analysis.getBars().get(rand.nextInt(n2))));
 		}
 	}
 
