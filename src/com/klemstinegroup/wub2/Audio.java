@@ -1,51 +1,19 @@
 package com.klemstinegroup.wub2;
 
-import java.awt.BorderLayout;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import javax.swing.BorderFactory;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JTextArea;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
-import com.echonest.api.v4.EchoNestAPI;
-import com.echonest.api.v4.Segment;
-import com.echonest.api.v4.TimedEvent;
-import com.echonest.api.v4.Track;
-import com.echonest.api.v4.TrackAnalysis;
-import com.klemstinegroup.wub.CentralCommand;
-import com.klemstinegroup.wub.FakeTrackAnalysis;
 import com.klemstinegroup.wub2.AudioInterval;
-import com.klemstinegroup.wub.MusicCanvas;
-import com.klemstinegroup.wub.Serializer;
-import com.sun.media.sound.WaveFileWriter;
 
 public class Audio {
 
 	public transient SourceDataLine line;
 	public transient Queue<AudioInterval> queue;
-	//public byte[] data;
 	
 	transient int position = 0;
 	transient AudioInterval currentlyPlaying;
@@ -59,7 +27,7 @@ public class Audio {
 	public static final int frameSize = channels * resolution / 8;
 	public static final int sampleRate = 44100;
 	public static final AudioFormat audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sampleRate, resolution, channels, frameSize, sampleRate, false);
-	static final int bufferSize = 8192;
+	public static final int bufferSize = 8192;
 
 	public Audio() {
 		queue = new LinkedList<AudioInterval>();

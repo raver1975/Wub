@@ -12,7 +12,7 @@ import com.echonest.api.v4.TrackAnalysis;
 
 public class LoadFromFile {
 	
-	public static Song loadSong(String file){
+	public synchronized static Song loadSong(String file){
 		byte[] data;
 		TrackAnalysis ta;
 		if (file.endsWith(".au")){
@@ -28,7 +28,7 @@ public class LoadFromFile {
 		return null;
 	}
 
-	public static byte[] loadData(String file) {
+	public synchronized static byte[] loadData(String file) {
 		Path path = new File(file).toPath();
 		try {
 			byte[] data = Files.readAllBytes(path);
@@ -40,7 +40,7 @@ public class LoadFromFile {
 		return null;
 	}
 
-	public static TrackAnalysis loadAnalysis(String file) {
+	public synchronized static TrackAnalysis loadAnalysis(String file) {
 		Path path = new File(file).toPath();
 		try {
 			byte[] data = Files.readAllBytes(path);
