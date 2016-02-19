@@ -324,6 +324,7 @@ public class AudioObject implements Serializable {
 	}
 
 	public String getFileName() {
+		if (file==null)return null;
 		return file.getName();
 	}
 
