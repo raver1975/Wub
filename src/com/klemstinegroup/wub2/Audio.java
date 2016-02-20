@@ -8,15 +8,14 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
-import com.klemstinegroup.wub2.AudioInterval;
 
 public class Audio {
 
 	public transient SourceDataLine line;
-	public transient Queue<AudioInterval> queue;
+	public transient Queue<AudioData> queue;
 	
 	transient int position = 0;
-	transient AudioInterval currentlyPlaying;
+	transient AudioData currentlyPlaying;
 	protected transient boolean breakPlay;
 	public transient boolean pause = false;
 	public transient boolean loop = false;
@@ -30,7 +29,7 @@ public class Audio {
 	public static final int bufferSize = 8192;
 
 	public Audio() {
-		queue = new LinkedList<AudioInterval>();
+		queue = new LinkedList<AudioData>();
 		startPlaying();
 	}
 
@@ -44,7 +43,7 @@ public class Audio {
 			public void run() {
 				top: while (true) {
 					if (!queue.isEmpty()) {
-						AudioInterval i = queue.poll();
+						AudioData i = queue.poll();
 
 						currentlyPlaying = i;
 						int j = 0;
@@ -103,7 +102,7 @@ public class Audio {
 		return res;
 	}
 
-	public void play(AudioInterval i) {
+	public void play(AudioData i) {
 		queue.add(i);
 	}
 	

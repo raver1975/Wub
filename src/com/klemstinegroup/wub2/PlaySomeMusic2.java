@@ -27,8 +27,8 @@ public class PlaySomeMusic2 {
 
 		// Song song1 =
 		// LoadFromFile.loadSong("i:\\wub\\5doprumaifi4p93b8qs7p0pari.an");
-		Song song2 = LoadFromFile.loadSong("i:\\wub\\c906k5i2co4d8om7qiegdaoh3d.an");
-		Song song1 = LoadFromFile.loadSong("i:\\wub\\9ulos27ngac2hegsjot4971al5.an");
+		Song song1 = LoadFromFile.loadSong("i:\\wub\\c906k5i2co4d8om7qiegdaoh3d.an");
+		Song song2 = LoadFromFile.loadSong("i:\\wub\\9ulos27ngac2hegsjot4971al5.an");
 
 
 		// Song song2 =
