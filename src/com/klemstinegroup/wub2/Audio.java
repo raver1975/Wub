@@ -33,10 +33,6 @@ public class Audio {
 		startPlaying();
 	}
 
-	void init() {
-
-	}
-
 	private void startPlaying() {
 		line = getLine();
 		new Thread(new Runnable() {
