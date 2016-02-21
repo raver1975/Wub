@@ -66,9 +66,9 @@ public class AudioUtils implements Handler {
     public static void pitchShift(AudioInterval ad, double shift) {
         AudioDispatcher adp = null;
         RateTransposer rateTransposer = new RateTransposer(shift);
-        WaveformSimilarityBasedOverlapAdd wsola = new WaveformSimilarityBasedOverlapAdd(WaveformSimilarityBasedOverlapAdd.Parameters.musicDefaults(shift, Audio.audioFormat.getSampleRate()));
+        //WaveformSimilarityBasedOverlapAdd wsola = new WaveformSimilarityBasedOverlapAdd(WaveformSimilarityBasedOverlapAdd.Parameters.musicDefaults(shift, Audio.audioFormat.getSampleRate()));
         try {
-            adp = AudioDispatcherFactory.fromByteArray(ad.data, Audio.audioFormat, wsola.getInputBufferSize(), wsola.getOverlap());
+            adp = AudioDispatcherFactory.fromByteArray(ad.data, Audio.audioFormat, 2048, 1024);
         } catch (UnsupportedAudioFileException e) {
             e.printStackTrace();
         }
@@ -84,9 +84,9 @@ public class AudioUtils implements Handler {
         CountDownLatch cdl = new CountDownLatch(1);
         ByteProcessor bp = new ByteProcessor(new AudioUtils(ad, cdl), format);
 
-        wsola.setDispatcher(adp);
+//        wsola.setDispatcher(adp);
 
-        adp.addAudioProcessor(wsola);
+//        adp.addAudioProcessor(wsola);
         adp.addAudioProcessor(rateTransposer);
         // adp.addAudioProcessor(gain);
         adp.addAudioProcessor(bp);
