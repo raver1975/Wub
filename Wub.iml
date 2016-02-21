@@ -26,63 +26,9 @@
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
-      <library name="json_simple-1.1.jar">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/json_simple-1.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="jl1.0.1.jar">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/jl1.0.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="mp3spi1.9.5.jar">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/mp3spi1.9.5.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="tritonus_aos-0.3.6.jar">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/tritonus_aos-0.3.6.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="tritonus_remaining-0.3.6.jar">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/tritonus_remaining-0.3.6.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="tritonus_share.jar">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/tritonus_share.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
       <library name="antlr-runtime-3.4.jar">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/sqljet/antlr-runtime-3.4.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/Sqljet/antlr-runtime-3.4.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -91,7 +37,7 @@
     <orderEntry type="module-library">
       <library name="org-netbeans-swing-outline-RELEASE68.jar">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/sqljet/org-netbeans-swing-outline-RELEASE68.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/Sqljet/org-netbeans-swing-outline-RELEASE68.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -100,7 +46,7 @@
     <orderEntry type="module-library">
       <library name="sqljet-1.1.10.jar">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/sqljet/sqljet-1.1.10.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/Sqljet/sqljet-1.1.10.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -109,16 +55,7 @@
     <orderEntry type="module-library">
       <library name="sqljet-browser-1.1.10.jar">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/sqljet/sqljet-browser-1.1.10.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="weka.jar">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/weka-3-6-13/weka.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/Sqljet/sqljet-browser-1.1.10.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -156,5 +93,7 @@
         <jarDirectory url="file://$MODULE_DIR$/libs" recursive="false" />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="weka" level="project" />
+    <orderEntry type="library" name="jEN" level="project" />
   </component>
 </module>
