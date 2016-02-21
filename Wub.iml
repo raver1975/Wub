@@ -95,5 +95,6 @@
     </orderEntry>
     <orderEntry type="library" name="weka" level="project" />
     <orderEntry type="library" name="jEN" level="project" />
+    <orderEntry type="library" name="hsqldb" level="project" />
   </component>
 </module>
