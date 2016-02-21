@@ -43,6 +43,6 @@ public class ByteProcessor implements AudioProcessor {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        handler.handleTimeStretch(output.toByteArray());
+        handler.handle(output.toByteArray());
     }
 }

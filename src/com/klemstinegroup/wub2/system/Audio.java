@@ -25,6 +25,7 @@ public class Audio {
 	public static final int frameSize = channels * resolution / 8;
 	public static final int sampleRate = 44100;
 	public static final AudioFormat audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sampleRate, resolution, channels, frameSize, sampleRate, false);
+	public static final AudioFormat audioFormatMono = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sampleRate, resolution, channels/2, frameSize/2, sampleRate, false);
 	public static final int bufferSize = 8192;
 
 	public Audio() {
