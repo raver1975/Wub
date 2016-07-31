@@ -6,8 +6,8 @@ public class PlaySomeMusic3 {
 
 	public PlaySomeMusic3() {
 		Audio audio = new Audio();
-		Song song1 = LoadFromFile.loadSong("i:\\wub\\c906k5i2co4d8om7qiegdaoh3d.an");
-		Song song2 = LoadFromFile.loadSong("i:\\wub\\9ulos27ngac2hegsjot4971al5.an");
+		Song song1 = LoadFromFile.loadSong("e:\\wub\\c906k5i2co4d8om7qiegdaoh3d.an");
+		Song song2 = LoadFromFile.loadSong("e:\\wub\\9ulos27ngac2hegsjot4971al5.an");
 
 		AudioInterval ai=song1.getAudioInterval(song1.analysis.getSections().get(2));
 		System.out.println(ai.data.length);

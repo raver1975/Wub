@@ -10,8 +10,13 @@ import java.nio.file.Path;
 import com.echonest.api.v4.TrackAnalysis;
 
 public class LoadFromFile {
-	
-	public synchronized static Song loadSong(String file){
+
+	public synchronized  static Song loadSong(String file){
+		return loadSong(new File(file));
+	}
+
+	public synchronized static Song loadSong(File file1){
+		String file=file1.getAbsolutePath();
 		byte[] data;
 		TrackAnalysis ta;
 		if (file.endsWith(".au")){

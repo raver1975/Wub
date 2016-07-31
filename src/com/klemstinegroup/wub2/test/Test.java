@@ -1,11 +1,16 @@
 package com.klemstinegroup.wub2.test;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 
+import com.echonest.api.v4.EchoNestException;
 import com.echonest.api.v4.Segment;
-import com.klemstinegroup.wub.AudioObject;
 import com.klemstinegroup.wub.Interval;
 
+import com.klemstinegroup.wub2.system.Audio;
+import com.klemstinegroup.wub2.system.Song;
+import sun.plugin.dom.core.Attr;
 import weka.clusterers.SimpleKMeans;
 import weka.core.Attribute;
 import weka.core.FastVector;
@@ -13,94 +18,134 @@ import weka.core.Instance;
 import weka.core.Instances;
 
 public class Test {
+static final int songNum=-1;
+    static final int numClusters = 40;
+    static final int attLength = 28;
 
-	public static void main(String[] args) {
-		new Thread(new Runnable() {
-			public void run() {
-				File file = new File(
-						"C:\\Users\\Paul\\Documents\\Vuze Downloads\\Zomboy � The Oubreak (2014) [LEAKED 320] [DUBSTEP, BROSTEP] [EDM RG]\\05. Skull 'n' Bones.mp3");
-				AudioObject ao = AudioObject.factory(file);
-				SimpleKMeans kmeans = new SimpleKMeans();
-				kmeans.setSeed(10);
-				FastVector attrs = new FastVector();
-				Attribute timbre1 = new Attribute("timbre1");
-				Attribute timbre2 = new Attribute("timbre2");
-				Attribute timbre3 = new Attribute("timbre3");
-				Attribute timbre4 = new Attribute("timbre4");
-				Attribute timbre5 = new Attribute("timbre5");
-				Attribute timbre6 = new Attribute("timbre6");
-				Attribute timbre7 = new Attribute("timbre7");
-				Attribute timbre8 = new Attribute("timbre8");
-				Attribute timbre9 = new Attribute("timbre9");
-				Attribute timbre10 = new Attribute("timbre10");
-				Attribute timbre11 = new Attribute("timbre11");
-				Attribute timbre12 = new Attribute("timbre12");
-				attrs.addElement(timbre1);
-				attrs.addElement(timbre2);
-				attrs.addElement(timbre3);
-				attrs.addElement(timbre4);
-				attrs.addElement(timbre5);
-				attrs.addElement(timbre6);
-				attrs.addElement(timbre7);
-				attrs.addElement(timbre8);
-				attrs.addElement(timbre9);
-				attrs.addElement(timbre10);
-				attrs.addElement(timbre11);
-				attrs.addElement(timbre12);
-				Instances dataset = new Instances("my_dataset", attrs, 0);
-				try {
-					kmeans.setNumClusters(2000);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+    public static void main(String[] args) {
+        new Thread(new Runnable() {
+            public Attribute[] attlist;
 
-				for (Segment s : ao.analysis.getSegments()) {
-					Instance inst = new Instance(12);
-					inst.setValue(timbre1, s.getTimbre()[0]);
-					inst.setValue(timbre2, s.getTimbre()[1]);
-					inst.setValue(timbre3, s.getTimbre()[2]);
-					inst.setValue(timbre4, s.getTimbre()[3]);
-					inst.setValue(timbre5, s.getTimbre()[4]);
-					inst.setValue(timbre6, s.getTimbre()[5]);
-					inst.setValue(timbre7, s.getTimbre()[6]);
-					inst.setValue(timbre8, s.getTimbre()[7]);
-					inst.setValue(timbre9, s.getTimbre()[8]);
-					inst.setValue(timbre10, s.getTimbre()[9]);
-					inst.setValue(timbre11, s.getTimbre()[10]);
-					inst.setValue(timbre12, s.getTimbre()[11]);
-					inst.setDataset(dataset);
-					dataset.add(inst);
+            public void run() {
+                Audio audio = new Audio();
+                SimpleKMeans kmeans = new SimpleKMeans();
+                kmeans.setSeed(10);
+                FastVector attrs = new FastVector();
+                attlist = new Attribute[attLength];
+                for (int i = 0; i < attLength; i++) {
+                    attlist[i] = new Attribute("at" + i);
+                    attrs.addElement(attlist[i]);
+                }
+                Instances dataset = new Instances("my_dataset", attrs, 0);
+                try {
+                    kmeans.setNumClusters(numClusters);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                HashMap<Instance, Segment> hm = new HashMap<>();
+                HashMap<Integer, Integer> hrm = new HashMap<>();
+                ArrayList<Integer>[] lastSeen = new ArrayList[numClusters];
+                Song song = SongManager.getRandom(songNum);
 
-					Interval i = new Interval(s, 0);
-				}
-				try {
-					kmeans.buildClusterer(dataset);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+                for (Segment s : song.analysis.getSegments()) {
+                    Instance inst = getInstance(attlist, s);
+                    hm.put(inst, s);
+                    inst.setDataset(dataset);
+                    dataset.add(inst);
+                }
 
-				// print out the cluster centroids
-				Instances centroids = kmeans.getClusterCentroids();
-				for (int i = 0; i < centroids.numInstances(); i++) {
-					System.out.println("Centroid " + (i + 1) + ": " + centroids.instance(i));
-				}
 
-				// get cluster membership for each instance
-				for (int i = 0; i < dataset.numInstances(); i++) {
-					try {
-						System.out.println(dataset.instance(i) + " is in cluster "
-								+ (kmeans.clusterInstance(dataset.instance(i)) + 1));
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
+                try {
+                    kmeans.buildClusterer(dataset);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-			}
-		}).start();
+//                // print out the cluster centroids
+//                Instances centroids = kmeans.getClusterCentroids();
+//                for (int i = 0; i < centroids.numInstances(); i++) {
+//                    System.out.println("Centroid " + (i + 1) + ": " + centroids.instance(i));
+//                }
 
-	}
+                // get cluster membership for each instance
+                for (int i = 0; i < dataset.numInstances(); i++) {
+                    try {
+                        hrm.put(i, kmeans.clusterInstance(dataset.instance(i)));
+                        int index = kmeans.clusterInstance(dataset.instance(i));
+                        if (lastSeen[index] == null) {
+                            lastSeen[index] = new ArrayList<Integer>();
+                        }
+//                        lastSeen[=i;
+                        lastSeen[index].add(i);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                int cnt = 0;
+                for (Segment s : song.analysis.getSegments()) {
+                        int search = hrm.get(cnt);
+                        //System.out.println("playing:" + lastSeen[search]);
+
+                        //get random from same bin
+                        ArrayList<Integer> bbb = lastSeen[search];
+                        int ran = (int) (Math.random() * bbb.size());
+
+                        audio.play(song.getAudioInterval(song.analysis.getSegments().get(bbb.get(ran))));
+                    //only use each one once
+                        lastSeen[search].remove(ran);
+//
+                    //or
+//                    lastSeen[search].clear();
+//                    lastSeen[search].add(ran);
+
+                    cnt++;
+                }
+                String meta = song.analysis.toString();
+                meta = meta.substring(0, 400);
+                meta = meta.replaceAll("(.{100})", "$1\n");
+                System.out.println(meta);
+            }
+
+            float pitchFactor=10f;
+            float timbreFactor=10f;
+
+            private Instance getInstance(Attribute[] attlist, Segment s) {
+
+                int cnt = 0;
+                Instance inst = new Instance(attLength);
+                inst.setValue(attlist[cnt++], s.getDuration() * 1000f);
+                inst.setValue(attlist[cnt++], s.getLoudnessMax() * 100f);
+                inst.setValue(attlist[cnt++], s.getLoudnessStart() * 100f);
+                inst.setValue(attlist[cnt++], s.getLoudnessMaxTime() * 100f);
+                inst.setValue(attlist[cnt++], timbreFactor*s.getTimbre()[0]);
+                inst.setValue(attlist[cnt++], timbreFactor*s.getTimbre()[1]);
+                inst.setValue(attlist[cnt++], timbreFactor*s.getTimbre()[2]);
+                inst.setValue(attlist[cnt++], timbreFactor*s.getTimbre()[3]);
+                inst.setValue(attlist[cnt++], timbreFactor*s.getTimbre()[4]);
+                inst.setValue(attlist[cnt++], timbreFactor*s.getTimbre()[5]);
+                inst.setValue(attlist[cnt++], timbreFactor*s.getTimbre()[6]);
+                inst.setValue(attlist[cnt++], timbreFactor*s.getTimbre()[7]);
+                inst.setValue(attlist[cnt++], timbreFactor*s.getTimbre()[8]);
+                inst.setValue(attlist[cnt++], timbreFactor*s.getTimbre()[9]);
+                inst.setValue(attlist[cnt++], timbreFactor*s.getTimbre()[10]);
+                inst.setValue(attlist[cnt++], timbreFactor*s.getTimbre()[11]);
+                inst.setValue(attlist[cnt++], s.getPitches()[0]*pitchFactor);
+                inst.setValue(attlist[cnt++], s.getPitches()[1]*pitchFactor);
+                inst.setValue(attlist[cnt++], s.getPitches()[2]*pitchFactor);
+                inst.setValue(attlist[cnt++], s.getPitches()[3]*pitchFactor);
+                inst.setValue(attlist[cnt++], s.getPitches()[4]*pitchFactor);
+                inst.setValue(attlist[cnt++], s.getPitches()[5]*pitchFactor);
+                inst.setValue(attlist[cnt++], s.getPitches()[6]*pitchFactor);
+                inst.setValue(attlist[cnt++], s.getPitches()[7]*pitchFactor);
+                inst.setValue(attlist[cnt++], s.getPitches()[8]*pitchFactor);
+                inst.setValue(attlist[cnt++], s.getPitches()[9]*pitchFactor);
+                inst.setValue(attlist[cnt++], s.getPitches()[10]*pitchFactor);
+                inst.setValue(attlist[cnt++], s.getPitches()[11]*pitchFactor);
+                return inst;
+            }
+        }).start();
+
+    }
 
 }
