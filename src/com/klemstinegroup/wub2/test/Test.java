@@ -10,18 +10,35 @@ import weka.clusterers.SimpleKMeans;
 import weka.core.*;
 
 public class Test {
-    static final int songNum = -1;
-    static final int numClusters = 400;
+
     static final int attLength = 28;
 
+    //933  good bassy dubstep
+    //2441 Crissy Criss & Youngman - Kick Snare
+    //713 kathy's song
+    //2088 bassnectar mesmerizing the ultra
+    //1670 covenant like tears in rain
+    //2344 saw wave bassicles
+
+    static final int songNum = 1670;
+
+    static final int numClusters = 255;
+    static final int start= 200;
+
+
+
+
     public static void main(String[] args) {
+
+        SongManager.process();
+
         new Thread(new Runnable() {
             public Attribute[] attlist;
 
             public void run() {
                 Audio audio = new Audio();
                 SimpleKMeans kmeans = new SimpleKMeans();
-                //kmeans.setSeed(10);
+                kmeans.setSeed(10);
                 FastVector attrs = new FastVector();
                 attlist = new Attribute[attLength];
                 for (int i = 0; i < attLength; i++) {
@@ -85,6 +102,10 @@ public class Test {
 
 
                 for (Segment s : song.analysis.getSegments()) {
+                    if (cnt<start){
+                        cnt++;
+                        continue;
+                    }
                     Segment search = hrm.get(cnt);
                     if (search!=null)
                     audio.play(song.getAudioInterval(search));
@@ -102,6 +123,8 @@ public class Test {
                 meta = meta.replaceAll("(.{100})", "$1\n");
                 System.out.println(meta);
 
+                System.out.println("segments size="+song.analysis.getSegments().size());
+
                 //--------------------------------------------------------------------------------------------------------------
             }
 
@@ -117,8 +140,8 @@ public class Test {
 
             float pitchFactor = 2f;
             float timbreFactor = 2f;
-            float loudFactor = 200f;
-            float durationFactor = 40f;
+            float loudFactor = 2f;
+            float durationFactor = 4f;
 
             private Instance getInstance(Attribute[] attlist, Segment s) {
 
