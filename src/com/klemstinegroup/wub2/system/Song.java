@@ -11,6 +11,7 @@ public class Song {
     public byte[] data;
     public TrackAnalysis analysis;
 
+
     public Song(byte[] data, TrackAnalysis ta) {
         this.data = data;
         this.analysis = ta;
