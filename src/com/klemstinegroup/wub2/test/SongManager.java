@@ -1,6 +1,7 @@
 package com.klemstinegroup.wub2.test;
 
 import com.echonest.api.v4.Segment;
+import com.klemstinegroup.wub2.system.Audio;
 import com.klemstinegroup.wub2.system.LoadFromFile;
 import com.klemstinegroup.wub2.system.Song;
 import weka.clusterers.SimpleKMeans;
@@ -43,7 +44,7 @@ public class SongManager {
     }
 
     public static void process() {
-        if (true)return ;
+//        if (true)return ;
         SimpleKMeans kmeans = new SimpleKMeans();
         kmeans.setSeed(10);
         FastVector attrs = new FastVector();
@@ -62,7 +63,9 @@ public class SongManager {
 
 
         HashMap<Instance, SegmentSong> hm = new HashMap<>();
-        HashMap<SegmentSong, Segment> hrm = new HashMap<>();
+        HashMap<Integer, SegmentSong> map = new HashMap<>();
+
+
         SegmentSong[] lastSeen = new SegmentSong[numClusters];
 
         for (int songIter = 0; songIter < list.length && songIter < 2; songIter++) {
@@ -71,13 +74,12 @@ public class SongManager {
             int cnt = 0;
             for (Segment s : song.analysis.getSegments()) {
                 Instance inst = getInstance(attlist, s);
-                hm.put(inst, new SegmentSong(cnt,s));
+                hm.put(inst, new SegmentSong(songIter, s));
                 inst.setDataset(dataset);
                 dataset.add(inst);
             }
-
-
         }
+
         try {
             kmeans.buildClusterer(dataset);
         } catch (Exception e) {
@@ -91,24 +93,45 @@ public class SongManager {
             int best = -1;
             for (int j = 0; j < dataset.numInstances(); j++) {
                 double dd = distance(centroids.instance(io), dataset.instance(j));
+//                System.out.println("dist="+dd);
                 if (dd < dist) {
                     dist = dd;
                     best = j;
                 }
             }
-            Song tempSong=SongManager.getRandom(best);
+//                        SegmentSong ss=hm.get(dataset.instance(best));
+//            Song tempSong=SongManager.getRandom(best.song);
 //            lastSeen[io] = song.analysis.getSegments().get(best);
-            lastSeen[io]=new SegmentSong(best,tempSong.analysis.getSegments().get(best));
+            SegmentSong gg = hm.get(dataset.instance(best));
+            lastSeen[io] = gg;
+            System.out.println("centroid io " + io + "\t" + best);
 
         }
 
         // get cluster membership for each instance
         for (int io = 0; io < dataset.numInstances(); io++) {
             try {
-//                hrm.put(io, lastSeen[kmeans.clusterInstance(dataset.instance(io))]);
+                int cluster = kmeans.clusterInstance(dataset.instance(io));
+                SegmentSong tempSegmentSong = lastSeen[cluster];
+
+                SegmentSong hh = hm.get(dataset.instance(io));
+                if (hh==null) System.out.println("hh==null");
+                map.put(hh.segment.hashCode(), tempSegmentSong);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+        Audio audio = new Audio();
+        Song song = SongManager.getRandom(0);
+        for (Segment s : song.analysis.getSegments()) {
+            Instance inst = getInstance(attlist, s);
+            SegmentSong play = hm.get(inst);
+            if (play == null) {
+                System.out.println("null~!!!");
+                continue;
+            }//            System.out.println("******" + play);
+            Song tempSong = SongManager.getRandom(play.song);
+            audio.play(tempSong.getAudioInterval(play.segment));
         }
     }
 

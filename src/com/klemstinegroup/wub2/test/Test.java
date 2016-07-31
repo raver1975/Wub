@@ -19,8 +19,10 @@ public class Test {
     //2088 bassnectar mesmerizing the ultra
     //1670 covenant like tears in rain
     //2344 saw wave bassicles
+    //2532 la roux, in for the the kill
+    //593 bassnectar lights
 
-    static final int songNum = 1670;
+    static final int songNum = -1;
 
     static final int numClusters = 255;
     static final int start= 200;
@@ -29,8 +31,11 @@ public class Test {
 
 
     public static void main(String[] args) {
+//        Audio audio = new Audio();
+//        SongManager.process();
 
-        SongManager.process();
+
+
 
         new Thread(new Runnable() {
             public Attribute[] attlist;
@@ -54,6 +59,7 @@ public class Test {
                 }
                 HashMap<Instance, Segment> hm = new HashMap<>();
                 HashMap<Integer, Segment> hrm = new HashMap<>();
+
                 Segment[] lastSeen = new Segment[numClusters];
                 Song song = SongManager.getRandom(songNum);
 
