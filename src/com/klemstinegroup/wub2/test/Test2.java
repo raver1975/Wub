@@ -23,16 +23,16 @@ public class Test2 {
     public static Attribute[] attlist;
 
 
-    static int playback = 101;
-    static int stretch = 4;
+    static int playback = 106;
+    static int stretch = 6;
     static int playbackStart = playback;
     static int playbackEnd = playback + stretch;
 
 
     static final int numClusters = 2000;
 
-    static float pitchFactor = 2f;
-    static float timbreFactor =5f;
+    static float pitchFactor = 3f;
+    static float timbreFactor =6f;
     static float loudFactor = 20f;
     static float durationFactor = 40f;
 
@@ -151,7 +151,7 @@ public class Test2 {
         double tot = 0;
         for (int i = 0; i < attLength; i++) {
             double ta = i1.value(attlist[i]) - i2.value(attlist[i]);
-            ta = Math.abs(ta);
+            ta = ta*ta;
             tot += ta;
         }
         return tot;
