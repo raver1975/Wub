@@ -23,15 +23,16 @@ public class Test2 {
     public static Attribute[] attlist;
 
 
-    static int playback = 1000;
-    static int playbackStart = playback - 20;
-    static int playbackEnd = playback + 20;
+    static int playback = 101;
+    static int stretch = 4;
+    static int playbackStart = playback;
+    static int playbackEnd = playback + stretch;
 
 
-    static final int numClusters = 5000;
+    static final int numClusters = 2000;
 
     static float pitchFactor = 2f;
-    static float timbreFactor = 2f;
+    static float timbreFactor =5f;
     static float loudFactor = 20f;
     static float durationFactor = 40f;
 
@@ -60,10 +61,12 @@ public class Test2 {
 
         //kmeans setup
         SimpleKMeans kmeans = new SimpleKMeans();
-        kmeans.setSeed(10);
+//        kmeans.setSeed(10);
+
         try {
             kmeans.setNumClusters(numClusters);
             kmeans.setDistanceFunction(new ManhattanDistance());
+//            kmeans.setMaxIterations(100);
         } catch (Exception e) {
             e.printStackTrace();
         }
