@@ -9,19 +9,17 @@ import java.io.Serializable;
  * Created by Paul on 7/31/2016.
  */
 public class SegmentSong implements Serializable {
-    Segment segment;
+//    Segment segment;
     int song;
-    int id;
+    int segment;
 
-    static int cnt;
-    SegmentSong(int song,Segment segment){
+    SegmentSong(int song,int segment){
         this.segment=segment;
         this.song=song;
-        this.id=cnt++;
     }
 
     @Override public int hashCode(){
-        return Integer.hashCode(id);
+        return Integer.hashCode(song);
     }
 
 
@@ -29,7 +27,8 @@ public class SegmentSong implements Serializable {
     public boolean equals(Object o) {
         if (!(o instanceof SegmentSong))return false;
         SegmentSong ss=(SegmentSong)o;
-        if (id!=ss.id)return false;
+        if (segment!=ss.segment)return false;
+        if (song!=ss.song)return false;
         return true;
     }
 
@@ -37,7 +36,7 @@ public class SegmentSong implements Serializable {
     public String toString() {
         return "SegmentSong{" +
                 "song=" + song +
-                ", id=" + id +
+                ", segment=" + segment +
                 '}';
     }
 }

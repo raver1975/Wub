@@ -23,8 +23,10 @@ public class SongManager {
     static final int attLength = 28;
     public static Attribute[] attlist;
 
-    static final int numClusters = 255*255;
-    static final int songsToScan = 100;
+    static int playback = 2;
+
+    static final int numClusters = 255;
+    static final int songsToScan = 10;
 
     static float pitchFactor = 2f;
     static float timbreFactor = 2f;
@@ -34,11 +36,11 @@ public class SongManager {
 
     static {
         File[] list1 = new File(directory).listFiles();
-        ArrayList<File> al=new ArrayList<>();
-        for (File f:list1){
-            if (f.getAbsolutePath().endsWith(".au"))al.add(f);
+        ArrayList<File> al = new ArrayList<>();
+        for (File f : list1) {
+            if (f.getAbsolutePath().endsWith(".au")) al.add(f);
         }
-        list=al.toArray(new File[]{});
+        list = al.toArray(new File[]{});
 
     }
 
@@ -54,15 +56,19 @@ public class SongManager {
 
     public static void process() {
 //        if (true)return ;
-        SimpleKMeans kmeans = new SimpleKMeans();
-        kmeans.setSeed(10);
+
+        //one time attribute setup
         FastVector attrs = new FastVector();
         attlist = new Attribute[attLength];
         for (int io = 0; io < attLength; io++) {
             attlist[io] = new Attribute("at" + io);
             attrs.addElement(attlist[io]);
         }
-        Instances dataset = new Instances("my_dataset", attrs, 0);
+
+
+        //kmeans setup
+        SimpleKMeans kmeans = new SimpleKMeans();
+        kmeans.setSeed(10);
         try {
             kmeans.setNumClusters(numClusters);
             kmeans.setDistanceFunction(new ManhattanDistance());
@@ -71,79 +77,91 @@ public class SongManager {
         }
 
 
-//        HashMap<Instance, SegmentSong> hm = new HashMap<>();
-        HashMap<Integer, SegmentSong> map = new HashMap<>();
-        SegmentSong[] lastSeen = new SegmentSong[numClusters];
+//        Instances[] datasets = new Instances[songsToScan];
+//        Instances dataset = new Instances("my_dataset", attrs, 0);
 
-        ArrayList<SegmentSong> coll = new ArrayList<>();
+
+//        HashMap<Instance, SegmentSong> hm = new HashMap<>();
+
+
         for (int songIter = 0; songIter < list.length && songIter < songsToScan; songIter++) {
+            ArrayList<SegmentSong> coll = new ArrayList<>();
+            Instances dataset = new Instances("my_dataset", attrs, 0);
+//            datasets[songIter] = dataset;
+            SegmentSong[] lastSeen = new SegmentSong[numClusters];
             Song song = LoadFromFile.loadSong(list[songIter]);
-            System.out.println("processing song #" + songIter +"/"+getSize()+"\t"+list[songIter].getName());
+            System.out.println("processing song #" + songIter + "/" + getSize() + "\t" + list[songIter].getName());
             int cnt = 0;
             for (Segment s : song.analysis.getSegments()) {
                 Instance inst = getInstance(attlist, s);
-                coll.add(new SegmentSong(songIter, s));
+                coll.add(new SegmentSong(songIter, cnt++));
                 inst.setDataset(dataset);
                 dataset.add(inst);
             }
-        }
-        long time=System.currentTimeMillis();
-        System.out.println("building cluster");
-        try {
-            kmeans.buildClusterer(dataset);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println("cluster built: "+((System.currentTimeMillis()-time)/1000));
-        // print out the cluster centroids
-        Instances centroids = kmeans.getClusterCentroids();
-        for (int io = 0; io < centroids.numInstances(); io++) {
-            double dist = Float.MAX_VALUE;
-            int best = -1;
-            for (int j = 0; j < dataset.numInstances(); j++) {
-                double dd = distance(centroids.instance(io), dataset.instance(j));
-//                System.out.println("dist="+dd);
-                if (dd < dist) {
-                    dist = dd;
-                    best = j;
-                }
-            }
-//                        SegmentSong ss=hm.get(dataset.instance(best));
-//            Song tempSong=SongManager.getRandom(best.song);
-//            lastSeen[io] = song.analysis.getSegments().get(best);
-            SegmentSong gg = coll.get(best);
-            lastSeen[io] = gg;
-            System.out.println("centroid io " + io + "\t" + gg);
 
-            Song tt = SongManager.getRandom(gg.song);
-            AudioInterval ai = tt.getAudioInterval(gg.segment);
-            ObjectManager.write(ai, "centroid" + io + ".ser");
-        }
-
-        // get cluster membership for each instance
-        for (int io = 0; io < dataset.numInstances(); io++) {
+            long time = System.currentTimeMillis();
+            System.out.println("building cluster");
             try {
-                int cluster = kmeans.clusterInstance(dataset.instance(io));
-                SegmentSong tempSegmentSong = lastSeen[cluster];
-                map.put(io, tempSegmentSong);
-
+                kmeans.buildClusterer(dataset);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            System.out.println("cluster built: " + ((System.currentTimeMillis() - time) / 1000));
+
+            // print out the cluster centroids
+            Instances centroids = kmeans.getClusterCentroids();
+            for (int io = 0; io < centroids.numInstances(); io++) {
+                double dist = Float.MAX_VALUE;
+                int best = -1;
+                for (int j = 0; j < dataset.numInstances(); j++) {
+                    double dd = distance(centroids.instance(io), dataset.instance(j));
+//                System.out.println("dist="+dd);
+                    if (dd < dist) {
+                        dist = dd;
+                        best = j;
+                    }
+                }
+                SegmentSong gg = coll.get(best);
+                lastSeen[io] = gg;
+                System.out.println("centroid io " + io + "\t" + gg);
+
+//                Song tt = SongManager.getRandom(gg.song);
+//                AudioInterval ai = tt.getAudioInterval(tt.analysis.getSegments().get(gg.segment));
+//                ObjectManager.write(ai, "centroid-" + songIter + "-" + io + ".ser");
+
+            }
+            // get cluster membership for each instance
+            HashMap<SegmentSong, SegmentSong> map = new HashMap<>();
+            for (int io = 0; io < dataset.numInstances(); io++) {
+                try {
+                    int cluster = kmeans.clusterInstance(dataset.instance(io));
+                    SegmentSong tempSegmentSong = lastSeen[cluster];
+                    map.put(new SegmentSong(songIter,io), tempSegmentSong);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            ObjectManager.write(map, "map-" + songIter + ".ser");
+
         }
-        ObjectManager.write(map,"map.ser");
+
+        HashMap<String, SegmentSong> map = (HashMap<String, SegmentSong>) ObjectManager.read("map-" + playback + ".ser");
+//        System.out.println( map.get(new SegmentSong(0,0).toString()));
+        //ObjectManager.write(map, "map.ser");
         Audio audio = new Audio();
-        Song song = SongManager.getRandom(0);
+        Song song = SongManager.getRandom(playback);
         int cnt = 0;
         for (Segment s : song.analysis.getSegments()) {
 //            Instance inst = getInstance(attlist, s);
-            SegmentSong play = map.get(cnt++);
+            SegmentSong pp=new SegmentSong(playback, cnt++);
+            SegmentSong play = map.get(pp);
             if (play == null) {
-                System.out.println("null~!!!");
+                System.out.println("null! "+pp);
                 continue;
             }//            System.out.println("******" + play);
             Song tempSong = SongManager.getRandom(play.song);
-            audio.play(tempSong.getAudioInterval(play.segment));
+            audio.play(tempSong.getAudioInterval(tempSong.analysis.getSegments().get(play.segment)));
         }
     }
 
