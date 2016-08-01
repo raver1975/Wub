@@ -23,6 +23,7 @@ public class ObjectManager {
         }
         try {
             oos.writeObject(mb);
+            System.out.println("wrote "+mb.getClass()+"\t"+"to"+"\t"+file);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -62,6 +63,7 @@ public class ObjectManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("read "+result.getClass()+"\t"+"fromyo"+"\t"+file);
         return result;
     }
 }
