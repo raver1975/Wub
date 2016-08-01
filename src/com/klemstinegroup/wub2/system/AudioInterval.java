@@ -1,11 +1,12 @@
 package com.klemstinegroup.wub2.system;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
 import com.echonest.api.v4.TimedEvent;
 
-public class AudioInterval {
+public class AudioInterval implements Serializable {
 
     //TimedEvent te;
     //public int startBytes;

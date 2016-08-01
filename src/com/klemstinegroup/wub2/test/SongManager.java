@@ -2,12 +2,15 @@ package com.klemstinegroup.wub2.test;
 
 import com.echonest.api.v4.Segment;
 import com.klemstinegroup.wub2.system.Audio;
+import com.klemstinegroup.wub2.system.AudioInterval;
 import com.klemstinegroup.wub2.system.LoadFromFile;
 import com.klemstinegroup.wub2.system.Song;
 import weka.clusterers.SimpleKMeans;
 import weka.core.*;
 
 import java.io.File;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -20,7 +23,8 @@ public class SongManager {
     static final int attLength = 28;
     public static Attribute[] attlist;
 
-    static final int numClusters = 255;
+    static final int numClusters = 255*255;
+    static final int songsToScan = 2000000;
 
     static float pitchFactor = 2f;
     static float timbreFactor = 2f;
@@ -29,8 +33,13 @@ public class SongManager {
 
 
     static {
-        list = new File(directory).listFiles();
-        System.out.println(list.length + " wub files in directory");
+        File[] list1 = new File(directory).listFiles();
+        ArrayList<File> al=new ArrayList<>();
+        for (File f:list1){
+            if (f.getAbsolutePath().endsWith(".au"))al.add(f);
+        }
+        list=al.toArray(new File[]{});
+
     }
 
     public static Song getRandom(int i) {
@@ -62,30 +71,30 @@ public class SongManager {
         }
 
 
-        HashMap<Instance, SegmentSong> hm = new HashMap<>();
+//        HashMap<Instance, SegmentSong> hm = new HashMap<>();
         HashMap<Integer, SegmentSong> map = new HashMap<>();
-
-
         SegmentSong[] lastSeen = new SegmentSong[numClusters];
 
-        for (int songIter = 0; songIter < list.length && songIter < 2; songIter++) {
+        ArrayList<SegmentSong> coll = new ArrayList<>();
+        for (int songIter = 0; songIter < list.length && songIter < songsToScan; songIter++) {
             Song song = LoadFromFile.loadSong(list[songIter]);
-            System.out.println("processing song #" + songIter);
+            System.out.println("processing song #" + songIter +"/"+getSize()+"\t"+list[songIter].getName());
             int cnt = 0;
             for (Segment s : song.analysis.getSegments()) {
                 Instance inst = getInstance(attlist, s);
-                hm.put(inst, new SegmentSong(songIter, s));
+                coll.add(new SegmentSong(songIter, s));
                 inst.setDataset(dataset);
                 dataset.add(inst);
             }
         }
-
+        long time=System.currentTimeMillis();
+        System.out.println("building cluster");
         try {
             kmeans.buildClusterer(dataset);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        System.out.println("cluster built: "+((System.currentTimeMillis()-time)/1000));
         // print out the cluster centroids
         Instances centroids = kmeans.getClusterCentroids();
         for (int io = 0; io < centroids.numInstances(); io++) {
@@ -102,10 +111,13 @@ public class SongManager {
 //                        SegmentSong ss=hm.get(dataset.instance(best));
 //            Song tempSong=SongManager.getRandom(best.song);
 //            lastSeen[io] = song.analysis.getSegments().get(best);
-            SegmentSong gg = hm.get(dataset.instance(best));
+            SegmentSong gg = coll.get(best);
             lastSeen[io] = gg;
-            System.out.println("centroid io " + io + "\t" + best);
+            System.out.println("centroid io " + io + "\t" + gg);
 
+            Song tt = SongManager.getRandom(gg.song);
+            AudioInterval ai = tt.getAudioInterval(gg.segment);
+            ObjectManager.write(ai, "centroid" + io + ".ser");
         }
 
         // get cluster membership for each instance
@@ -113,19 +125,19 @@ public class SongManager {
             try {
                 int cluster = kmeans.clusterInstance(dataset.instance(io));
                 SegmentSong tempSegmentSong = lastSeen[cluster];
+                map.put(io, tempSegmentSong);
 
-                SegmentSong hh = hm.get(dataset.instance(io));
-                if (hh==null) System.out.println("hh==null");
-                map.put(hh.segment.hashCode(), tempSegmentSong);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        ObjectManager.write(map,"map.ser");
         Audio audio = new Audio();
         Song song = SongManager.getRandom(0);
+        int cnt = 0;
         for (Segment s : song.analysis.getSegments()) {
-            Instance inst = getInstance(attlist, s);
-            SegmentSong play = hm.get(inst);
+//            Instance inst = getInstance(attlist, s);
+            SegmentSong play = map.get(cnt++);
             if (play == null) {
                 System.out.println("null~!!!");
                 continue;

@@ -32,11 +32,12 @@ public class Test {
 
     public static void main(String[] args) {
 //        Audio audio = new Audio();
-//        SongManager.process();
+        SongManager.process();
 
 
 
 
+/*
         new Thread(new Runnable() {
             public Attribute[] attlist;
 
@@ -184,6 +185,7 @@ public class Test {
                 return inst;
             }
         }).start();
+*/
 
     }
 

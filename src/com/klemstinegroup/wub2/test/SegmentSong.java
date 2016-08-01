@@ -8,13 +8,17 @@ import com.echonest.api.v4.Segment;
 public class SegmentSong  {
     Segment segment;
     int song;
+    int id;
+
+    static int cnt;
     SegmentSong(int song,Segment segment){
         this.segment=segment;
         this.song=song;
+        this.id=cnt++;
     }
 
     @Override public int hashCode(){
-        return segment.hashCode();
+        return Integer.hashCode(id);
     }
 
 
@@ -22,7 +26,15 @@ public class SegmentSong  {
     public boolean equals(Object o) {
         if (!(o instanceof SegmentSong))return false;
         SegmentSong ss=(SegmentSong)o;
-        if (segment.hashCode()!=ss.segment.hashCode())return false;
+        if (id!=ss.id)return false;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "SegmentSong{" +
+                "song=" + song +
+                ", id=" + id +
+                '}';
     }
 }
