@@ -1,11 +1,14 @@
 package com.klemstinegroup.wub2.test;
 
 import com.echonest.api.v4.Segment;
+import com.sun.xml.internal.ws.developer.Serialization;
+
+import java.io.Serializable;
 
 /**
  * Created by Paul on 7/31/2016.
  */
-public class SegmentSong  {
+public class SegmentSong implements Serializable {
     Segment segment;
     int song;
     int id;

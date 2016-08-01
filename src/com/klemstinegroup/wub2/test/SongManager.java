@@ -24,7 +24,7 @@ public class SongManager {
     public static Attribute[] attlist;
 
     static final int numClusters = 255*255;
-    static final int songsToScan = 2000000;
+    static final int songsToScan = 100;
 
     static float pitchFactor = 2f;
     static float timbreFactor = 2f;
