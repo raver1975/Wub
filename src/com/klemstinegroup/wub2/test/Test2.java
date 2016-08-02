@@ -24,8 +24,16 @@ public class Test2 {
     //230
     //245 uk dubstep tutorial
     //246 good dub with voice
+    //290 is good
+    //296 bassnectar lights
+    //298 vnv nation
+    //300 icon of coil machines are us
+    //301 zeds dead, eyes on fire
+    //310 convenent bullet
+    //316 bassnectar enter the chamber
+    //323 bassnectar
 
-    static int playback = 246;
+    static int playback = 402;
     static int stretch = 1;
     static int playbackStart = playback;
     static int playbackEnd = playback + stretch;
@@ -33,10 +41,10 @@ public class Test2 {
 
     static final int numClusters = 255;
 
-    static float pitchFactor = 10f;
-    static float timbreFactor = 16f;
-    static float loudFactor = 50f;
-    static float durationFactor = 60f;
+    static float pitchFactor = 5f;
+    static float timbreFactor = 10f;
+    static float loudFactor = 20f;
+    static float durationFactor = 40f;
 
     static {
         File[] list1 = new File(directory).listFiles();
@@ -67,7 +75,7 @@ public class Test2 {
 
         try {
             kmeans.setNumClusters(numClusters);
-            kmeans.setDistanceFunction(new EuclideanDistance());
+            kmeans.setDistanceFunction(new ManhattanDistance());
 //            kmeans.setMaxIterations(100);
         } catch (Exception e) {
             e.printStackTrace();
