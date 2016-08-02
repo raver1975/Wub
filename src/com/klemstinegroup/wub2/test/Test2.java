@@ -1,14 +1,15 @@
 package com.klemstinegroup.wub2.test;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 import com.echonest.api.v4.Segment;
 
 import com.klemstinegroup.wub2.system.Audio;
 import com.klemstinegroup.wub2.system.LoadFromFile;
 import com.klemstinegroup.wub2.system.Song;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import weka.clusterers.SimpleKMeans;
 import weka.core.*;
 
@@ -32,8 +33,15 @@ public class Test2 {
     //310 convenent bullet
     //316 bassnectar enter the chamber
     //323 bassnectar
+    //404 NIN slave screams
+    //407 rotersand almost wasted
+    //423 vnv nation true life remix
+    //430 gemini blue
+    //439 bassnectar nothing has been broken
+    //449 bassnectar paging sterophonic
+    //456 bassnectar timestretch
 
-    static int playback = 402;
+    static int playback = 472;
     static int stretch = 1;
     static int playbackStart = playback;
     static int playbackEnd = playback + stretch;
@@ -41,10 +49,10 @@ public class Test2 {
 
     static final int numClusters = 255;
 
-    static float pitchFactor = 5f;
+    static float pitchFactor = 17f;
     static float timbreFactor = 10f;
-    static float loudFactor = 20f;
-    static float durationFactor = 40f;
+    static float loudFactor = 70f;
+    static float durationFactor = 90f;
 
     static {
         File[] list1 = new File(directory).listFiles();
@@ -76,6 +84,9 @@ public class Test2 {
         try {
             kmeans.setNumClusters(numClusters);
             kmeans.setDistanceFunction(new ManhattanDistance());
+            String[] options = weka.core.Utils.splitOptions("-I 100");
+            kmeans.setOptions(options);
+
 //            kmeans.setMaxIterations(100);
         } catch (Exception e) {
             e.printStackTrace();
@@ -160,12 +171,63 @@ public class Test2 {
 //            System.out.println("playing: "+play);
             audio.play(tempSong.getAudioInterval(tempSong.analysis.getSegments().get(play.segment)));
         }
-        String meta = song.analysis.toString();
-        meta = meta.substring(0, 400);
-        meta = meta.replaceAll("(.{100})", "$1\n");
-        System.out.println(meta);
+//        String meta = song.analysis.toString();
+//        meta = meta.substring(0, 400);
+//        meta = meta.replaceAll("(.{100})", "$1\n");
+//        meta=meta.substring(0,meta.length()-1);
+//        System.out.println(meta);
 
-        System.out.println("segments size=" + song.analysis.getSegments().size());
+        JSONParser parser = new JSONParser();
+        JSONObject js = (JSONObject) song.analysis.getMap().get("meta");
+        String title = null;
+        String artist = null;
+        String album = null;
+        String genre = null;
+        Long seconds = null;
+
+        try {
+            title = (String) js.get("title");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            artist = (String) js.get("artist");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            album = (String) js.get("album");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            genre = (String) js.get("genre");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            seconds = (Long) js.get("seconds");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (seconds==null||seconds==0)seconds=new Long(-61);
+
+        float scale = (int) (((float) numClusters / (float) song.analysis.getSegments().size()) * 1000) / 10f;
+        System.out.println("segments size=" + song.analysis.getSegments().size() + "\t" + scale + "%");
+        System.out.println("title\t" + title);
+        System.out.println("artist\t" + artist);
+        System.out.println("album\t" + album);
+        System.out.println("genre\t" + genre);
+        System.out.println("time\t" + seconds / 60 + ": " + seconds % 60);
+        Iterator iter = song.analysis.getMap().entrySet().iterator();
+
+//        while (iter.hasNext()){
+//            Object bbb = iter.next();
+//
+//            Map.Entry<String, String> bbe = (Map.Entry<String, String>) bbb;
+//            System.out.println(bbb.toString());
+//
+//        }
     }
 
     protected static double distance(Instance i1, Instance i2) {
