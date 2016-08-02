@@ -21,8 +21,11 @@ public class Test2 {
     static final int attLength = 28;
     public static Attribute[] attlist;
 
+    //230
+    //245 uk dubstep tutorial
+    //246 good dub with voice
 
-    static int playback = 212;
+    static int playback = 246;
     static int stretch = 1;
     static int playbackStart = playback;
     static int playbackEnd = playback + stretch;
@@ -30,10 +33,10 @@ public class Test2 {
 
     static final int numClusters = 255;
 
-    static float pitchFactor = 2f;
-    static float timbreFactor = 3f;
-    static float loudFactor = 15f;
-    static float durationFactor = 50f;
+    static float pitchFactor = 10f;
+    static float timbreFactor = 16f;
+    static float loudFactor = 50f;
+    static float durationFactor = 60f;
 
     static {
         File[] list1 = new File(directory).listFiles();
@@ -64,7 +67,7 @@ public class Test2 {
 
         try {
             kmeans.setNumClusters(numClusters);
-            kmeans.setDistanceFunction(new ManhattanDistance());
+            kmeans.setDistanceFunction(new EuclideanDistance());
 //            kmeans.setMaxIterations(100);
         } catch (Exception e) {
             e.printStackTrace();
