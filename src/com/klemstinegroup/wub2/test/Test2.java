@@ -15,7 +15,6 @@ import weka.core.*;
 public class Test2 {
 
 
-
     static String directory = "e:\\wub\\";
     private static final File[] list;
 
@@ -23,18 +22,18 @@ public class Test2 {
     public static Attribute[] attlist;
 
 
-    static int playback = 106;
-    static int stretch = 6;
+    static int playback = 838;
+    static int stretch = 1;
     static int playbackStart = playback;
     static int playbackEnd = playback + stretch;
 
 
-    static final int numClusters = 2000;
+    static final int numClusters = 255;
 
-    static float pitchFactor = 3f;
-    static float timbreFactor =6f;
-    static float loudFactor = 20f;
-    static float durationFactor = 40f;
+    static float pitchFactor = 10f;
+    static float timbreFactor = 20f;
+    static float loudFactor = 70f;
+    static float durationFactor = 100f;
 
     static {
         File[] list1 = new File(directory).listFiles();
@@ -79,7 +78,7 @@ public class Test2 {
 //            datasets[songIter] = dataset;
 
             Song song = LoadFromFile.loadSong(list[songIter]);
-            System.out.println("processing song #" + ((songIter-playbackStart)+1) + "/" + Math.min(list.length, playbackEnd-playbackStart) + "\t" + list[songIter].getName());
+            System.out.println("processing song #" + ((songIter - playbackStart) + 1) + "/" + Math.min(list.length, playbackEnd - playbackStart) + "\t" + list[songIter].getName());
             int cnt = 0;
             for (Segment s : song.analysis.getSegments()) {
                 Instance inst = getInstance(attlist, s);
@@ -134,24 +133,35 @@ public class Test2 {
 
         Audio audio = new Audio();
         Song song = SongManager.getRandom(playback);
-
-        for (int cnt=0;cnt<song.analysis.getSegments().size();cnt++) {
+        Song tempSong = null;
+        int lastSong = -1;
+        for (int cnt = 0; cnt < song.analysis.getSegments().size(); cnt++) {
             SegmentSong pp = new SegmentSong(playback, cnt);
             SegmentSong play = map.get(pp);
             if (play == null) {
                 System.out.println("null! " + pp);
                 continue;
             }
-            Song tempSong = SongManager.getRandom(play.song);
+            if (lastSong != play.song) {
+                tempSong = SongManager.getRandom(play.song);
+                lastSong = play.song;
+            }
+//            System.out.println("playing: "+play);
             audio.play(tempSong.getAudioInterval(tempSong.analysis.getSegments().get(play.segment)));
         }
+        String meta = song.analysis.toString();
+        meta = meta.substring(0, 400);
+        meta = meta.replaceAll("(.{100})", "$1\n");
+        System.out.println(meta);
+
+        System.out.println("segments size=" + song.analysis.getSegments().size());
     }
 
     protected static double distance(Instance i1, Instance i2) {
         double tot = 0;
         for (int i = 0; i < attLength; i++) {
             double ta = i1.value(attlist[i]) - i2.value(attlist[i]);
-            ta = ta*ta;
+            ta = ta * ta;
             tot += ta;
         }
         return tot;
