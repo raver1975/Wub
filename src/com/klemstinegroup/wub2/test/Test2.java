@@ -22,7 +22,7 @@ public class Test2 {
     public static Attribute[] attlist;
 
 
-    static int playback = 838;
+    static int playback = 212;
     static int stretch = 1;
     static int playbackStart = playback;
     static int playbackEnd = playback + stretch;
@@ -30,10 +30,10 @@ public class Test2 {
 
     static final int numClusters = 255;
 
-    static float pitchFactor = 10f;
-    static float timbreFactor = 20f;
-    static float loudFactor = 70f;
-    static float durationFactor = 100f;
+    static float pitchFactor = 2f;
+    static float timbreFactor = 3f;
+    static float loudFactor = 15f;
+    static float durationFactor = 50f;
 
     static {
         File[] list1 = new File(directory).listFiles();
@@ -161,7 +161,7 @@ public class Test2 {
         double tot = 0;
         for (int i = 0; i < attLength; i++) {
             double ta = i1.value(attlist[i]) - i2.value(attlist[i]);
-            ta = ta * ta;
+            ta = Math.abs(ta);
             tot += ta;
         }
         return tot;
