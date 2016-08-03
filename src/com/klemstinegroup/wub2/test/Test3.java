@@ -47,13 +47,13 @@ public class Test3 {
     //1016 bassnectar basshead
 
     public static JFrame frame=new JFrame("test");
-    static int playback =407;
+    static int playback =1016;
     static int stretch = 1;
     static int playbackStart = playback;
     static int playbackEnd = playback + stretch;
 
 
-    static final int numClusters =255;
+    static final int numClusters =400;
 
     static float pitchFactor = 17f;
     static float timbreFactor = 10f;
