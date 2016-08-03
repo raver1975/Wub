@@ -1,10 +1,11 @@
 package com.klemstinegroup.wub2.system;
 
+import com.klemstinegroup.wub.ColorHelper;
 import com.klemstinegroup.wub2.test.Test3;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.awt.*;
+import java.lang.reflect.Array;
+import java.util.*;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
@@ -38,6 +39,23 @@ public class Audio {
 
     ArrayList<Integer> tem = new ArrayList<>();
 
+
+    public static HashMap<Integer,Color> randomColor=new HashMap<>();
+    static{
+        ArrayList<Integer> gill=new ArrayList<>();
+        for (int i=0;i<Test3.numClusters;i++){
+            gill.add(i);
+        }
+
+        for (int i=0;i<Test3.numClusters;i++){
+            int pos= (int) (Math.random()*gill.size());
+            double normd=((double)pos/(double)Test3.numClusters)*100d;
+//            Test3.tf.setBackground(ColorHelper.numberToColor(normd));
+            randomColor.put(i,ColorHelper.numberToColor(normd));
+            gill.remove(new Integer(pos));
+        }
+
+    }
     private void startPlaying() {
         line = getLine();
         new Thread(new Runnable() {
@@ -49,13 +67,18 @@ public class Audio {
 
                         currentlyPlaying = i;
                         if (i.payload != null) {
-                            System.out.println("now playing " + i.payload);
+//                            System.out.println("now playing " + i.payload);
 
                             if (Test3.tf != null) {
 
                                 if (!tem.contains(i.payload.segment))
                                     tem.add(i.payload.segment);
-                                Test3.tf.append(tem.indexOf(i.payload.segment) + "\n");
+                                int norm=tem.indexOf(i.payload.segment);
+                                Test3.tf.append(norm + "\n");
+//                                Test3.tf.setBackground(randomColor.get(norm));
+                                double normd=((double)norm/(double)Test3.numClusters)*100d;
+                                Test3.tf.setBackground(ColorHelper.numberToColor(normd));
+                                Test3.tf.invalidate();
 
 //								Test3.tf.setText(i.payload.segment+"");
                             }

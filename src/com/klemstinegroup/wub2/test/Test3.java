@@ -12,6 +12,7 @@ import weka.core.*;
 
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
+import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,10 +54,10 @@ public class Test3 {
     static int playbackEnd = playback + stretch;
 
 
-    static final int numClusters =400;
+    public static final int numClusters =255;
 
     static float pitchFactor = 17f;
-    static float timbreFactor = 10f;
+    static float timbreFactor = 17f;
     static float loudFactor = 70f;
     static float durationFactor = 90f;
     public static JTextArea tf;
@@ -79,6 +80,7 @@ public class Test3 {
 
         frame.setSize(400,300);
         tf=new JTextArea();
+        tf.setFont(new Font("Arial",Font.BOLD,300));
         JScrollPane jscr=new JScrollPane(tf);
 
         DefaultCaret caret = (DefaultCaret) tf.getCaret();
