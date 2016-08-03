@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class SegmentSong implements Serializable {
 //    Segment segment;
     int song;
-    int segment;
+    public int segment;
 
     SegmentSong(int song,int segment){
         this.segment=segment;

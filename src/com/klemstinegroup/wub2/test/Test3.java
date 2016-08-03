@@ -1,10 +1,6 @@
 package com.klemstinegroup.wub2.test;
 
-import java.io.File;
-import java.util.*;
-
 import com.echonest.api.v4.Segment;
-
 import com.klemstinegroup.wub2.system.Audio;
 import com.klemstinegroup.wub2.system.AudioInterval;
 import com.klemstinegroup.wub2.system.LoadFromFile;
@@ -14,7 +10,14 @@ import org.json.simple.parser.JSONParser;
 import weka.clusterers.SimpleKMeans;
 import weka.core.*;
 
-public class Test2 {
+import javax.swing.*;
+import javax.swing.text.DefaultCaret;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+
+public class Test3 {
 
 
     static String directory = "e:\\wub\\";
@@ -43,19 +46,21 @@ public class Test2 {
     //456 bassnectar timestretch
     //1016 bassnectar basshead
 
-
-    static int playback =1016;
+    public static JFrame frame=new JFrame("test");
+    static int playback =407;
     static int stretch = 1;
     static int playbackStart = playback;
     static int playbackEnd = playback + stretch;
 
 
-    static final int numClusters =400;
+    static final int numClusters =255;
 
     static float pitchFactor = 17f;
     static float timbreFactor = 10f;
     static float loudFactor = 70f;
     static float durationFactor = 90f;
+    public static JTextArea tf;
+
 
     static {
         File[] list1 = new File(directory).listFiles();
@@ -70,6 +75,16 @@ public class Test2 {
 
     public static void main(String[] args) {
 
+
+
+        frame.setSize(400,300);
+        tf=new JTextArea();
+        JScrollPane jscr=new JScrollPane(tf);
+
+        DefaultCaret caret = (DefaultCaret) tf.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        frame.add(jscr);
+        frame.setVisible(true);
 
         //one time attribute setup
         FastVector attrs = new FastVector();
@@ -87,7 +102,7 @@ public class Test2 {
         try {
             kmeans.setNumClusters(numClusters);
             kmeans.setDistanceFunction(new ManhattanDistance());
-            String[] options = weka.core.Utils.splitOptions("-I 100");
+            String[] options = Utils.splitOptions("-I 100");
             kmeans.setOptions(options);
 
 //            kmeans.setMaxIterations(100);
@@ -163,6 +178,11 @@ public class Test2 {
         for (int cnt = 0; cnt < song.analysis.getSegments().size(); cnt++) {
             SegmentSong pp = new SegmentSong(playback, cnt);
             SegmentSong play = map.get(pp);
+//            if (Math.random()<.5f){
+//                cnt=play.segment-1;
+//                System.out.println("ging back to "+(cnt));
+//                continue;
+//            }
             if (play == null) {
                 System.out.println("null! " + pp);
                 continue;

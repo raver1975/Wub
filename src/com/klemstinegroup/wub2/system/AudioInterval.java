@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.echonest.api.v4.TimedEvent;
+import com.klemstinegroup.wub2.test.SegmentSong;
 
 public class AudioInterval implements Serializable {
 
@@ -12,6 +13,8 @@ public class AudioInterval implements Serializable {
     //public int startBytes;
     //public int lengthBytes;
     public byte[] data;
+    public SegmentSong payload;
+
     //public int endBytes;
 //	int newbytestart;
 
