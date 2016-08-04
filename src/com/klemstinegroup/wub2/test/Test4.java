@@ -51,7 +51,7 @@ public class Test4 {
     public static JFrame frame = new JFrame(Test4.class.toString());
 
     static boolean rnn=true;
-    static int playback = 230;
+    static int playback = 1016;
     static int stretch = 1;
     static int playbackStart = playback;
     static int playbackEnd = playback + stretch;
@@ -210,7 +210,7 @@ public class Test4 {
         while(rnn) {
             String get = null;
             try {
-                get = ExamplePaulGraham.go("out");
+                get = ExamplePaulGraham.go("out",true);
             } catch (Exception e) {
                 e.printStackTrace();
             }

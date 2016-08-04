@@ -12,7 +12,7 @@ import rnn.datastructs.DataSet;
 public class ExamplePaulGraham {
 //    private static long seed=4337;
 
-    public static String go(String textSource) throws Exception {
+    public static String go(String textSource,boolean init) throws Exception {
 
 		/*
 		 * Character-by-character sentence prediction and generation, closely following the example here:
@@ -22,7 +22,7 @@ public class ExamplePaulGraham {
 //		String textSource = "PaulGraham";
         DataSet data = new TextGeneration(textSource + ".txt");
         String savePath = textSource + ".ser";
-        boolean initFromSaved = true; //set this to false to start with a fresh model
+        boolean initFromSaved = init; //set this to false to start with a fresh model
         boolean overwriteSaved = true;
 
         TextGeneration.reportSequenceLength = 75;
