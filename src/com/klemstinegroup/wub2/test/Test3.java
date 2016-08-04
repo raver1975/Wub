@@ -7,6 +7,7 @@ import com.klemstinegroup.wub2.system.LoadFromFile;
 import com.klemstinegroup.wub2.system.Song;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import rnn.ExamplePaulGraham;
 import weka.clusterers.SimpleKMeans;
 import weka.core.*;
 
@@ -15,6 +16,9 @@ import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -187,6 +191,49 @@ public class Test3 {
         Song song = SongManager.getRandom(playback);
         Song tempSong = null;
         int lastSong = -1;
+        String out = "";
+        ArrayList<Integer> tem = new ArrayList<>();
+        for (int cnt = 0; cnt < song.analysis.getSegments().size(); cnt++) {
+            SegmentSong pp = new SegmentSong(playback, cnt);
+            if (!tem.contains(pp.segment)) {
+                tem.add(pp.segment);
+            }
+            out += (char) tem.indexOf(pp.segment);
+
+        }
+        PrintWriter writer = null;
+        try {
+            writer = new PrintWriter("out.txt", "UTF-8");
+            writer.println(out);
+            writer.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        boolean flag=true;
+        while(flag==true) {
+            String get = null;
+            try {
+                get = ExamplePaulGraham.go("out");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            for (int i = 0; i < get.length(); i++) {
+                char c = get.charAt(i);
+                SegmentSong pp = new SegmentSong(playback, (int) c);
+                SegmentSong play = map.get(pp);
+                if (lastSong != play.song) {
+                    tempSong = SongManager.getRandom(play.song);
+                    lastSong = play.song;
+                }
+                AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(play.segment));
+                ai.payload = play;
+                audio.play(ai);
+            }
+        }
+
+
         for (int cnt = 0; cnt < song.analysis.getSegments().size(); cnt++) {
             SegmentSong pp = new SegmentSong(playback, cnt);
             SegmentSong play = map.get(pp);
