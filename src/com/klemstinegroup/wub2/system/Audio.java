@@ -106,14 +106,14 @@ public class Audio {
 
                                         for (int xi=-1;xi<2;xi++){
                                             for (int yi=-1;yi<2;yi++){
-                                                g.drawString(i.payload.song+":"+i.payload.segment,40-xi,-10+yi+Test3.frame.getHeight()/2);
+                                                g.drawString(i.payload.song+":"+tem.get(i.payload.segment),60-xi,-10+yi+Test3.frame.getHeight()/2);
 
                                             }
 
                                         }
                                         g.setColor(Color.BLACK);
 
-                                        g.drawString(i.payload.song+":"+i.payload.segment,40,-10+Test3.frame.getHeight()/2);
+                                        g.drawString(i.payload.song+":"+i.payload.segment,60,-10+Test3.frame.getHeight()/2);
 
 
 
