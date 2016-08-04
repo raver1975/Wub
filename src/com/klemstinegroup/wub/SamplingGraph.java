@@ -15,7 +15,7 @@ import com.echonest.api.v4.Segment;
 /**
  * Render a WaveForm.
  */
-class SamplingGraph {
+public class SamplingGraph {
 
 	public SamplingGraph() {
 	}

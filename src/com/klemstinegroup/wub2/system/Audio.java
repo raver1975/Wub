@@ -1,10 +1,11 @@
 package com.klemstinegroup.wub2.system;
 
+import com.echonest.api.v4.Segment;
 import com.klemstinegroup.wub.ColorHelper;
+import com.klemstinegroup.wub2.test.SongManager;
 import com.klemstinegroup.wub2.test.Test3;
 
 import java.awt.*;
-import java.lang.reflect.Array;
 import java.util.*;
 
 import javax.sound.sampled.AudioFormat;
@@ -12,6 +13,8 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
+
+import com.klemstinegroup.wub.*;
 
 public class Audio {
 
@@ -31,6 +34,8 @@ public class Audio {
     public static final AudioFormat audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sampleRate, resolution, channels, frameSize, sampleRate, false);
     public static final AudioFormat audioFormatMono = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sampleRate, resolution, channels / 2, frameSize / 2, sampleRate, false);
     public static final int bufferSize = 8192;
+    private Song cachedSong;
+    private int cachedSongIndex;
 
     public Audio() {
         queue = new LinkedList<AudioInterval>();
@@ -40,22 +45,24 @@ public class Audio {
     ArrayList<Integer> tem = new ArrayList<>();
 
 
-    public static HashMap<Integer,Color> randomColor=new HashMap<>();
-    static{
-        ArrayList<Integer> gill=new ArrayList<>();
-        for (int i=0;i<Test3.numClusters;i++){
+    public static HashMap<Integer, Color> randomColor = new HashMap<>();
+
+    static {
+        ArrayList<Integer> gill = new ArrayList<>();
+        for (int i = 0; i < Test3.numClusters; i++) {
             gill.add(i);
         }
 
-        for (int i=0;i<Test3.numClusters;i++){
-            int pos= (int) (Math.random()*gill.size());
-            double normd=((double)pos/(double)Test3.numClusters)*100d;
+        for (int i = 0; i < Test3.numClusters; i++) {
+            int pos = (int) (Math.random() * gill.size());
+            double normd = ((double) pos / (double) Test3.numClusters) * 100d;
 //            Test3.tf.setBackground(ColorHelper.numberToColor(normd));
-            randomColor.put(i,ColorHelper.numberToColor(normd));
+            randomColor.put(i, ColorHelper.numberToColor(normd));
             gill.remove(new Integer(pos));
         }
 
     }
+
     private void startPlaying() {
         line = getLine();
         new Thread(new Runnable() {
@@ -70,17 +77,32 @@ public class Audio {
 //                            System.out.println("now playing " + i.payload);
 
                             if (Test3.tf != null) {
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (!tem.contains(i.payload.segment))
+                                            tem.add(i.payload.segment);
+                                        int norm = tem.indexOf(i.payload.segment);
+//                                Test3.tf.append(norm + "\n");
+                                        double normd = ((double) norm / (double) Test3.numClusters) * 100d;
 
-                                if (!tem.contains(i.payload.segment))
-                                    tem.add(i.payload.segment);
-                                int norm=tem.indexOf(i.payload.segment);
-                                Test3.tf.append(norm + "\n");
-//                                Test3.tf.setBackground(randomColor.get(norm));
-                                double normd=((double)norm/(double)Test3.numClusters)*100d;
-                                Test3.tf.setBackground(ColorHelper.numberToColor(normd));
-                                Test3.tf.invalidate();
+//                                Test3.tf.invalidate();
 
-//								Test3.tf.setText(i.payload.segment+"");
+                                        if (cachedSong == null || cachedSongIndex != i.payload.song) {
+                                            cachedSong = SongManager.getRandom(i.payload.song);
+                                            cachedSongIndex = i.payload.song;
+                                        }
+
+                                        ArrayList<Segment> list = new ArrayList<>();
+                                        list.add(cachedSong.analysis.getSegments().get(i.payload.segment));
+                                        double duration = cachedSong.analysis.getSegments().get(i.payload.segment).duration;
+                                        Test3.tf.setBackground(ColorHelper.numberToColor(normd));
+                                        Test3.tf.setImage(new SamplingGraph().createWaveForm(list, duration, i.data, audioFormat, Test3.tf.getWidth(), Test3.tf.getHeight()));
+                                        Test3.tf.invalidate();
+//                                System.out.println("hetre2");
+
+                                    }
+                                }).start();
                             }
 
 
@@ -125,7 +147,10 @@ public class Audio {
                     }
                 }
             }
-        }).start();
+        }).
+
+                start();
+
     }
 
     public SourceDataLine getLine() {

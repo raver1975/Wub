@@ -10,7 +10,7 @@ import java.io.Serializable;
  */
 public class SegmentSong implements Serializable {
 //    Segment segment;
-    int song;
+public int song;
     public int segment;
 
     SegmentSong(int song,int segment){

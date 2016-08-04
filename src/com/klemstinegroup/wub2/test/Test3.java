@@ -13,6 +13,7 @@ import weka.core.*;
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,23 +48,25 @@ public class Test3 {
     //456 bassnectar timestretch
     //1016 bassnectar basshead
 
-    public static JFrame frame=new JFrame("test");
-    static int playback =1016;
+    public static JFrame frame = new JFrame("test");
+
+    static int playback = 1016;
     static int stretch = 1;
     static int playbackStart = playback;
     static int playbackEnd = playback + stretch;
 
 
-    public static final int numClusters =255;
+    public static final int numClusters = 255;
 
     static float pitchFactor = 17f;
     static float timbreFactor = 17f;
     static float loudFactor = 70f;
     static float durationFactor = 90f;
-    public static JTextArea tf;
+    public static ImagePanel tf;
 
 
     static {
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         File[] list1 = new File(directory).listFiles();
         ArrayList<File> al = new ArrayList<>();
         for (File f : list1) {
@@ -77,16 +80,23 @@ public class Test3 {
     public static void main(String[] args) {
 
 
+        frame.setSize(400, 300);
+        tf = new ImagePanel();
+        tf.setFont(new Font("Arial", Font.BOLD, 300));
+        JScrollPane jscr = new JScrollPane(tf);
 
-        frame.setSize(400,300);
-        tf=new JTextArea();
-        tf.setFont(new Font("Arial",Font.BOLD,300));
-        JScrollPane jscr=new JScrollPane(tf);
-
-        DefaultCaret caret = (DefaultCaret) tf.getCaret();
-        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+//        DefaultCaret caret = (DefaultCaret) tf.getCaret();
+//        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         frame.add(jscr);
         frame.setVisible(true);
+
+        for (int i = 0; i < 10; i++) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
         //one time attribute setup
         FastVector attrs = new FastVector();
@@ -194,8 +204,8 @@ public class Test3 {
                 lastSong = play.song;
             }
 //            System.out.println("playing: "+play);
-            AudioInterval ai=tempSong.getAudioInterval(tempSong.analysis.getSegments().get(play.segment));
-            ai.payload=play;
+            AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(play.segment));
+            ai.payload = play;
             audio.play(ai);
         }
 //        String meta = song.analysis.toString();
@@ -237,7 +247,7 @@ public class Test3 {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (seconds==null||seconds==0)seconds=new Long(-61);
+        if (seconds == null || seconds == 0) seconds = new Long(-61);
 
         float scale = (int) (((float) numClusters / (float) song.analysis.getSegments().size()) * 1000) / 10f;
         System.out.println("segments size=" + song.analysis.getSegments().size() + "\t" + scale + "%");
