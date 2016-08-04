@@ -2,6 +2,7 @@ package com.klemstinegroup.wub2.system;
 
 import com.echonest.api.v4.Segment;
 import com.klemstinegroup.wub.ColorHelper;
+import com.klemstinegroup.wub2.test.ImagePanel;
 import com.klemstinegroup.wub2.test.SongManager;
 import com.klemstinegroup.wub2.test.Test3;
 
@@ -14,6 +15,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
+import javax.swing.*;
 
 import com.klemstinegroup.wub.*;
 
@@ -38,9 +40,13 @@ public class Audio {
     private Song cachedSong;
     private int cachedSongIndex;
 
-    public Audio() {
+    public Audio(){
+        this(null,1);
+    }
+
+    public Audio(ImagePanel ip,int numClusters) {
         queue = new LinkedList<AudioInterval>();
-        startPlaying();
+        startPlaying(ip,numClusters);
     }
 
     ArrayList<Integer> tem = new ArrayList<>();
@@ -64,7 +70,7 @@ public class Audio {
 
     }
 
-    private void startPlaying() {
+    private void startPlaying(ImagePanel tf,int numClusters) {
         line = getLine();
         new Thread(new Runnable() {
             public void run() {
@@ -74,20 +80,21 @@ public class Audio {
                         AudioInterval i = queue.poll();
 
                         currentlyPlaying = i;
+                        System.out.println("currently playing: "+i.payload);
                         if (i.payload != null) {
 //                            System.out.println("now playing " + i.payload);
 
-                            if (Test3.tf != null) {
+                            if (tf != null) {
                                 new Thread(new Runnable() {
                                     @Override
                                     public void run() {
                                         if (!tem.contains(i.payload.segment))
                                             tem.add(i.payload.segment);
                                         int norm = tem.indexOf(i.payload.segment);
-//                                Test3.tf.append(norm + "\n");
-                                        double normd = ((double) norm / (double) Test3.numClusters) * 100d;
+//                                tf.append(norm + "\n");
+                                        double normd = ((double) norm / (double) numClusters) * 100d;
 
-//                                Test3.tf.invalidate();
+//                                tf.invalidate();
 
                                         if (cachedSong == null || cachedSongIndex != i.payload.song) {
                                             cachedSong = SongManager.getRandom(i.payload.song);
@@ -97,8 +104,8 @@ public class Audio {
                                         ArrayList<Segment> list = new ArrayList<>();
                                         list.add(cachedSong.analysis.getSegments().get(i.payload.segment));
                                         double duration = cachedSong.analysis.getSegments().get(i.payload.segment).duration;
-                                        Test3.tf.setBackground(ColorHelper.numberToColor(normd));
-                                        BufferedImage bi=new SamplingGraph().createWaveForm(list, duration, i.data, audioFormat, Test3.tf.getWidth(), Test3.tf.getHeight());
+                                        tf.setBackground(ColorHelper.numberToColor(normd));
+                                        BufferedImage bi=new SamplingGraph().createWaveForm(list, duration, i.data, audioFormat, tf.getWidth(), tf.getHeight());
                                         Graphics g=bi.getGraphics();
 
                                         g.setFont(new Font("Arial", Font.BOLD, 30));
@@ -106,19 +113,19 @@ public class Audio {
 
                                         for (int xi=-1;xi<2;xi++){
                                             for (int yi=-1;yi<2;yi++){
-                                                g.drawString(i.payload.song+":"+tem.get(i.payload.segment),60-xi,-10+yi+Test3.frame.getHeight()/2);
+                                                g.drawString(i.payload.song+":"+i.payload.segment,60-xi,15+yi+tf.getHeight()/2);
 
                                             }
 
                                         }
                                         g.setColor(Color.BLACK);
 
-                                        g.drawString(i.payload.song+":"+i.payload.segment,60,-10+Test3.frame.getHeight()/2);
+                                        g.drawString(i.payload.song+":"+i.payload.segment,60,15+tf.getHeight()/2);
 
 
 
-                                        Test3.tf.setImage(bi);
-                                        Test3.tf.invalidate();
+                                        tf.setImage(bi);
+                                        tf.invalidate();
 //                                System.out.println("hetre2");
 
                                     }

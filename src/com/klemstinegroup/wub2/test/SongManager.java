@@ -161,7 +161,7 @@ public class SongManager {
         HashMap<String, SegmentSong> map = (HashMap<String, SegmentSong>) ObjectManager.read("map-" + playback + ".ser");
 //        System.out.println( map.get(new SegmentSong(0,0).toString()));
         //ObjectManager.write(map, "map.ser");
-        Audio audio = new Audio();
+       // Audio audio = new Audio();
         Song song = SongManager.getRandom(playback);
         int cnt = 0;
         for (Segment s : song.analysis.getSegments()) {
@@ -173,7 +173,7 @@ public class SongManager {
                 continue;
             }//            System.out.println("******" + play);
             Song tempSong = SongManager.getRandom(play.song);
-            audio.play(tempSong.getAudioInterval(tempSong.analysis.getSegments().get(play.segment)));
+            //audio.play(tempSong.getAudioInterval(tempSong.analysis.getSegments().get(play.segment)));
         }
     }
 
