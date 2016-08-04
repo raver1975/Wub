@@ -22,7 +22,7 @@ public class ExamplePaulGraham {
 //		String textSource = "PaulGraham";
         DataSet data = new TextGeneration(textSource + ".txt");
         String savePath = textSource + ".ser";
-        boolean initFromSaved = false; //set this to false to start with a fresh model
+        boolean initFromSaved = true; //set this to false to start with a fresh model
         boolean overwriteSaved = true;
 
         TextGeneration.reportSequenceLength = 75;

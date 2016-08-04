@@ -100,8 +100,23 @@ public class Audio {
                                         Test3.tf.setBackground(ColorHelper.numberToColor(normd));
                                         BufferedImage bi=new SamplingGraph().createWaveForm(list, duration, i.data, audioFormat, Test3.tf.getWidth(), Test3.tf.getHeight());
                                         Graphics g=bi.getGraphics();
-                                        g.setColor(Color.WHITE);
-                                        g.drawString(i.payload.song+":"+i.payload.segment,20,20);
+
+                                        g.setFont(new Font("Arial", Font.BOLD, 30));
+                                        g.setColor(Color.RED);
+
+                                        for (int xi=-1;xi<2;xi++){
+                                            for (int yi=-1;yi<2;yi++){
+                                                g.drawString(i.payload.song+":"+i.payload.segment,40-xi,-10+yi+Test3.frame.getHeight()/2);
+
+                                            }
+
+                                        }
+                                        g.setColor(Color.BLACK);
+
+                                        g.drawString(i.payload.song+":"+i.payload.segment,40,-10+Test3.frame.getHeight()/2);
+
+
+
                                         Test3.tf.setImage(bi);
                                         Test3.tf.invalidate();
 //                                System.out.println("hetre2");
