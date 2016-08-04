@@ -6,6 +6,7 @@ import com.klemstinegroup.wub2.test.SongManager;
 import com.klemstinegroup.wub2.test.Test3;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.*;
 
 import javax.sound.sampled.AudioFormat;
@@ -97,7 +98,11 @@ public class Audio {
                                         list.add(cachedSong.analysis.getSegments().get(i.payload.segment));
                                         double duration = cachedSong.analysis.getSegments().get(i.payload.segment).duration;
                                         Test3.tf.setBackground(ColorHelper.numberToColor(normd));
-                                        Test3.tf.setImage(new SamplingGraph().createWaveForm(list, duration, i.data, audioFormat, Test3.tf.getWidth(), Test3.tf.getHeight()));
+                                        BufferedImage bi=new SamplingGraph().createWaveForm(list, duration, i.data, audioFormat, Test3.tf.getWidth(), Test3.tf.getHeight());
+                                        Graphics g=bi.getGraphics();
+                                        g.setColor(Color.WHITE);
+                                        g.drawString(i.payload.song+":"+i.payload.segment,20,20);
+                                        Test3.tf.setImage(bi);
                                         Test3.tf.invalidate();
 //                                System.out.println("hetre2");
 

@@ -54,13 +54,13 @@ public class Test3 {
 
     public static JFrame frame = new JFrame("test");
 
-    static int playback = 1016;
+    static int playback = 430;
     static int stretch = 1;
     static int playbackStart = playback;
     static int playbackEnd = playback + stretch;
 
 
-    public static final int numClusters = 255;
+    public static final int numClusters = 256;
 
     static float pitchFactor = 17f;
     static float timbreFactor = 17f;
@@ -194,7 +194,7 @@ public class Test3 {
         String out = "";
         ArrayList<Integer> tem = new ArrayList<>();
         for (int cnt = 0; cnt < song.analysis.getSegments().size(); cnt++) {
-            SegmentSong pp = new SegmentSong(playback, cnt);
+            SegmentSong pp = map.get(new SegmentSong(playback, cnt));
             if (!tem.contains(pp.segment)) {
                 tem.add(pp.segment);
             }

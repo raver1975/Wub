@@ -10,6 +10,8 @@ import rnn.datasets.TextGeneration;
 import rnn.datastructs.DataSet;
 
 public class ExamplePaulGraham {
+//    private static long seed=4337;
+
     public static String go(String textSource) throws Exception {
 
 		/*
@@ -20,16 +22,15 @@ public class ExamplePaulGraham {
 //		String textSource = "PaulGraham";
         DataSet data = new TextGeneration(textSource + ".txt");
         String savePath = textSource + ".ser";
-        boolean initFromSaved = true; //set this to false to start with a fresh model
+        boolean initFromSaved = false; //set this to false to start with a fresh model
         boolean overwriteSaved = true;
 
-        TextGeneration.reportSequenceLength = 20;
-        TextGeneration.singleWordAutocorrect = false; //set this to true to constrain generated sentences to contain only words observed in the training data.
+        TextGeneration.reportSequenceLength = 75;
 
-        int bottleneckSize = 10; //one-hot input is squeezed through this
-        int hiddenDimension = 2000;
-        int hiddenLayers = 2;
-        double learningRate = 0.001;
+        int bottleneckSize = 20; //one-hot input is squeezed through this
+        int hiddenDimension = 400;
+        int hiddenLayers =2;
+        double learningRate = 0.0001;
         double initParamsStdDev = 0.08;
 
         Random rng = new Random();
@@ -39,12 +40,12 @@ public class ExamplePaulGraham {
                 data.outputDimension, data.getModelOutputUnitToUse(),
                 initParamsStdDev, rng);
 
-        int reportEveryNthEpoch = 1000;
-        int trainingEpochs = 1;
+        int reportEveryNthEpoch =5;
+        int trainingEpochs = 5;
 
 //		while(true) {
-        Trainer.train(trainingEpochs, learningRate, lstm, data, reportEveryNthEpoch, initFromSaved, overwriteSaved, savePath, rng);
-        List<String> predicted = TextGeneration.generateText(lstm,TextGeneration.reportSequenceLength, true, .1f, new Random());
+        Trainer.train(trainingEpochs, learningRate-=.00001d, lstm, data, reportEveryNthEpoch, initFromSaved, overwriteSaved, savePath, rng);
+        List<String> predicted = TextGeneration.generateText(lstm,TextGeneration.reportSequenceLength,false, .5f, new Random());
         int cnt = 0;
         System.out.println("--------------------------------------------");
         for (String b : predicted) {
