@@ -214,7 +214,7 @@ public class Test3 {
         while(flag==true) {
             String get = null;
             try {
-                get = ExamplePaulGraham.go("out");
+                get = ExamplePaulGraham.go("out",true);
             } catch (Exception e) {
                 e.printStackTrace();
             }
