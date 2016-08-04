@@ -12,18 +12,14 @@ import weka.clusterers.SimpleKMeans;
 import weka.core.*;
 
 import javax.swing.*;
-import javax.swing.text.DefaultCaret;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class Test3 {
+public class Test4 {
 
 
     static String directory = "e:\\wub\\";
@@ -52,9 +48,10 @@ public class Test3 {
     //456 bassnectar timestretch
     //1016 bassnectar basshead
 
-    public static JFrame frame = new JFrame("test");
+    public static JFrame frame = new JFrame(Test4.class.toString());
 
-    static int playback = 430;
+    static boolean rnn=true;
+    static int playback = 230;
     static int stretch = 1;
     static int playbackStart = playback;
     static int playbackEnd = playback + stretch;
@@ -210,8 +207,7 @@ public class Test3 {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        boolean flag=true;
-        while(flag==true) {
+        while(rnn) {
             String get = null;
             try {
                 get = ExamplePaulGraham.go("out");
