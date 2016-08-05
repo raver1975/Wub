@@ -7,7 +7,11 @@ import com.klemstinegroup.wub2.system.LoadFromFile;
 import com.klemstinegroup.wub2.system.Song;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import rnn.ExamplePaulGraham;
+import rnn.datasets.TextGeneration;
+import rnn.datastructs.DataSet;
+import rnn.model.Model;
+import rnn.trainer.Trainer;
+import rnn.util.NeuralNetworkHelper;
 import weka.clusterers.SimpleKMeans;
 import weka.core.*;
 
@@ -15,9 +19,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 
 public class Test4 {
 
@@ -50,7 +52,10 @@ public class Test4 {
 
     public static JFrame frame = new JFrame(Test4.class.toString());
 
-    static boolean rnn=true;
+    static boolean rnn = true;
+    static boolean enableAudioDuringTraining = false;
+    private static boolean loadPrevSavedModel = true;
+
     static int playback = 1016;
     static int stretch = 1;
     static int playbackStart = playback;
@@ -63,6 +68,16 @@ public class Test4 {
     static float timbreFactor = 17f;
     static float loudFactor = 70f;
     static float durationFactor = 90f;
+
+    public static int reportSequenceLength = 200;
+
+    static int bottleneckSize = 20; //one-hot input is squeezed through this
+    static int hiddenDimension = 500;
+    static int hiddenLayers = 5;
+    static double learningRate = 0.0001;
+    static double initParamsStdDev = 0.08;
+
+
     public static ImagePanel tf;
 
 
@@ -184,7 +199,7 @@ public class Test4 {
         ObjectManager.write(map, "map-universal.ser");
 
 
-        Audio audio = new Audio(tf,numClusters);
+        Audio audio = new Audio(tf, numClusters);
         Song song = SongManager.getRandom(playback);
         Song tempSong = null;
         int lastSong = -1;
@@ -198,27 +213,49 @@ public class Test4 {
             out += (char) tem.indexOf(pp.segment);
 
         }
-        PrintWriter writer = null;
-        try {
-            writer = new PrintWriter("out.txt", "UTF-8");
-            writer.println(out);
-            writer.close();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        while(rnn) {
-            String get = null;
-            try {
-                get = ExamplePaulGraham.go("out",true);
-            } catch (Exception e) {
-                e.printStackTrace();
+
+        if (rnn) {
+            while (true) {
+                String get = null;
+                try {
+                    PrintWriter writer = null;
+                    try {
+                        writer = new PrintWriter("out.txt", "UTF-8");
+                        writer.println(out);
+                        writer.close();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    get = predictListString("out", loadPrevSavedModel);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (enableAudioDuringTraining) {
+                    for (int i = 0; i < get.length(); i++) {
+                        char c = get.charAt(i);
+                        SegmentSong pp = new SegmentSong(playback, (int) c);
+                        SegmentSong play = map.get(pp);
+                        if (lastSong != play.song) {
+                            tempSong = SongManager.getRandom(play.song);
+                            lastSong = play.song;
+                        }
+                        AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(play.segment));
+                        ai.payload = play;
+                        audio.play(ai);
+                    }
+                }
             }
-
-            for (int i = 0; i < get.length(); i++) {
-                char c = get.charAt(i);
-                SegmentSong pp = new SegmentSong(playback, (int) c);
+        } else {
+            for (int cnt = 0; cnt < song.analysis.getSegments().size(); cnt++) {
+                SegmentSong pp = new SegmentSong(playback, cnt);
                 SegmentSong play = map.get(pp);
+//            }
+                if (play == null) {
+                    System.out.println("null! " + pp);
+                    continue;
+                }
                 if (lastSong != play.song) {
                     tempSong = SongManager.getRandom(play.song);
                     lastSong = play.song;
@@ -227,36 +264,15 @@ public class Test4 {
                 ai.payload = play;
                 audio.play(ai);
             }
+
+
+//        while (iter.hasNext()){
+//            Object bbb = iter.next();
+//
+//            Map.Entry<String, String> bbe = (Map.Entry<String, String>) bbb;
+//            System.out.println(bbb.toString());
+//
         }
-
-
-        for (int cnt = 0; cnt < song.analysis.getSegments().size(); cnt++) {
-            SegmentSong pp = new SegmentSong(playback, cnt);
-            SegmentSong play = map.get(pp);
-//            if (Math.random()<.5f){
-//                cnt=play.segment-1;
-//                System.out.println("ging back to "+(cnt));
-//                continue;
-//            }
-            if (play == null) {
-                System.out.println("null! " + pp);
-                continue;
-            }
-            if (lastSong != play.song) {
-                tempSong = SongManager.getRandom(play.song);
-                lastSong = play.song;
-            }
-//            System.out.println("playing: "+play);
-            AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(play.segment));
-            ai.payload = play;
-            audio.play(ai);
-        }
-//        String meta = song.analysis.toString();
-//        meta = meta.substring(0, 400);
-//        meta = meta.replaceAll("(.{100})", "$1\n");
-//        meta=meta.substring(0,meta.length()-1);
-//        System.out.println(meta);
-
         JSONParser parser = new JSONParser();
         JSONObject js = (JSONObject) song.analysis.getMap().get("meta");
         String title = null;
@@ -301,13 +317,6 @@ public class Test4 {
         System.out.println("time\t" + seconds / 60 + ": " + seconds % 60);
         Iterator iter = song.analysis.getMap().entrySet().iterator();
 
-//        while (iter.hasNext()){
-//            Object bbb = iter.next();
-//
-//            Map.Entry<String, String> bbe = (Map.Entry<String, String>) bbb;
-//            System.out.println(bbb.toString());
-//
-//        }
     }
 
     protected static double distance(Instance i1, Instance i2) {
@@ -353,6 +362,46 @@ public class Test4 {
         inst.setValue(attlist[cnt++], s.getPitches()[10] * pitchFactor);
         inst.setValue(attlist[cnt++], s.getPitches()[11] * pitchFactor);
         return inst;
+    }
+
+    public static String predictListString(String textSource, boolean init) throws Exception {
+
+		/*
+         * Character-by-character sentence prediction and generation, closely following the example here:
+		 * http://cs.stanford.edu/people/karpathy/recurrentjs/
+		*/
+
+//		String textSource = "PaulGraham";
+        DataSet data = new TextGeneration(textSource + ".txt");
+        String savePath = textSource + ".ser";
+        boolean initFromSaved = init; //set this to false to start with a fresh model
+        boolean overwriteSaved = true;
+
+
+        Random rng = new Random();
+        Model lstm = NeuralNetworkHelper.makeLstmWithInputBottleneck(
+                data.inputDimension, bottleneckSize,
+                hiddenDimension, hiddenLayers,
+                data.outputDimension, data.getModelOutputUnitToUse(),
+                initParamsStdDev, rng);
+
+        int reportEveryNthEpoch = 1;
+        int trainingEpochs = 1;
+
+//		while(true) {
+        Trainer.train(trainingEpochs, learningRate -= .0000001d, lstm, data, reportEveryNthEpoch, initFromSaved, overwriteSaved, savePath, rng);
+        java.util.List<String> predicted = TextGeneration.generateText(lstm, reportSequenceLength, false, .5f, new Random());
+        int cnt = 0;
+        System.out.println("--------------------------------------------");
+        for (String b : predicted) {
+            System.out.println((cnt++) + "\t" + b);
+            return b;
+        }
+        System.out.println("--------------------------------------------");
+
+//		}
+
+        return null;
     }
 }
 

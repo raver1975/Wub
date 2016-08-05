@@ -7,18 +7,13 @@ import com.klemstinegroup.wub2.system.LoadFromFile;
 import com.klemstinegroup.wub2.system.Song;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import rnn.ExamplePaulGraham;
 import weka.clusterers.SimpleKMeans;
 import weka.core.*;
 
 import javax.swing.*;
-import javax.swing.text.DefaultCaret;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -214,7 +209,7 @@ public class Test3 {
         while(flag==true) {
             String get = null;
             try {
-                get = ExamplePaulGraham.go("out",true);
+                get = Test4.predictListString("out",true);
             } catch (Exception e) {
                 e.printStackTrace();
             }
