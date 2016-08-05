@@ -53,10 +53,10 @@ public class Test4 {
     public static JFrame frame = new JFrame(Test4.class.toString());
 
     static boolean rnn = true;
-    static boolean enableAudioDuringTraining = false;
+    static boolean enableAudioDuringTraining = true;
     private static boolean loadPrevSavedModel = true;
 
-    static int playback = 1016;
+    static int playback = 246;
     static int stretch = 1;
     static int playbackStart = playback;
     static int playbackEnd = playback + stretch;
@@ -69,8 +69,8 @@ public class Test4 {
     static float loudFactor = 70f;
     static float durationFactor = 90f;
 
-    public static int reportSequenceLength = 200;
-
+    public static int reportSequenceLength = 80;
+    static double temperature = .2d;
     static int bottleneckSize = 20; //one-hot input is squeezed through this
     static int hiddenDimension = 500;
     static int hiddenLayers = 5;
@@ -390,18 +390,18 @@ public class Test4 {
 
 //		while(true) {
         Trainer.train(trainingEpochs, learningRate -= .0000001d, lstm, data, reportEveryNthEpoch, initFromSaved, overwriteSaved, savePath, rng);
-        java.util.List<String> predicted = TextGeneration.generateText(lstm, reportSequenceLength, false, .5f, new Random());
+        java.util.List<String> predicted = TextGeneration.generateText(lstm, reportSequenceLength, false, temperature, new Random());
         int cnt = 0;
+        String ret = "";
         System.out.println("--------------------------------------------");
         for (String b : predicted) {
             System.out.println((cnt++) + "\t" + b);
-            return b;
+            if (b.length() > ret.length()) ret = b;
         }
         System.out.println("--------------------------------------------");
-
+        return ret;
 //		}
 
-        return null;
     }
 }
 
