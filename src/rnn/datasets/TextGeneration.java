@@ -25,7 +25,7 @@ import rnn.model.Nonlinearity;
 
 public class TextGeneration extends DataSet {
 
-    public static int reportSequenceLength = 100;
+
     public static boolean reportPerplexity = true;
     private static Map<String, Integer> charToIndex = new HashMap<>();
     private static Map<Integer, String> indexToChar = new HashMap<>();
