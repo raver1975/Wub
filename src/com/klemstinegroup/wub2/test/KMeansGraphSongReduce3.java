@@ -66,13 +66,15 @@ public class KMeansGraphSongReduce3 {
     static boolean enableAudioDuringTraining = true;
 //    private static boolean loadPrevSavedModel = true;
 
-    static int playback = 430;
+    static int playback = 439;
+    private static int sizeFactor = 10;
+    private static int repeats=1;
     static int stretch = 1;
     static int playbackStart = playback;
     static int playbackEnd = playback + stretch;
 
 
-    public static final int numClusters =255*2;
+    public static final int numClusters = 900;
 
     static float pitchFactor = 17f;
     static float timbreFactor = 17f;
@@ -80,6 +82,7 @@ public class KMeansGraphSongReduce3 {
     static float durationFactor = 90f;
 
     public static ImagePanel tf;
+    private static int minClusterSize=30;
 
 
     static {
@@ -206,12 +209,12 @@ public class KMeansGraphSongReduce3 {
             out += (char) tem.indexOf(pp.segment);
 
         }
-        ListenableDirectedGraph g = new ListenableDirectedGraph( DefaultEdge.class );
+        ListenableDirectedGraph g = new ListenableDirectedGraph(DefaultEdge.class);
 
         // create a visualization using JGraph, via an adapter
         JGraphModelAdapter m_jgAdapter = new JGraphModelAdapter(g);
 
-        JGraph graph = new JGraph( m_jgAdapter );
+        JGraph graph = new JGraph(m_jgAdapter);
 //        JGraph graph = new MultiGraph("id");
 
 //        JFrame frame=new JFrame("jgraph");
@@ -226,7 +229,7 @@ public class KMeansGraphSongReduce3 {
 //        }
         HashSet<Integer> nodes = new HashSet<>();
 //        HashSet<String> edges = new HashSet<>();
-        for (int cnt = 0; cnt < song.analysis.getSegments().size(); cnt++) {
+        for (int cnt = 0; cnt < song.analysis.getSegments().size() / sizeFactor; cnt++) {
             SegmentSong pp = new SegmentSong(playback, cnt);
             SegmentSong play = map.get(pp);
 //            }
@@ -249,7 +252,7 @@ public class KMeansGraphSongReduce3 {
                 nodes.add(play.segment);
             }
 //            if (!edges.contains(startNode + ":" + play.segment)) {
-                g.addEdge(startNode + "", play.segment + "",true);
+            g.addEdge(startNode + "", play.segment + "", true);
 //                edges.add(startNode + ":" + play.segment);
 //            }
 
@@ -258,7 +261,7 @@ public class KMeansGraphSongReduce3 {
 //            audio.play(ai);
         }
         g.addVertex("99999");
-        g.addEdge(startNode+"","99999");
+        g.addEdge(startNode + "", "99999");
 
 //        graph.display();
 
@@ -289,11 +292,11 @@ public class KMeansGraphSongReduce3 {
         }*/
         System.out.println("looking for cycles");
         SzwarcfiterLauerSimpleCycles jsc = new SzwarcfiterLauerSimpleCycles(g);
-        List<List<String>> list=jsc.findSimpleCycles();
-        for (List list1:list){
-            if (list1.size()<10)continue;
-            for (int i=0;i<1;i++) {
-                System.out.print(i+": ");
+        List<List<String>> list = jsc.findSimpleCycles();
+        for (List list1 : list) {
+            if (list1.size() < minClusterSize) continue;
+            for (int i = 0; i < repeats; i++) {
+                System.out.print(i + ": ");
                 for (Object s : list1) {
                     System.out.print((String) s + " ");
                     AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(Integer.parseInt((String) s)));
@@ -304,7 +307,7 @@ public class KMeansGraphSongReduce3 {
 
             }
             try {
-                Thread.sleep(4000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
