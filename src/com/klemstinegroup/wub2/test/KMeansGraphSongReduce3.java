@@ -5,11 +5,19 @@ import com.klemstinegroup.wub2.system.Audio;
 import com.klemstinegroup.wub2.system.AudioInterval;
 import com.klemstinegroup.wub2.system.LoadFromFile;
 import com.klemstinegroup.wub2.system.Song;
-import edu.princeton.cs.algs4.Digraph;
+import edu.uci.ics.jung.graph.event.GraphEvent;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.MultiGraph;
-import org.graphstream.graph.implementations.SingleGraph;
+import org.jgraph.JGraph;
+import org.jgraph.graph.DefaultEdge;
+import org.jgrapht.GraphHelper;
+import org.jgrapht.Graphs;
+import org.jgrapht.ListenableGraph;
+import org.jgrapht.alg.cycle.HawickJamesSimpleCycles;
+import org.jgrapht.alg.cycle.JohnsonSimpleCycles;
+import org.jgrapht.ext.JGraphModelAdapter;
+import org.jgrapht.graph.ListenableDirectedGraph;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import weka.clusterers.SimpleKMeans;
@@ -18,10 +26,10 @@ import weka.core.*;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.*;
+import java.util.List;
 
-public class KMeansGraphSongReduce2 {
+public class KMeansGraphSongReduce3 {
 
 
     static String directory = "e:\\wub\\";
@@ -50,7 +58,7 @@ public class KMeansGraphSongReduce2 {
     //456 bassnectar timestretch
     //1016 bassnectar basshead
 
-    public static JFrame frame = new JFrame(KMeansGraphSongReduce2.class.toString());
+    public static JFrame frame = new JFrame(KMeansGraphSongReduce3.class.toString());
 
     //    static boolean rnn = true;
     static boolean enableAudioDuringTraining = true;
@@ -62,7 +70,7 @@ public class KMeansGraphSongReduce2 {
     static int playbackEnd = playback + stretch;
 
 
-    public static final int numClusters =1500;
+    public static final int numClusters =500;
 
     static float pitchFactor = 17f;
     static float timbreFactor = 17f;
@@ -196,7 +204,18 @@ public class KMeansGraphSongReduce2 {
             out += (char) tem.indexOf(pp.segment);
 
         }
-        Graph graph = new MultiGraph("id");
+        ListenableDirectedGraph g = new ListenableDirectedGraph( DefaultEdge.class );
+
+        // create a visualization using JGraph, via an adapter
+        JGraphModelAdapter m_jgAdapter = new JGraphModelAdapter(g);
+
+        JGraph graph = new JGraph( m_jgAdapter );
+//        JGraph graph = new MultiGraph("id");
+
+//        JFrame frame=new JFrame("jgraph");
+//        frame.add(graph);
+//        frame.setSize(600,400);
+//        frame.setVisible(true);
 
         int startNode = 0;
 
@@ -220,42 +239,61 @@ public class KMeansGraphSongReduce2 {
 //            AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(tem.indexOf(play.segment)));
 
             if (!nodes.contains(startNode)) {
-                graph.addNode(startNode + "");
+                g.addVertex(startNode + "");
                 nodes.add(startNode);
             }
             if (!nodes.contains(play.segment)) {
-                graph.addNode(play.segment + "");
+                g.addVertex(play.segment + "");
                 nodes.add(play.segment);
             }
 //            if (!edges.contains(startNode + ":" + play.segment)) {
-                graph.addEdge(cnt + "", startNode + "", play.segment + "",true);
+                g.addEdge(startNode + "", play.segment + "",true);
 //                edges.add(startNode + ":" + play.segment);
 //            }
+
             startNode = play.segment;
 //            ai.payload = play;
 //            audio.play(ai);
         }
-        //graph.addEdge(song.analysis.getSegments().size()+"",startNode+"",numClusters+"");
+        g.addVertex("99999");
+        g.addEdge(startNode+"","99999");
 
-        graph.display();
+//        graph.display();
+
 
 
         startNode = 0;
-        while (startNode != numClusters) {
+        while (startNode != 99999) {
             AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(startNode));
             ai.payload = new SegmentSong(playback, tem.indexOf(startNode));
-            audio.play(ai);
+            //audio.play(ai);
 
-            Iterator<Edge> adj = graph.getNode(startNode + "").getEachLeavingEdge().iterator();
-            ArrayList<Edge> temp = new ArrayList<>();
-            while (adj.hasNext()) temp.add(adj.next());
+            Set bb = g.vertexSet();
+            for (Object b :bb){
+                String x=(String)b;
 
+            }
+            List<String> temp = Graphs.successorListOf(g,startNode + "");
+//            Iterator<Edge> adj = g.getVertex(startNode + "").getEachLeavingEdge().iterator();
+//            ArrayList<Edge> temp = new ArrayList<>();
+//            while (adj.hasNext()) temp.add(adj.next());
+//
             int next = (int) (Math.random() * temp.size());
             System.out.println("going down: " + next + " out of " + temp.size());
-            Edge selected = temp.get(next);
-            startNode = Integer.parseInt(selected.getNode1().getId());
+//            Edge selected = temp.get(next);
+            startNode=Integer.parseInt(temp.get(next));
+//            startNode = Integer.parseInt(selected.getNode1().getId());
 //            System.out.println(Arrays.toString(bb));
 
+        }
+        System.out.println("looking for cycles");
+        HawickJamesSimpleCycles jsc = new HawickJamesSimpleCycles(g);
+        List<List<String>> list=jsc.findSimpleCycles();
+        for (List list1:list){
+            for (Object s:list1){
+                System.out.print((String)s+" ");
+            }
+            System.out.println();
         }
 
 
