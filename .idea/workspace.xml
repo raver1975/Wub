@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ab275348-9c2e-46dc-a9d5-a42ca3b2351e" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/map-universal.ser" afterPath="$PROJECT_DIR$/map-universal.ser" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/Test3.java" afterPath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/Test3.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/Test4.java" afterPath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/Test4.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce3.java" afterPath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce3.java" />
     </list>
     <ignored path="Wub.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -187,8 +185,8 @@
       <file leaf-file-name="KMeansGraphSongReduce3.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce3.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1037">
-              <caret line="228" column="66" selection-start-line="228" selection-start-column="66" selection-end-line="228" selection-end-column="66" />
+            <state relative-caret-position="397">
+              <caret line="306" column="30" selection-start-line="306" selection-start-column="30" selection-end-line="306" selection-end-column="30" />
               <folding />
             </state>
           </provider>
@@ -329,9 +327,9 @@
         <option value="$PROJECT_DIR$/src/edu/uci/ics/jung/visualization/spatial/FastRenderingGraph.java" />
         <option value="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce2.java" />
         <option value="$PROJECT_DIR$/src/com/klemstinegroup/wub2/system/Audio.java" />
-        <option value="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce3.java" />
         <option value="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/Test4.java" />
         <option value="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/Test3.java" />
+        <option value="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce3.java" />
       </list>
     </option>
   </component>
@@ -1184,7 +1182,7 @@
       <workItem from="1470484804742" duration="1507000" />
       <workItem from="1470525509690" duration="16415000" />
       <workItem from="1470574935816" duration="9878000" />
-      <workItem from="1470599203570" duration="945000" />
+      <workItem from="1470599203570" duration="1053000" />
     </task>
     <task id="LOCAL-00001" summary="playing around with saved wub database">
       <created>1469949651449</created>
@@ -1407,7 +1405,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="146530000" />
+    <option name="totallyTimeSpent" value="146638000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="0" />
@@ -1994,8 +1992,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce3.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1037">
-          <caret line="228" column="66" selection-start-line="228" selection-start-column="66" selection-end-line="228" selection-end-column="66" />
+        <state relative-caret-position="397">
+          <caret line="306" column="30" selection-start-line="306" selection-start-column="30" selection-end-line="306" selection-end-column="30" />
           <folding />
         </state>
       </provider>

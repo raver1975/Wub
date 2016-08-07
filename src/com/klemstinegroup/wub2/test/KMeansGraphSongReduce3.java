@@ -292,7 +292,7 @@ public class KMeansGraphSongReduce3 {
         List<List<String>> list=jsc.findSimpleCycles();
         for (List list1:list){
             if (list1.size()<10)continue;
-            for (int i=0;i<4;i++) {
+            for (int i=0;i<1;i++) {
                 System.out.print(i+": ");
                 for (Object s : list1) {
                     System.out.print((String) s + " ");
@@ -304,7 +304,7 @@ public class KMeansGraphSongReduce3 {
 
             }
             try {
-                Thread.sleep(15000);
+                Thread.sleep(4000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
