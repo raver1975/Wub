@@ -55,7 +55,7 @@ public class Test3 {
     static int playbackEnd = playback + stretch;
 
 
-    public static final int numClusters = 256;
+    public static final int numClusters = 2512;
 
     static float pitchFactor = 17f;
     static float timbreFactor = 17f;
@@ -182,7 +182,7 @@ public class Test3 {
         ObjectManager.write(map, "map-universal.ser");
 
 
-        Audio audio = new Audio(tf,numClusters);
+        Audio audio = new Audio(tf, numClusters);
         Song song = SongManager.getRandom(playback);
         Song tempSong = null;
         int lastSong = -1;
@@ -204,28 +204,6 @@ public class Test3 {
 
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        boolean flag=true;
-        while(flag==true) {
-            String get = null;
-            try {
-                get = Test4.predictListString("out",true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            for (int i = 0; i < get.length(); i++) {
-                char c = get.charAt(i);
-                SegmentSong pp = new SegmentSong(playback, (int) c);
-                SegmentSong play = map.get(pp);
-                if (lastSong != play.song) {
-                    tempSong = SongManager.getRandom(play.song);
-                    lastSong = play.song;
-                }
-                AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(play.segment));
-                ai.payload = play;
-                audio.play(ai);
-            }
         }
 
 

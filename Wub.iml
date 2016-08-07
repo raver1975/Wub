@@ -97,5 +97,7 @@
     <orderEntry type="library" name="jEN" level="project" />
     <orderEntry type="library" name="hsqldb" level="project" />
     <orderEntry type="library" name="htm.java" level="project" />
+    <orderEntry type="library" name="algs4" level="project" />
+    <orderEntry type="library" name="guava-19.0" level="project" />
   </component>
 </module>

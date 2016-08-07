@@ -7,19 +7,15 @@ import com.klemstinegroup.wub2.system.LoadFromFile;
 import com.klemstinegroup.wub2.system.Song;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import rnn.datasets.TextGeneration;
-import rnn.datastructs.DataSet;
-import rnn.model.Model;
-import rnn.trainer.Trainer;
-import rnn.util.NeuralNetworkHelper;
 import weka.clusterers.SimpleKMeans;
 import weka.core.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.io.PrintWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class Test4 {
 
@@ -52,31 +48,22 @@ public class Test4 {
 
     public static JFrame frame = new JFrame(Test4.class.toString());
 
-    static boolean rnn = true;
+    //    static boolean rnn = true;
     static boolean enableAudioDuringTraining = true;
-    private static boolean loadPrevSavedModel = true;
+//    private static boolean loadPrevSavedModel = true;
 
-    static int playback = 246;
+    static int playback = 1016;
     static int stretch = 1;
     static int playbackStart = playback;
     static int playbackEnd = playback + stretch;
 
 
-    public static final int numClusters = 256;
+    public static final int numClusters =256;
 
     static float pitchFactor = 17f;
     static float timbreFactor = 17f;
     static float loudFactor = 70f;
     static float durationFactor = 90f;
-
-    public static int reportSequenceLength = 80;
-    static double temperature = .2d;
-    static int bottleneckSize = 20; //one-hot input is squeezed through this
-    static int hiddenDimension = 500;
-    static int hiddenLayers = 5;
-    static double learningRate = 0.0001;
-    static double initParamsStdDev = 0.08;
-
 
     public static ImagePanel tf;
 
@@ -105,14 +92,6 @@ public class Test4 {
 //        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         frame.add(jscr);
         frame.setVisible(true);
-
-        for (int i = 0; i < 10; i++) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
 
         //one time attribute setup
         FastVector attrs = new FastVector();
@@ -215,55 +194,22 @@ public class Test4 {
         }
 
 
-        if (rnn) {
-            while (true) {
-                String get = null;
-                try {
-                    PrintWriter writer = null;
-                    try {
-                        writer = new PrintWriter("out.txt", "UTF-8");
-                        writer.println(out);
-                        writer.close();
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    get = predictListString("out", loadPrevSavedModel);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                if (enableAudioDuringTraining) {
-                    for (int i = 0; i < get.length(); i++) {
-                        char c = get.charAt(i);
-                        SegmentSong pp = new SegmentSong(playback, (int) c);
-                        SegmentSong play = map.get(pp);
-                        if (lastSong != play.song) {
-                            tempSong = SongManager.getRandom(play.song);
-                            lastSong = play.song;
-                        }
-                        AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(play.segment));
-                        ai.payload = play;
-                        audio.play(ai);
-                    }
-                }
-            }
-        } else {
-            for (int cnt = 0; cnt < song.analysis.getSegments().size(); cnt++) {
-                SegmentSong pp = new SegmentSong(playback, cnt);
-                SegmentSong play = map.get(pp);
+        for (int cnt = 0; cnt < song.analysis.getSegments().size(); cnt++) {
+            SegmentSong pp = new SegmentSong(playback, cnt);
+            SegmentSong play = map.get(pp);
 //            }
-                if (play == null) {
-                    System.out.println("null! " + pp);
-                    continue;
-                }
-                if (lastSong != play.song) {
-                    tempSong = SongManager.getRandom(play.song);
-                    lastSong = play.song;
-                }
-                AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(play.segment));
-                ai.payload = play;
-                audio.play(ai);
+            if (play == null) {
+                System.out.println("null! " + pp);
+                continue;
             }
+            if (lastSong != play.song) {
+                tempSong = SongManager.getRandom(play.song);
+                lastSong = play.song;
+            }
+            AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(play.segment));
+            ai.payload = play;
+            audio.play(ai);
+        }
 
 
 //        while (iter.hasNext()){
@@ -272,7 +218,7 @@ public class Test4 {
 //            Map.Entry<String, String> bbe = (Map.Entry<String, String>) bbb;
 //            System.out.println(bbb.toString());
 //
-        }
+
         JSONParser parser = new JSONParser();
         JSONObject js = (JSONObject) song.analysis.getMap().get("meta");
         String title = null;
@@ -364,45 +310,7 @@ public class Test4 {
         return inst;
     }
 
-    public static String predictListString(String textSource, boolean init) throws Exception {
 
-		/*
-         * Character-by-character sentence prediction and generation, closely following the example here:
-		 * http://cs.stanford.edu/people/karpathy/recurrentjs/
-		*/
-
-//		String textSource = "PaulGraham";
-        DataSet data = new TextGeneration(textSource + ".txt");
-        String savePath = textSource + ".ser";
-        boolean initFromSaved = init; //set this to false to start with a fresh model
-        boolean overwriteSaved = true;
-
-
-        Random rng = new Random();
-        Model lstm = NeuralNetworkHelper.makeLstmWithInputBottleneck(
-                data.inputDimension, bottleneckSize,
-                hiddenDimension, hiddenLayers,
-                data.outputDimension, data.getModelOutputUnitToUse(),
-                initParamsStdDev, rng);
-
-        int reportEveryNthEpoch = 1;
-        int trainingEpochs = 1;
-
-//		while(true) {
-        Trainer.train(trainingEpochs, learningRate -= .0000001d, lstm, data, reportEveryNthEpoch, initFromSaved, overwriteSaved, savePath, rng);
-        java.util.List<String> predicted = TextGeneration.generateText(lstm, reportSequenceLength, false, temperature, new Random());
-        int cnt = 0;
-        String ret = "";
-        System.out.println("--------------------------------------------");
-        for (String b : predicted) {
-            System.out.println((cnt++) + "\t" + b);
-            if (b.length() > ret.length()) ret = b;
-        }
-        System.out.println("--------------------------------------------");
-        return ret;
-//		}
-
-    }
 }
 
 
