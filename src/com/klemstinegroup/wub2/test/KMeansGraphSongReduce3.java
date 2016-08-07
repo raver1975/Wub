@@ -16,6 +16,8 @@ import org.jgrapht.Graphs;
 import org.jgrapht.ListenableGraph;
 import org.jgrapht.alg.cycle.HawickJamesSimpleCycles;
 import org.jgrapht.alg.cycle.JohnsonSimpleCycles;
+import org.jgrapht.alg.cycle.SzwarcfiterLauerSimpleCycles;
+import org.jgrapht.alg.cycle.TarjanSimpleCycles;
 import org.jgrapht.ext.JGraphModelAdapter;
 import org.jgrapht.graph.ListenableDirectedGraph;
 import org.json.simple.JSONObject;
@@ -64,13 +66,13 @@ public class KMeansGraphSongReduce3 {
     static boolean enableAudioDuringTraining = true;
 //    private static boolean loadPrevSavedModel = true;
 
-    static int playback = 310;
+    static int playback = 430;
     static int stretch = 1;
     static int playbackStart = playback;
     static int playbackEnd = playback + stretch;
 
 
-    public static final int numClusters =500;
+    public static final int numClusters =255*2;
 
     static float pitchFactor = 17f;
     static float timbreFactor = 17f;
@@ -262,7 +264,7 @@ public class KMeansGraphSongReduce3 {
 
 
 
-        startNode = 0;
+/*        startNode = 0;
         while (startNode != 99999) {
             AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(startNode));
             ai.payload = new SegmentSong(playback, tem.indexOf(startNode));
@@ -284,16 +286,28 @@ public class KMeansGraphSongReduce3 {
             startNode=Integer.parseInt(temp.get(next));
 //            startNode = Integer.parseInt(selected.getNode1().getId());
 //            System.out.println(Arrays.toString(bb));
-
-        }
+        }*/
         System.out.println("looking for cycles");
-        HawickJamesSimpleCycles jsc = new HawickJamesSimpleCycles(g);
+        SzwarcfiterLauerSimpleCycles jsc = new SzwarcfiterLauerSimpleCycles(g);
         List<List<String>> list=jsc.findSimpleCycles();
         for (List list1:list){
-            for (Object s:list1){
-                System.out.print((String)s+" ");
+            if (list1.size()<10)continue;
+            for (int i=0;i<4;i++) {
+                System.out.print(i+": ");
+                for (Object s : list1) {
+                    System.out.print((String) s + " ");
+                    AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(Integer.parseInt((String) s)));
+                    ai.payload = new SegmentSong(playback, Integer.parseInt((String) s));
+                    audio.play(ai);
+                }
+                System.out.println();
+
             }
-            System.out.println();
+            try {
+                Thread.sleep(15000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
 
