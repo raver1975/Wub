@@ -182,7 +182,11 @@ public class Test3 {
         ObjectManager.write(map, "map-universal.ser");
 
 
+<<<<<<< HEAD
         Audio audio = new Audio(tf, numClusters);
+=======
+        Audio audio = new Audio(tf,numClusters);
+>>>>>>> c519c0dc1d38d93aa71e3e12bce798d4506822eb
         Song song = SongManager.getRandom(playback);
         Song tempSong = null;
         int lastSong = -1;
@@ -205,6 +209,31 @@ public class Test3 {
         } catch (Exception e) {
             e.printStackTrace();
         }
+<<<<<<< HEAD
+=======
+        boolean flag=true;
+        while(flag==true) {
+            String get = null;
+            try {
+                get = Test4.predictListString("out",true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            for (int i = 0; i < get.length(); i++) {
+                char c = get.charAt(i);
+                SegmentSong pp = new SegmentSong(playback, (int) c);
+                SegmentSong play = map.get(pp);
+                if (lastSong != play.song) {
+                    tempSong = SongManager.getRandom(play.song);
+                    lastSong = play.song;
+                }
+                AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(play.segment));
+                ai.payload = play;
+                audio.play(ai);
+            }
+        }
+>>>>>>> c519c0dc1d38d93aa71e3e12bce798d4506822eb
 
 
         for (int cnt = 0; cnt < song.analysis.getSegments().size(); cnt++) {
