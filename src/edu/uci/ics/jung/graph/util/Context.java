@@ -35,6 +35,8 @@ public class Context<G,E>
 	
 	@Override
 	public int hashCode() {
+		System.out.println(graph+"\t"+element);
+		if (graph==null)return element.hashCode();
 		return graph.hashCode() ^ element.hashCode();
 	}
 	

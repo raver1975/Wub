@@ -52,7 +52,7 @@ public class SimpleGraphDraw
 			}});
         Graph g = new UndirectedSparseGraph();
         
-        pnr.load("src/main/resources/datasets/simple.net", g);
+        pnr.load("datasets/simple.net", g);
         return g;
     }
 }
