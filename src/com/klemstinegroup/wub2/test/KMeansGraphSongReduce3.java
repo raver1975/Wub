@@ -5,6 +5,8 @@ import com.klemstinegroup.wub2.system.Audio;
 import com.klemstinegroup.wub2.system.AudioInterval;
 import com.klemstinegroup.wub2.system.LoadFromFile;
 import com.klemstinegroup.wub2.system.Song;
+import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
+import com.mxgraph.swing.mxGraphComponent;
 import edu.uci.ics.jung.graph.event.GraphEvent;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
@@ -67,14 +69,16 @@ public class KMeansGraphSongReduce3 {
 //    private static boolean loadPrevSavedModel = true;
 
     static int playback = 439;
-    private static int sizeFactor = 10;
-    private static int repeats=1;
+//    private static int sizeFactor = 20;
+    private static int startExamine=1000;
+    private static int endExamine=1200;
+    private static int repeats = 1;
     static int stretch = 1;
     static int playbackStart = playback;
     static int playbackEnd = playback + stretch;
 
 
-    public static final int numClusters = 900;
+    public static final int numClusters = 255;
 
     static float pitchFactor = 17f;
     static float timbreFactor = 17f;
@@ -82,7 +86,7 @@ public class KMeansGraphSongReduce3 {
     static float durationFactor = 90f;
 
     public static ImagePanel tf;
-    private static int minClusterSize=30;
+//    private static int minClusterSize = 30;
 
 
     static {
@@ -176,7 +180,7 @@ public class KMeansGraphSongReduce3 {
             }
             SegmentSong gg = coll.get(best);
             lastSeen[io] = gg;
-            System.out.println("centroid io " + io + "\t" + gg);
+//            System.out.println("centroid io " + io + "\t" + gg);
 
 
         }
@@ -217,10 +221,6 @@ public class KMeansGraphSongReduce3 {
         JGraph graph = new JGraph(m_jgAdapter);
 //        JGraph graph = new MultiGraph("id");
 
-//        JFrame frame=new JFrame("jgraph");
-//        frame.add(graph);
-//        frame.setSize(600,400);
-//        frame.setVisible(true);
 
         int startNode = 0;
 
@@ -229,7 +229,7 @@ public class KMeansGraphSongReduce3 {
 //        }
         HashSet<Integer> nodes = new HashSet<>();
 //        HashSet<String> edges = new HashSet<>();
-        for (int cnt = 0; cnt < song.analysis.getSegments().size() / sizeFactor; cnt++) {
+        for (int cnt = startExamine; cnt < song.analysis.getSegments().size() &&cnt<endExamine; cnt++) {
             SegmentSong pp = new SegmentSong(playback, cnt);
             SegmentSong play = map.get(pp);
 //            }
@@ -263,65 +263,7 @@ public class KMeansGraphSongReduce3 {
         g.addVertex("99999");
         g.addEdge(startNode + "", "99999");
 
-//        graph.display();
 
-
-
-/*        startNode = 0;
-        while (startNode != 99999) {
-            AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(startNode));
-            ai.payload = new SegmentSong(playback, tem.indexOf(startNode));
-            //audio.play(ai);
-
-            Set bb = g.vertexSet();
-            for (Object b :bb){
-                String x=(String)b;
-
-            }
-            List<String> temp = Graphs.successorListOf(g,startNode + "");
-//            Iterator<Edge> adj = g.getVertex(startNode + "").getEachLeavingEdge().iterator();
-//            ArrayList<Edge> temp = new ArrayList<>();
-//            while (adj.hasNext()) temp.add(adj.next());
-//
-            int next = (int) (Math.random() * temp.size());
-            System.out.println("going down: " + next + " out of " + temp.size());
-//            Edge selected = temp.get(next);
-            startNode=Integer.parseInt(temp.get(next));
-//            startNode = Integer.parseInt(selected.getNode1().getId());
-//            System.out.println(Arrays.toString(bb));
-        }*/
-        System.out.println("looking for cycles");
-        SzwarcfiterLauerSimpleCycles jsc = new SzwarcfiterLauerSimpleCycles(g);
-        List<List<String>> list = jsc.findSimpleCycles();
-        for (List list1 : list) {
-            if (list1.size() < minClusterSize) continue;
-            for (int i = 0; i < repeats; i++) {
-                System.out.print(i + ": ");
-                for (Object s : list1) {
-                    System.out.print((String) s + " ");
-                    AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(Integer.parseInt((String) s)));
-                    ai.payload = new SegmentSong(playback, Integer.parseInt((String) s));
-                    audio.play(ai);
-                }
-                System.out.println();
-
-            }
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-
-//        while (iter.hasNext()){
-//            Object bbb = iter.next();
-//
-//            Map.Entry<String, String> bbe = (Map.Entry<String, String>) bbb;
-//            System.out.println(bbb.toString());
-//
-
-        JSONParser parser = new JSONParser();
         JSONObject js = (JSONObject) song.analysis.getMap().get("meta");
         String title = null;
         String artist = null;
@@ -357,15 +299,61 @@ public class KMeansGraphSongReduce3 {
         if (seconds == null || seconds == 0) seconds = new Long(-61);
 
         float scale = (int) (((float) numClusters / (float) song.analysis.getSegments().size()) * 1000) / 10f;
+
         System.out.println("segments size=" + song.analysis.getSegments().size() + "\t" + scale + "%");
         System.out.println("title\t" + title);
         System.out.println("artist\t" + artist);
         System.out.println("album\t" + album);
         System.out.println("genre\t" + genre);
         System.out.println("time\t" + seconds / 60 + ": " + seconds % 60);
-        Iterator iter = song.analysis.getMap().entrySet().iterator();
 
 
+
+/*        startNode = 0;
+        while (startNode != 99999) {
+            AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(startNode));
+            ai.payload = new SegmentSong(playback, tem.indexOf(startNode));
+            //audio.play(ai);
+
+            Set bb = g.vertexSet();
+            for (Object b :bb){
+                String x=(String)b;
+
+            }
+            List<String> temp = Graphs.successorListOf(g,startNode + "");
+//            Iterator<Edge> adj = g.getVertex(startNode + "").getEachLeavingEdge().iterator();
+//            ArrayList<Edge> temp = new ArrayList<>();
+//            while (adj.hasNext()) temp.add(adj.next());
+//
+            int next = (int) (Math.random() * temp.size());
+            System.out.println("going down: " + next + " out of " + temp.size());
+//            Edge selected = temp.get(next);
+            startNode=Integer.parseInt(temp.get(next));
+//            startNode = Integer.parseInt(selected.getNode1().getId());
+//            System.out.println(Arrays.toString(bb));
+        }*/
+        System.out.println("looking for cycles");
+        HawickJamesSimpleCycles jsc = new HawickJamesSimpleCycles(g);
+        List<List<String>> cycles = jsc.findSimpleCycles();
+        for (List list1 : cycles) {
+            for (int i = 0; i < repeats; i++) {
+                System.out.print(i + ": ");
+                for (Object s : list1) {
+                    System.out.print((String) s + " ");
+                    AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(Integer.parseInt((String) s)));
+                    ai.payload = new SegmentSong(playback, Integer.parseInt((String) s));
+                    audio.play(ai);
+                }
+                System.out.println();
+
+            }
+        }
+
+
+        JFrame frame=new JFrame("jgraph");
+        frame.add(graph);
+        frame.setSize(600,400);
+        frame.setVisible(true);
     }
 
     protected static double distance(Instance i1, Instance i2) {

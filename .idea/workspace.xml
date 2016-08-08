@@ -153,19 +153,17 @@
       <file leaf-file-name="GraphFromGraphMLDemo.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/edu/uci/ics/jung/samples/GraphFromGraphMLDemo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2040">
+            <state relative-caret-position="2125">
               <caret line="171" column="27" selection-start-line="171" selection-start-column="27" selection-end-line="171" selection-end-column="27" />
               <folding>
                 <element signature="e#0#6880#0" expanded="false" />
                 <element signature="imports" expanded="false" />
-                <element signature="e#2860#2906#0" expanded="false" />
-                <element signature="e#3012#3027#0" expanded="false" />
-                <element signature="e#3661#3788#0" expanded="false" />
-                <element signature="e#3787#3788#0" expanded="false" />
-                <element signature="e#5015#5174#0" expanded="false" />
-                <element signature="e#5173#5174#0" expanded="false" />
-                <element signature="e#5251#5412#0" expanded="false" />
-                <element signature="e#5411#5412#0" expanded="false" />
+                <element signature="e#3729#3730#0" expanded="false" />
+                <element signature="e#3786#3787#0" expanded="false" />
+                <element signature="e#5093#5094#0" expanded="false" />
+                <element signature="e#5163#5164#0" expanded="false" />
+                <element signature="e#5329#5330#0" expanded="false" />
+                <element signature="e#5401#5402#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -174,7 +172,7 @@
       <file leaf-file-name="Test4.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/Test4.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="948">
+            <state relative-caret-position="3910">
               <caret line="251" column="2" selection-start-line="251" selection-start-column="2" selection-end-line="251" selection-end-column="2" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -186,8 +184,8 @@
       <file leaf-file-name="KMeansGraphSongReduce3.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce3.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="408">
-              <caret line="68" column="29" selection-start-line="68" selection-start-column="29" selection-end-line="68" selection-end-column="29" />
+            <state relative-caret-position="227">
+              <caret line="352" column="0" selection-start-line="352" selection-start-column="0" selection-end-line="352" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -206,7 +204,7 @@
       <file leaf-file-name="Audio.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/system/Audio.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="88">
+            <state relative-caret-position="1428">
               <caret line="103" column="64" selection-start-line="103" selection-start-column="64" selection-end-line="103" selection-end-column="64" />
               <folding />
             </state>
@@ -216,7 +214,7 @@
       <file leaf-file-name="Test3.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/Test3.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="183">
+            <state relative-caret-position="3315">
               <caret line="211" column="27" selection-start-line="211" selection-start-column="27" selection-end-line="211" selection-end-column="27" />
               <folding />
             </state>
@@ -231,26 +229,18 @@
               <folding>
                 <element signature="e#0#11889#0" expanded="false" />
                 <element signature="imports" expanded="false" />
-                <element signature="e#3017#3178#0" expanded="false" />
-                <element signature="e#3177#3178#0" expanded="false" />
-                <element signature="e#3229#3373#0" expanded="false" />
-                <element signature="e#3372#3373#0" expanded="false" />
+                <element signature="e#3112#3113#0" expanded="false" />
+                <element signature="e#3174#3175#0" expanded="false" />
+                <element signature="e#3307#3308#0" expanded="false" />
+                <element signature="e#3369#3370#0" expanded="false" />
                 <element signature="e#3469#3470#0" expanded="false" />
                 <element signature="e#3488#3489#0" expanded="false" />
                 <element signature="e#3595#3596#0" expanded="false" />
                 <element signature="e#3618#3619#0" expanded="false" />
-                <element signature="e#4821#4828#0" expanded="false" />
-                <element signature="e#5163#5180#0" expanded="false" />
-                <element signature="e#6023#6182#0" expanded="false" />
-                <element signature="e#6181#6182#0" expanded="false" />
-                <element signature="e#6259#6420#0" expanded="false" />
-                <element signature="e#6419#6420#0" expanded="false" />
-                <element signature="e#6524#7325#0" expanded="false" />
-                <element signature="e#6714#6730#0" expanded="false" />
-                <element signature="e#7045#7061#0" expanded="false" />
-                <element signature="e#7324#7325#0" expanded="false" />
-                <element signature="e#7438#7627#0" expanded="false" />
-                <element signature="e#7626#7627#0" expanded="false" />
+                <element signature="e#6101#6102#0" expanded="false" />
+                <element signature="e#6171#6172#0" expanded="false" />
+                <element signature="e#6337#6338#0" expanded="false" />
+                <element signature="e#6409#6410#0" expanded="false" />
                 <element signature="e#8221#8222#0" expanded="false" />
                 <element signature="e#8256#8257#0" expanded="false" />
                 <element signature="e#9227#9228#0" expanded="false" />
@@ -371,9 +361,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -566,6 +553,9 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -1183,7 +1173,8 @@
       <workItem from="1470484804742" duration="1507000" />
       <workItem from="1470525509690" duration="16415000" />
       <workItem from="1470574935816" duration="9878000" />
-      <workItem from="1470599203570" duration="2166000" />
+      <workItem from="1470599203570" duration="2186000" />
+      <workItem from="1470621973901" duration="2178000" />
     </task>
     <task id="LOCAL-00001" summary="playing around with saved wub database">
       <created>1469949651449</created>
@@ -1402,11 +1393,18 @@
       <option name="project" value="LOCAL" />
       <updated>1470599226049</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="leaving">
+      <created>1470602267825</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1470602267825</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="147751000" />
+    <option name="totallyTimeSpent" value="149949000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="0" />
@@ -1418,9 +1416,10 @@
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" x="92" y="92" width="1736" height="856" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.35785952" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.35897437" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1429,8 +1428,8 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39910814" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1439,7 +1438,6 @@
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" x="92" y="92" width="1736" height="856" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Bean Validation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
@@ -1479,7 +1477,8 @@
     <MESSAGE value="graph visualization&#10;" />
     <MESSAGE value="jgrapht" />
     <MESSAGE value="Merge branch 'master' of https://github.com/raver1975/Wub&#10;&#10;# Conflicts:&#10;#&#9;Wub.iml&#10;#&#9;src/com/klemstinegroup/wub2/system/Audio.java&#10;#&#9;src/com/klemstinegroup/wub2/test/Test3.java&#10;#&#9;src/com/klemstinegroup/wub2/test/Test4.java&#10;" />
-    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'master' of https://github.com/raver1975/Wub&#10;&#10;# Conflicts:&#10;#&#9;Wub.iml&#10;#&#9;src/com/klemstinegroup/wub2/system/Audio.java&#10;#&#9;src/com/klemstinegroup/wub2/test/Test3.java&#10;#&#9;src/com/klemstinegroup/wub2/test/Test4.java&#10;" />
+    <MESSAGE value="leaving" />
+    <option name="LAST_COMMIT_MESSAGE" value="leaving" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1674,7 +1673,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
           <caret line="35" column="39" selection-start-line="35" selection-start-column="35" selection-end-line="35" selection-end-column="39" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1727,10 +1725,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="612">
           <caret line="49" column="94" selection-start-line="49" selection-start-column="94" selection-end-line="49" selection-end-column="94" />
-          <folding>
-            <element signature="e#0#3192#0" expanded="false" />
-            <element signature="imports" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1745,7 +1739,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="94">
           <caret line="113" column="77" selection-start-line="113" selection-start-column="24" selection-end-line="113" selection-end-column="77" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1774,7 +1767,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="595">
           <caret line="54" column="18" selection-start-line="54" selection-start-column="18" selection-end-line="54" selection-end-column="18" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1882,19 +1874,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/edu/uci/ics/jung/samples/GraphFromGraphMLDemo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2040">
+        <state relative-caret-position="2125">
           <caret line="171" column="27" selection-start-line="171" selection-start-column="27" selection-end-line="171" selection-end-column="27" />
           <folding>
             <element signature="e#0#6880#0" expanded="false" />
             <element signature="imports" expanded="false" />
-            <element signature="e#2860#2906#0" expanded="false" />
-            <element signature="e#3012#3027#0" expanded="false" />
-            <element signature="e#3661#3788#0" expanded="false" />
-            <element signature="e#3787#3788#0" expanded="false" />
-            <element signature="e#5015#5174#0" expanded="false" />
-            <element signature="e#5173#5174#0" expanded="false" />
-            <element signature="e#5251#5412#0" expanded="false" />
-            <element signature="e#5411#5412#0" expanded="false" />
+            <element signature="e#3729#3730#0" expanded="false" />
+            <element signature="e#3786#3787#0" expanded="false" />
+            <element signature="e#5093#5094#0" expanded="false" />
+            <element signature="e#5163#5164#0" expanded="false" />
+            <element signature="e#5329#5330#0" expanded="false" />
+            <element signature="e#5401#5402#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1906,26 +1896,18 @@
           <folding>
             <element signature="e#0#11889#0" expanded="false" />
             <element signature="imports" expanded="false" />
-            <element signature="e#3017#3178#0" expanded="false" />
-            <element signature="e#3177#3178#0" expanded="false" />
-            <element signature="e#3229#3373#0" expanded="false" />
-            <element signature="e#3372#3373#0" expanded="false" />
+            <element signature="e#3112#3113#0" expanded="false" />
+            <element signature="e#3174#3175#0" expanded="false" />
+            <element signature="e#3307#3308#0" expanded="false" />
+            <element signature="e#3369#3370#0" expanded="false" />
             <element signature="e#3469#3470#0" expanded="false" />
             <element signature="e#3488#3489#0" expanded="false" />
             <element signature="e#3595#3596#0" expanded="false" />
             <element signature="e#3618#3619#0" expanded="false" />
-            <element signature="e#4821#4828#0" expanded="false" />
-            <element signature="e#5163#5180#0" expanded="false" />
-            <element signature="e#6023#6182#0" expanded="false" />
-            <element signature="e#6181#6182#0" expanded="false" />
-            <element signature="e#6259#6420#0" expanded="false" />
-            <element signature="e#6419#6420#0" expanded="false" />
-            <element signature="e#6524#7325#0" expanded="false" />
-            <element signature="e#6714#6730#0" expanded="false" />
-            <element signature="e#7045#7061#0" expanded="false" />
-            <element signature="e#7324#7325#0" expanded="false" />
-            <element signature="e#7438#7627#0" expanded="false" />
-            <element signature="e#7626#7627#0" expanded="false" />
+            <element signature="e#6101#6102#0" expanded="false" />
+            <element signature="e#6171#6172#0" expanded="false" />
+            <element signature="e#6337#6338#0" expanded="false" />
+            <element signature="e#6409#6410#0" expanded="false" />
             <element signature="e#8221#8222#0" expanded="false" />
             <element signature="e#8256#8257#0" expanded="false" />
             <element signature="e#9227#9228#0" expanded="false" />
@@ -1967,7 +1949,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/system/Audio.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
+        <state relative-caret-position="1428">
           <caret line="103" column="64" selection-start-line="103" selection-start-column="64" selection-end-line="103" selection-end-column="64" />
           <folding />
         </state>
@@ -1975,7 +1957,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/Test3.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="183">
+        <state relative-caret-position="3315">
           <caret line="211" column="27" selection-start-line="211" selection-start-column="27" selection-end-line="211" selection-end-column="27" />
           <folding />
         </state>
@@ -1983,7 +1965,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/Test4.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="948">
+        <state relative-caret-position="3910">
           <caret line="251" column="2" selection-start-line="251" selection-start-column="2" selection-end-line="251" selection-end-column="2" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -1993,8 +1975,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce3.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="68" column="29" selection-start-line="68" selection-start-column="29" selection-end-line="68" selection-end-column="29" />
+        <state relative-caret-position="227">
+          <caret line="352" column="0" selection-start-line="352" selection-start-column="0" selection-end-line="352" selection-end-column="0" />
           <folding />
         </state>
       </provider>
