@@ -75,7 +75,8 @@ public class Audio {
     }
 
     private void startPlaying(ImagePanel tf, int numClusters) {
-        line = getLine();
+        HashMap<String,Integer> hm=new HashMap<>();
+                line = getLine();
         new Thread(new Runnable() {
             public void run() {
                 top:
@@ -126,8 +127,12 @@ public class Audio {
                                             g.setColor(Color.BLACK);
 
                                             g.drawString(i.payload.song + ":" + i.payload.segment, 60, 15 + tf.getHeight() / 2);
+                                            if (hm.get(i.payload.segment+"")==null)hm.put(i.payload.segment+"",0);
+                                            int val=hm.get(i.payload.segment+"")+1;
+                                            hm.put(i.payload.segment+"",val);
 
-                                            if (lastNode!=null)lastNode.addAttribute("ui.style", "fill-color: rgb(0,0,255);");;
+                                            Color color=ColorHelper.numberToColorPercentage((double)val/(double)BeautifulKMGSR.maxValue);
+                                            if (lastNode!=null)lastNode.addAttribute("ui.style", "fill-color: rgb("+color.getRed()+","+color.getGreen()+","+color.getBlue()+");");
                                             Node node = BeautifulKMGSR.graph.getNode(i.payload.segment + "");
                                             if (node!=null)node.addAttribute("ui.style", "fill-color: rgb(255,0,0);");
                                             lastNode=node;

@@ -9,6 +9,7 @@ import org.graphstream.graph.Edge;
 import org.graphstream.graph.implementations.MultiGraph;
 import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.Viewer;
+import org.jgrapht.alg.EulerianCircuit;
 import org.json.simple.JSONObject;
 import weka.clusterers.SimpleKMeans;
 import weka.core.*;
@@ -16,10 +17,7 @@ import weka.core.*;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.*;
 
 public class BeautifulKMGSR {
 
@@ -50,19 +48,19 @@ public class BeautifulKMGSR {
     //456 bassnectar timestretch
     //1016 bassnectar basshead
 
-    public static JFrame frame = new JFrame(BeautifulKMGSR.class.toString());
+//    public static JFrame frame = new JFrame(BeautifulKMGSR.class.toString());
 
     //    static boolean rnn = true;
     static boolean enableAudioDuringTraining = true;
 //    private static boolean loadPrevSavedModel = true;
 
-    static int playback = 298;
+    static int playback =1016;
     static int stretch = 1;
     static int playbackStart = playback;
     static int playbackEnd = playback + stretch;
 
 
-    public static final int numClusters =1000;
+    public static final int numClusters = 1200;
 
     static float pitchFactor = 17f;
     static float timbreFactor = 17f;
@@ -71,10 +69,12 @@ public class BeautifulKMGSR {
 
     public static ImagePanel tf;
     public static MultiGraph graph;
+    public static int maxValue;
+//    public static HashMap<String,Integer> hm;
 
 
     static {
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         File[] list1 = new File(directory).listFiles();
         ArrayList<File> al = new ArrayList<>();
         for (File f : list1) {
@@ -88,15 +88,15 @@ public class BeautifulKMGSR {
     public static void main(String[] args) {
 
 
-        frame.setSize(400, 300);
+//        frame.setSize(400, 300);
         tf = new ImagePanel();
         tf.setFont(new Font("Arial", Font.BOLD, 300));
-        JScrollPane jscr = new JScrollPane(tf);
+//        JScrollPane jscr = new JScrollPane(tf);
 
 //        DefaultCaret caret = (DefaultCaret) tf.getCaret();
 //        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-        frame.add(jscr);
-        frame.setVisible(true);
+//        frame.add(jscr);
+//        frame.setVisible(true);
 
         //one time attribute setup
         FastVector attrs = new FastVector();
@@ -198,6 +198,8 @@ public class BeautifulKMGSR {
 
         }
         graph = new MultiGraph("id");
+        graph.addAttribute("ui.quality");
+        graph.addAttribute("ui.antialias");
         Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
         viewer.enableAutoLayout();
         View view = viewer.addDefaultView(false);
@@ -232,7 +234,7 @@ public class BeautifulKMGSR {
                 nodes.add(play.segment);
             }
 //            if (!edges.contains(startNode + ":" + play.segment)) {
-                graph.addEdge(cnt + "", startNode + "", play.segment + "",true);
+            graph.addEdge(cnt + "", startNode + "", play.segment + "", true);
 //                edges.add(startNode + ":" + play.segment);
 //            }
             startNode = play.segment;
@@ -241,11 +243,18 @@ public class BeautifulKMGSR {
         }
         //graph.addEdge(song.analysis.getSegments().size()+"",startNode+"",numClusters+"");
 
-        JFrame jframe=new JFrame("graphstream");
+        JFrame jframe = new JFrame("graphstream");
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        jframe.setSize(800,600);
-        jframe.add(viewer.getDefaultView());
+        jframe.setSize(800, 600);
+        JPanel panel=new JPanel();
+        panel.setLayout(new BorderLayout());
+        jframe.add(panel);
+        panel.add("Center",viewer.getDefaultView());
+        tf.setMinimumSize(new Dimension(100,100));
+        tf.setPreferredSize(new Dimension(100,100));
+        panel.add("North",tf);
         jframe.setVisible(true);
+
 
 
         JSONObject js = (JSONObject) song.analysis.getMap().get("meta");
@@ -291,20 +300,53 @@ public class BeautifulKMGSR {
         System.out.println("time\t" + seconds / 60 + ": " + seconds % 60);
 
 
+        HashMap<String, Integer> hm = new HashMap<>();
+
         startNode = 0;
         while (startNode != numClusters) {
             AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(startNode));
-            ai.payload = new SegmentSong(playback,startNode);
+            ai.payload = new SegmentSong(playback, startNode);
             audio.play(ai);
 
             Iterator<Edge> adj = graph.getNode(startNode + "").getEachLeavingEdge().iterator();
             ArrayList<Edge> temp = new ArrayList<>();
-            while (adj.hasNext()) temp.add(adj.next());
+            int lowest = 0;
+            int lowestValue = Integer.MAX_VALUE;
+//            int cnt = 0;
+            while (adj.hasNext()) {
+                Edge bb = adj.next();
+                temp.add(bb);
+            }
+            int cnt=0;
+            Collections.shuffle(temp);
+            for (Edge bb:temp){
+                String key = bb.getNode1().getId();
+                if (!hm.containsKey(key)) {
+                    hm.put(key, 0);
+                }
+                int val = hm.get(key);
+                if (val < lowestValue) {
+                    lowestValue = val;
+                    lowest = cnt;
 
-            int next = (int) (Math.random() * temp.size());
+                }
+                cnt++;
+            }
+
+
+//            int next = (int) (Math.random() * temp.size());
+            int next = lowest;
+
             System.out.println("going down: " + next + " out of " + temp.size());
             Edge selected = temp.get(next);
             startNode = Integer.parseInt(selected.getNode1().getId());
+            String key = selected.getNode1().getId();
+            if (!hm.containsKey(key)) {
+                hm.put(key, 0);
+            }
+            int val = hm.get(key);
+            hm.put(key, val + 1);
+            maxValue = Math.max(maxValue, val + 1);
 //            System.out.println(Arrays.toString(bb));
 
         }
