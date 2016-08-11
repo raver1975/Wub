@@ -2,6 +2,7 @@ package com.klemstinegroup.wub2.system;
 
 import com.echonest.api.v4.Segment;
 import com.klemstinegroup.wub.ColorHelper;
+import com.klemstinegroup.wub2.test.BeautifulKMGSR;
 import com.klemstinegroup.wub2.test.ImagePanel;
 import com.klemstinegroup.wub2.test.SongManager;
 import com.klemstinegroup.wub2.test.Test3;
@@ -18,6 +19,8 @@ import javax.sound.sampled.SourceDataLine;
 import javax.swing.*;
 
 import com.klemstinegroup.wub.*;
+import org.graphstream.graph.*;
+import org.graphstream.graph.Node;
 
 public class Audio {
 
@@ -39,6 +42,7 @@ public class Audio {
     public static final int bufferSize = 8192;
     private Song cachedSong;
     private int cachedSongIndex;
+    Node lastNode=null;
 
     public Audio() {
         this(null, 1);
@@ -123,6 +127,10 @@ public class Audio {
 
                                             g.drawString(i.payload.song + ":" + i.payload.segment, 60, 15 + tf.getHeight() / 2);
 
+                                            if (lastNode!=null)lastNode.addAttribute("ui.style", "fill-color: rgb(0,0,255);");;
+                                            Node node = BeautifulKMGSR.graph.getNode(i.payload.segment + "");
+                                            if (node!=null)node.addAttribute("ui.style", "fill-color: rgb(255,0,0);");
+                                            lastNode=node;
 
                                             tf.setImage(bi);
                                             tf.invalidate();

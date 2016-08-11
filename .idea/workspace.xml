@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/system/Audio.java" line="123" />
+    <bookmark url="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/system/Audio.java" line="127" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ab275348-9c2e-46dc-a9d5-a42ca3b2351e" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/ListDirectory.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/BeautifulKMGSR.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/map-universal.ser" afterPath="$PROJECT_DIR$/map-universal.ser" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/system/Audio.java" afterPath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/system/Audio.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce2.java" afterPath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce2.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansSongReduce.java" afterPath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansSongReduce.java" />
     </list>
     <ignored path="Wub.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -28,55 +32,53 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="DefaultParallelEdgeIndexFunction.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/edu/uci/ics/jung/graph/util/DefaultParallelEdgeIndexFunction.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="816">
-              <caret line="64" column="40" selection-start-line="64" selection-start-column="40" selection-end-line="64" selection-end-column="40" />
-              <folding>
-                <element signature="e#0#4448#0" expanded="false" />
-                <element signature="imports" expanded="false" />
-                <element signature="e#4410#4411#0" expanded="false" />
-                <element signature="e#4444#4445#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GraphFromGraphMLDemo.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/edu/uci/ics/jung/samples/GraphFromGraphMLDemo.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2125">
-              <caret line="171" column="27" selection-start-line="171" selection-start-column="27" selection-end-line="171" selection-end-column="27" />
-              <folding>
-                <element signature="e#0#6880#0" expanded="false" />
-                <element signature="imports" expanded="false" />
-                <element signature="e#3729#3730#0" expanded="false" />
-                <element signature="e#3786#3787#0" expanded="false" />
-                <element signature="e#5093#5094#0" expanded="false" />
-                <element signature="e#5163#5164#0" expanded="false" />
-                <element signature="e#5329#5330#0" expanded="false" />
-                <element signature="e#5401#5402#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="Test4.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/Test4.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="3910">
               <caret line="251" column="2" selection-start-line="251" selection-start-column="2" selection-end-line="251" selection-end-column="2" />
+              <folding>
+                <element signature="imports" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="KMeansGraphSongReduce3.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce3.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="279">
+              <caret line="220" column="47" selection-start-line="220" selection-start-column="47" selection-end-line="220" selection-end-column="47" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="KMeansGraphSongReduce3.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce3.java">
+      <file leaf-file-name="KMeansGraphSongReduce2.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce2.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4040">
-              <caret line="279" column="47" selection-start-line="279" selection-start-column="47" selection-end-line="279" selection-end-column="47" />
+            <state relative-caret-position="160">
+              <caret line="297" column="93" selection-start-line="297" selection-start-column="93" selection-end-line="297" selection-end-column="93" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BeautifulKMGSR.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/BeautifulKMGSR.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="272">
+              <caret line="59" column="27" selection-start-line="59" selection-start-column="27" selection-end-line="59" selection-end-column="27" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="KMeansSongReduce.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansSongReduce.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="51">
+              <caret line="52" column="29" selection-start-line="52" selection-start-column="29" selection-end-line="52" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -85,11 +87,9 @@
       <file leaf-file-name="ListDirectory.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/ListDirectory.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="765">
+            <state relative-caret-position="663">
               <caret line="48" column="3" selection-start-line="48" selection-start-column="3" selection-end-line="48" selection-end-column="3" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -97,9 +97,13 @@
       <file leaf-file-name="SongManager.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/SongManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2263">
+            <state relative-caret-position="2754">
               <caret line="175" column="14" selection-start-line="175" selection-start-column="14" selection-end-line="175" selection-end-column="14" />
-              <folding />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#1675#1676#0" expanded="false" />
+                <element signature="e#1709#1710#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -117,14 +121,10 @@
       <file leaf-file-name="Audio.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/system/Audio.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1428">
-              <caret line="103" column="64" selection-start-line="103" selection-start-column="64" selection-end-line="103" selection-end-column="64" />
+            <state relative-caret-position="2176">
+              <caret line="130" column="70" selection-start-line="130" selection-start-column="70" selection-end-line="130" selection-end-column="70" />
               <folding>
-                <element signature="imports" expanded="false" />
-                <element signature="e#1602#1603#0" expanded="false" />
-                <element signature="e#1631#1632#0" expanded="false" />
-                <element signature="e#8045#8046#0" expanded="false" />
-                <element signature="e#8073#8074#0" expanded="false" />
+                <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -137,35 +137,6 @@
               <caret line="211" column="27" selection-start-line="211" selection-start-column="27" selection-end-line="211" selection-end-column="27" />
               <folding>
                 <element signature="imports" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BalloonLayoutDemo.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/edu/uci/ics/jung/samples/BalloonLayoutDemo.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="75" column="13" selection-start-line="75" selection-start-column="13" selection-end-line="75" selection-end-column="13" />
-              <folding>
-                <element signature="e#0#11889#0" expanded="false" />
-                <element signature="imports" expanded="false" />
-                <element signature="e#3112#3113#0" expanded="false" />
-                <element signature="e#3174#3175#0" expanded="false" />
-                <element signature="e#3307#3308#0" expanded="false" />
-                <element signature="e#3369#3370#0" expanded="false" />
-                <element signature="e#3469#3470#0" expanded="false" />
-                <element signature="e#3488#3489#0" expanded="false" />
-                <element signature="e#3595#3596#0" expanded="false" />
-                <element signature="e#3618#3619#0" expanded="false" />
-                <element signature="e#6101#6102#0" expanded="false" />
-                <element signature="e#6171#6172#0" expanded="false" />
-                <element signature="e#6337#6338#0" expanded="false" />
-                <element signature="e#6409#6410#0" expanded="false" />
-                <element signature="e#8221#8222#0" expanded="false" />
-                <element signature="e#8256#8257#0" expanded="false" />
-                <element signature="e#9227#9228#0" expanded="false" />
-                <element signature="e#9247#9248#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -191,8 +162,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/ImagePanel.java" />
-        <option value="$PROJECT_DIR$/src/rnn/datastructs/DataSequence.java" />
         <option value="$PROJECT_DIR$/src/rnn/matrix/Matrix.java" />
         <option value="$PROJECT_DIR$/src/rnn/model/LinearUnit.java" />
         <option value="$PROJECT_DIR$/src/rnn/model/Nonlinearity.java" />
@@ -236,12 +205,14 @@
         <option value="$PROJECT_DIR$/src/edu/uci/ics/jung/samples/SimpleGraphDraw.java" />
         <option value="$PROJECT_DIR$/src/edu/uci/ics/jung/graph/util/Context.java" />
         <option value="$PROJECT_DIR$/src/edu/uci/ics/jung/visualization/spatial/FastRenderingGraph.java" />
-        <option value="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce2.java" />
-        <option value="$PROJECT_DIR$/src/com/klemstinegroup/wub2/system/Audio.java" />
         <option value="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/Test4.java" />
         <option value="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/Test3.java" />
-        <option value="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce3.java" />
         <option value="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/ListDirectory.java" />
+        <option value="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansSongReduce.java" />
+        <option value="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce3.java" />
+        <option value="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce2.java" />
+        <option value="$PROJECT_DIR$/src/com/klemstinegroup/wub2/system/Audio.java" />
+        <option value="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/BeautifulKMGSR.java" />
       </list>
     </option>
   </component>
@@ -282,7 +253,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -475,8 +445,9 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -502,47 +473,7 @@
       <recent name="com.klemstinegroup.wub2.test" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.ListDirectory">
-    <configuration default="false" name="EdgeLabelDemo" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="edu.uci.ics.jung.samples.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="MAIN_CLASS_NAME" value="edu.uci.ics.jung.samples.EdgeLabelDemo" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="Wub" />
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="false" name="L2RTreeLayoutDemo" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="edu.uci.ics.jung.samples.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="MAIN_CLASS_NAME" value="edu.uci.ics.jung.samples.L2RTreeLayoutDemo" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="Wub" />
-      <envs />
-      <method />
-    </configuration>
+  <component name="RunManager" selected="Application.BeautifulKMGSR">
     <configuration default="false" name="KMeansGraphSongReduce2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
@@ -591,6 +522,46 @@
         </pattern>
       </extension>
       <option name="MAIN_CLASS_NAME" value="com.klemstinegroup.wub2.test.ListDirectory" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="Wub" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="KMeansSongReduce" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="com.klemstinegroup.wub2.test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="MAIN_CLASS_NAME" value="com.klemstinegroup.wub2.test.KMeansSongReduce" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="Wub" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="BeautifulKMGSR" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="com.klemstinegroup.wub2.test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="MAIN_CLASS_NAME" value="com.klemstinegroup.wub2.test.BeautifulKMGSR" />
       <option name="VM_PARAMETERS" />
       <option name="PROGRAM_PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
@@ -1040,19 +1011,19 @@
       <method />
     </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="Application.EdgeLabelDemo" />
-      <item index="1" class="java.lang.String" itemvalue="Application.L2RTreeLayoutDemo" />
-      <item index="2" class="java.lang.String" itemvalue="Application.KMeansGraphSongReduce2" />
-      <item index="3" class="java.lang.String" itemvalue="Application.KMeansGraphSongReduce3" />
-      <item index="4" class="java.lang.String" itemvalue="Application.ListDirectory" />
+      <item index="0" class="java.lang.String" itemvalue="Application.KMeansGraphSongReduce2" />
+      <item index="1" class="java.lang.String" itemvalue="Application.KMeansGraphSongReduce3" />
+      <item index="2" class="java.lang.String" itemvalue="Application.ListDirectory" />
+      <item index="3" class="java.lang.String" itemvalue="Application.KMeansSongReduce" />
+      <item index="4" class="java.lang.String" itemvalue="Application.BeautifulKMGSR" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Application.ListDirectory" />
-        <item index="1" class="java.lang.String" itemvalue="Application.KMeansGraphSongReduce3" />
-        <item index="2" class="java.lang.String" itemvalue="Application.KMeansGraphSongReduce2" />
-        <item index="3" class="java.lang.String" itemvalue="Application.L2RTreeLayoutDemo" />
-        <item index="4" class="java.lang.String" itemvalue="Application.EdgeLabelDemo" />
+        <item index="0" class="java.lang.String" itemvalue="Application.BeautifulKMGSR" />
+        <item index="1" class="java.lang.String" itemvalue="Application.KMeansGraphSongReduce2" />
+        <item index="2" class="java.lang.String" itemvalue="Application.KMeansGraphSongReduce3" />
+        <item index="3" class="java.lang.String" itemvalue="Application.KMeansSongReduce" />
+        <item index="4" class="java.lang.String" itemvalue="Application.ListDirectory" />
       </list>
     </recent_temporary>
   </component>
@@ -1097,7 +1068,13 @@
       <workItem from="1470599203570" duration="2186000" />
       <workItem from="1470621973901" duration="2214000" />
       <workItem from="1470660542879" duration="258000" />
-      <workItem from="1470662343961" duration="2485000" />
+      <workItem from="1470662343961" duration="2525000" />
+      <workItem from="1470684316493" duration="138000" />
+      <workItem from="1470707539008" duration="16000" />
+      <workItem from="1470839217891" duration="2484000" />
+      <workItem from="1470841916816" duration="141000" />
+      <workItem from="1470924402847" duration="171000" />
+      <workItem from="1470929826116" duration="4348000" />
     </task>
     <task id="LOCAL-00001" summary="playing around with saved wub database">
       <created>1469949651449</created>
@@ -1330,11 +1307,18 @@
       <option name="project" value="LOCAL" />
       <updated>1470624164287</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="catalog listing">
+      <created>1470669778349</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1470669778349</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="152728000" />
+    <option name="totallyTimeSpent" value="160066000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="0" />
@@ -1347,18 +1331,19 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3567447" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3556299" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18923241" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18923241" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32664436" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39910814" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39910814" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1372,7 +1357,6 @@
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Bean Validation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32664436" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28837952" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -1408,7 +1392,8 @@
     <MESSAGE value="jgrapht" />
     <MESSAGE value="Merge branch 'master' of https://github.com/raver1975/Wub&#10;&#10;# Conflicts:&#10;#&#9;Wub.iml&#10;#&#9;src/com/klemstinegroup/wub2/system/Audio.java&#10;#&#9;src/com/klemstinegroup/wub2/test/Test3.java&#10;#&#9;src/com/klemstinegroup/wub2/test/Test4.java&#10;" />
     <MESSAGE value="leaving" />
-    <option name="LAST_COMMIT_MESSAGE" value="leaving" />
+    <MESSAGE value="catalog listing" />
+    <option name="LAST_COMMIT_MESSAGE" value="catalog listing" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1419,13 +1404,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/rnn/loss/LossArgMax.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="11" selection-start-line="2" selection-start-column="11" selection-end-line="2" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/rnn/loss/LossMultiDimensionalBinary.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
@@ -1606,14 +1584,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansSongReduce.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1428">
-          <caret line="97" column="31" selection-start-line="97" selection-start-column="31" selection-end-line="97" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1309">
@@ -1689,7 +1659,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="646">
           <caret line="38" column="50" selection-start-line="38" selection-start-column="50" selection-end-line="38" selection-end-column="50" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1697,93 +1666,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1649">
           <caret line="115" column="38" selection-start-line="115" selection-start-column="38" selection-end-line="115" selection-end-column="42" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#5930#5931#0" expanded="false" />
-            <element signature="e#5950#5951#0" expanded="false" />
-            <element signature="e#6001#6002#0" expanded="false" />
-            <element signature="e#6028#6029#0" expanded="false" />
-            <element signature="e#6240#6241#0" expanded="false" />
-            <element signature="e#6283#6284#0" expanded="false" />
-            <element signature="e#6345#6346#0" expanded="false" />
-            <element signature="e#6393#6394#0" expanded="false" />
-            <element signature="e#6436#6437#0" expanded="false" />
-            <element signature="e#6474#6475#0" expanded="false" />
-            <element signature="e#6512#6513#0" expanded="false" />
-            <element signature="e#6549#6550#0" expanded="false" />
-            <element signature="e#6588#6589#0" expanded="false" />
-            <element signature="e#6626#6627#0" expanded="false" />
-            <element signature="e#6669#6670#0" expanded="false" />
-            <element signature="e#6711#6712#0" expanded="false" />
-            <element signature="e#6742#6743#0" expanded="false" />
-            <element signature="e#6776#6777#0" expanded="false" />
-            <element signature="e#6809#6810#0" expanded="false" />
-            <element signature="e#6845#6846#0" expanded="false" />
-            <element signature="e#6893#6894#0" expanded="false" />
-            <element signature="e#6932#6933#0" expanded="false" />
-            <element signature="e#6972#6973#0" expanded="false" />
-            <element signature="e#7012#7013#0" expanded="false" />
-            <element signature="e#7048#7049#0" expanded="false" />
-            <element signature="e#7089#7090#0" expanded="false" />
-            <element signature="e#7118#7119#0" expanded="false" />
-            <element signature="e#7152#7153#0" expanded="false" />
-            <element signature="e#7198#7199#0" expanded="false" />
-            <element signature="e#7240#7241#0" expanded="false" />
-            <element signature="e#7378#7379#0" expanded="false" />
-            <element signature="e#7416#7417#0" expanded="false" />
-            <element signature="e#7455#7456#0" expanded="false" />
-            <element signature="e#7492#7493#0" expanded="false" />
-            <element signature="e#7531#7532#0" expanded="false" />
-            <element signature="e#7569#7570#0" expanded="false" />
-            <element signature="e#7608#7609#0" expanded="false" />
-            <element signature="e#7650#7651#0" expanded="false" />
-            <element signature="e#7701#7702#0" expanded="false" />
-            <element signature="e#7745#7746#0" expanded="false" />
-            <element signature="e#7797#7798#0" expanded="false" />
-            <element signature="e#7842#7843#0" expanded="false" />
-            <element signature="e#7887#7888#0" expanded="false" />
-            <element signature="e#7925#7926#0" expanded="false" />
-            <element signature="e#7966#7967#0" expanded="false" />
-            <element signature="e#8010#8011#0" expanded="false" />
-            <element signature="e#8057#8058#0" expanded="false" />
-            <element signature="e#8097#8098#0" expanded="false" />
-            <element signature="e#8139#8140#0" expanded="false" />
-            <element signature="e#8184#8185#0" expanded="false" />
-            <element signature="e#8230#8231#0" expanded="false" />
-            <element signature="e#8269#8270#0" expanded="false" />
-            <element signature="e#8313#8314#0" expanded="false" />
-            <element signature="e#8360#8361#0" expanded="false" />
-            <element signature="e#8410#8411#0" expanded="false" />
-            <element signature="e#8453#8454#0" expanded="false" />
-            <element signature="e#8491#8492#0" expanded="false" />
-            <element signature="e#8534#8535#0" expanded="false" />
-            <element signature="e#8576#8577#0" expanded="false" />
-            <element signature="e#8621#8622#0" expanded="false" />
-            <element signature="e#8669#8670#0" expanded="false" />
-            <element signature="e#8710#8711#0" expanded="false" />
-            <element signature="e#8741#8742#0" expanded="false" />
-            <element signature="e#8777#8778#0" expanded="false" />
-            <element signature="e#8893#8894#0" expanded="false" />
-            <element signature="e#8929#8930#0" expanded="false" />
-            <element signature="e#8972#8973#0" expanded="false" />
-            <element signature="e#9012#9013#0" expanded="false" />
-            <element signature="e#9059#9060#0" expanded="false" />
-            <element signature="e#9103#9104#0" expanded="false" />
-            <element signature="e#9144#9145#0" expanded="false" />
-            <element signature="e#9182#9183#0" expanded="false" />
-            <element signature="e#9226#9227#0" expanded="false" />
-            <element signature="e#9267#9268#0" expanded="false" />
-            <element signature="e#9312#9313#0" expanded="false" />
-            <element signature="e#9354#9355#0" expanded="false" />
-            <element signature="e#9396#9397#0" expanded="false" />
-            <element signature="e#9435#9436#0" expanded="false" />
-            <element signature="e#9469#9470#0" expanded="false" />
-            <element signature="e#9506#9507#0" expanded="false" />
-            <element signature="e#9543#9544#0" expanded="false" />
-            <element signature="e#9579#9580#0" expanded="false" />
-            <element signature="e#9620#9621#0" expanded="false" />
-            <element signature="e#9660#9661#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1791,16 +1673,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2125">
           <caret line="171" column="27" selection-start-line="171" selection-start-column="27" selection-end-line="171" selection-end-column="27" />
-          <folding>
-            <element signature="e#0#6880#0" expanded="false" />
-            <element signature="imports" expanded="false" />
-            <element signature="e#3729#3730#0" expanded="false" />
-            <element signature="e#3786#3787#0" expanded="false" />
-            <element signature="e#5093#5094#0" expanded="false" />
-            <element signature="e#5163#5164#0" expanded="false" />
-            <element signature="e#5329#5330#0" expanded="false" />
-            <element signature="e#5401#5402#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1808,26 +1680,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
           <caret line="75" column="13" selection-start-line="75" selection-start-column="13" selection-end-line="75" selection-end-column="13" />
-          <folding>
-            <element signature="e#0#11889#0" expanded="false" />
-            <element signature="imports" expanded="false" />
-            <element signature="e#3112#3113#0" expanded="false" />
-            <element signature="e#3174#3175#0" expanded="false" />
-            <element signature="e#3307#3308#0" expanded="false" />
-            <element signature="e#3369#3370#0" expanded="false" />
-            <element signature="e#3469#3470#0" expanded="false" />
-            <element signature="e#3488#3489#0" expanded="false" />
-            <element signature="e#3595#3596#0" expanded="false" />
-            <element signature="e#3618#3619#0" expanded="false" />
-            <element signature="e#6101#6102#0" expanded="false" />
-            <element signature="e#6171#6172#0" expanded="false" />
-            <element signature="e#6337#6338#0" expanded="false" />
-            <element signature="e#6409#6410#0" expanded="false" />
-            <element signature="e#8221#8222#0" expanded="false" />
-            <element signature="e#8256#8257#0" expanded="false" />
-            <element signature="e#9227#9228#0" expanded="false" />
-            <element signature="e#9247#9248#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1844,35 +1697,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce2.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="623">
-          <caret line="239" column="11" selection-start-line="239" selection-start-column="8" selection-end-line="239" selection-end-column="11" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/ObjectManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="425">
           <caret line="25" column="18" selection-start-line="25" selection-start-column="12" selection-end-line="25" selection-end-column="18" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/system/Audio.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1428">
-          <caret line="103" column="64" selection-start-line="103" selection-start-column="64" selection-end-line="103" selection-end-column="64" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#1602#1603#0" expanded="false" />
-            <element signature="e#1631#1632#0" expanded="false" />
-            <element signature="e#8045#8046#0" expanded="false" />
-            <element signature="e#8073#8074#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1890,32 +1719,70 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3910">
           <caret line="251" column="2" selection-start-line="251" selection-start-column="2" selection-end-line="251" selection-end-column="2" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/SongManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2263">
+        <state relative-caret-position="2754">
           <caret line="175" column="14" selection-start-line="175" selection-start-column="14" selection-end-line="175" selection-end-column="14" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#1675#1676#0" expanded="false" />
+            <element signature="e#1709#1710#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/ListDirectory.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="765">
+        <state relative-caret-position="663">
           <caret line="48" column="3" selection-start-line="48" selection-start-column="3" selection-end-line="48" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansSongReduce.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="52" column="29" selection-start-line="52" selection-start-column="29" selection-end-line="52" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce3.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="279">
+          <caret line="220" column="47" selection-start-line="220" selection-start-column="47" selection-end-line="220" selection-end-column="47" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce2.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="297" column="93" selection-start-line="297" selection-start-column="93" selection-end-line="297" selection-end-column="93" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/system/Audio.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2176">
+          <caret line="130" column="70" selection-start-line="130" selection-start-column="70" selection-end-line="130" selection-end-column="70" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce3.java">
+    <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/BeautifulKMGSR.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4040">
-          <caret line="279" column="47" selection-start-line="279" selection-start-column="47" selection-end-line="279" selection-end-column="47" />
+        <state relative-caret-position="272">
+          <caret line="59" column="27" selection-start-line="59" selection-start-column="27" selection-end-line="59" selection-end-column="27" />
           <folding />
         </state>
       </provider>

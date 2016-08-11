@@ -10,6 +10,8 @@ import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.MultiGraph;
 import org.graphstream.graph.implementations.SingleGraph;
+import org.graphstream.ui.view.View;
+import org.graphstream.ui.view.Viewer;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import weka.clusterers.SimpleKMeans;
@@ -56,13 +58,13 @@ public class KMeansGraphSongReduce2 {
     static boolean enableAudioDuringTraining = true;
 //    private static boolean loadPrevSavedModel = true;
 
-    static int playback = 310;
+    static int playback = 246;
     static int stretch = 1;
     static int playbackStart = playback;
     static int playbackEnd = playback + stretch;
 
 
-    public static final int numClusters =1500;
+    public static final int numClusters =540;
 
     static float pitchFactor = 17f;
     static float timbreFactor = 17f;
@@ -70,6 +72,7 @@ public class KMeansGraphSongReduce2 {
     static float durationFactor = 90f;
 
     public static ImagePanel tf;
+    public static MultiGraph graph;
 
 
     static {
@@ -196,7 +199,10 @@ public class KMeansGraphSongReduce2 {
             out += (char) tem.indexOf(pp.segment);
 
         }
-        Graph graph = new MultiGraph("id");
+        graph = new MultiGraph("id");
+        Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+        viewer.enableAutoLayout();
+        View view = viewer.addDefaultView(false);
 
         int startNode = 0;
 
@@ -237,36 +243,13 @@ public class KMeansGraphSongReduce2 {
         }
         //graph.addEdge(song.analysis.getSegments().size()+"",startNode+"",numClusters+"");
 
-        graph.display();
+        JFrame jframe=new JFrame("graphstream");
+        jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jframe.setSize(800,600);
+        jframe.add(viewer.getDefaultView());
+        jframe.setVisible(true);
 
 
-        startNode = 0;
-        while (startNode != numClusters) {
-            AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(startNode));
-            ai.payload = new SegmentSong(playback, tem.indexOf(startNode));
-            audio.play(ai);
-
-            Iterator<Edge> adj = graph.getNode(startNode + "").getEachLeavingEdge().iterator();
-            ArrayList<Edge> temp = new ArrayList<>();
-            while (adj.hasNext()) temp.add(adj.next());
-
-            int next = (int) (Math.random() * temp.size());
-            System.out.println("going down: " + next + " out of " + temp.size());
-            Edge selected = temp.get(next);
-            startNode = Integer.parseInt(selected.getNode1().getId());
-//            System.out.println(Arrays.toString(bb));
-
-        }
-
-
-//        while (iter.hasNext()){
-//            Object bbb = iter.next();
-//
-//            Map.Entry<String, String> bbe = (Map.Entry<String, String>) bbb;
-//            System.out.println(bbb.toString());
-//
-
-        JSONParser parser = new JSONParser();
         JSONObject js = (JSONObject) song.analysis.getMap().get("meta");
         String title = null;
         String artist = null;
@@ -308,7 +291,33 @@ public class KMeansGraphSongReduce2 {
         System.out.println("album\t" + album);
         System.out.println("genre\t" + genre);
         System.out.println("time\t" + seconds / 60 + ": " + seconds % 60);
-        Iterator iter = song.analysis.getMap().entrySet().iterator();
+
+
+        startNode = 0;
+        while (startNode != numClusters) {
+            AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(startNode));
+            ai.payload = new SegmentSong(playback,startNode);
+            audio.play(ai);
+
+            Iterator<Edge> adj = graph.getNode(startNode + "").getEachLeavingEdge().iterator();
+            ArrayList<Edge> temp = new ArrayList<>();
+            while (adj.hasNext()) temp.add(adj.next());
+
+            int next = (int) (Math.random() * temp.size());
+            System.out.println("going down: " + next + " out of " + temp.size());
+            Edge selected = temp.get(next);
+            startNode = Integer.parseInt(selected.getNode1().getId());
+//            System.out.println(Arrays.toString(bb));
+
+        }
+
+
+//        while (iter.hasNext()){
+//            Object bbb = iter.next();
+//
+//            Map.Entry<String, String> bbe = (Map.Entry<String, String>) bbb;
+//            System.out.println(bbb.toString());
+//
 
 
     }
