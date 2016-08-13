@@ -60,7 +60,7 @@ public class BeautifulKMGSR {
     static int playbackEnd = playback + stretch;
 
 
-    public static final int numClusters = 1200;
+    public static final int numClusters = 1170;
 
     static float pitchFactor = 17f;
     static float timbreFactor = 17f;
@@ -198,8 +198,8 @@ public class BeautifulKMGSR {
 
         }
         graph = new MultiGraph("id");
-        graph.addAttribute("ui.quality");
-        graph.addAttribute("ui.antialias");
+//        graph.addAttribute("ui.quality");
+//        graph.addAttribute("ui.antialias");
         Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
         viewer.enableAutoLayout();
         View view = viewer.addDefaultView(false);
@@ -303,7 +303,9 @@ public class BeautifulKMGSR {
         HashMap<String, Integer> hm = new HashMap<>();
 
         startNode = 0;
-        while (startNode != numClusters) {
+        int cnto=100000;
+        while (cnto-->0) {
+//            if (startNode == numClusters-1)startNode=0;
             AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(startNode));
             ai.payload = new SegmentSong(playback, startNode);
             audio.play(ai);
