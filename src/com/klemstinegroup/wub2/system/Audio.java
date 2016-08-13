@@ -132,9 +132,16 @@ public class Audio {
                                             hm.put(i.payload.segment+"",val);
 
                                             Color color=ColorHelper.numberToColorPercentage((double)val/(double)BeautifulKMGSR.maxValue);
-                                            if (lastNode!=null)lastNode.addAttribute("ui.style", "fill-color: rgb("+color.getRed()+","+color.getGreen()+","+color.getBlue()+");");
+                                            if (lastNode!=null){
+                                                lastNode.addAttribute("ui.style", "fill-color: rgb("+color.getRed()+","+color.getGreen()+","+color.getBlue()+");");
+                                                lastNode.addAttribute("ui.style", "size: 15;");
+                                            }
                                             Node node = BeautifulKMGSR.graph.getNode(i.payload.segment + "");
-                                            if (node!=null)node.addAttribute("ui.style", "fill-color: rgb(255,0,0);");
+                                            if (node!=null){
+                                                node.addAttribute("ui.style", "fill-color: rgb(255,0,0);");
+                                                node.addAttribute("ui.style", "size:40;");
+                                            }
+
                                             lastNode=node;
 
                                             tf.setImage(bi);

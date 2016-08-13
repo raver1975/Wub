@@ -22,7 +22,7 @@ import java.util.*;
 public class BeautifulKMGSR {
 
 
-    static String directory = "e:\\wub\\";
+    static String directory = "d:\\wubdata\\";
     private static final File[] list;
 
     static final int attLength = 28;
@@ -54,13 +54,13 @@ public class BeautifulKMGSR {
     static boolean enableAudioDuringTraining = true;
 //    private static boolean loadPrevSavedModel = true;
 
-    static int playback =1016;
+    static int playback =456;
     static int stretch = 1;
     static int playbackStart = playback;
     static int playbackEnd = playback + stretch;
 
 
-    public static final int numClusters = 1170;
+    public static final int numClusters = 1470;
 
     static float pitchFactor = 17f;
     static float timbreFactor = 17f;
@@ -211,7 +211,8 @@ public class BeautifulKMGSR {
 //        }
         HashSet<Integer> nodes = new HashSet<>();
 //        HashSet<String> edges = new HashSet<>();
-        for (int cnt = 0; cnt < song.analysis.getSegments().size(); cnt++) {
+        int cnt;
+        for (cnt = 0; cnt < song.analysis.getSegments().size(); cnt++) {
             SegmentSong pp = new SegmentSong(playback, cnt);
             SegmentSong play = map.get(pp);
 //            }
@@ -241,7 +242,7 @@ public class BeautifulKMGSR {
 //            ai.payload = play;
 //            audio.play(ai);
         }
-        //graph.addEdge(song.analysis.getSegments().size()+"",startNode+"",numClusters+"");
+        graph.addEdge((cnt++) + "", startNode + "", 0 + "", true);
 
         JFrame jframe = new JFrame("graphstream");
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -303,7 +304,7 @@ public class BeautifulKMGSR {
         HashMap<String, Integer> hm = new HashMap<>();
 
         startNode = 0;
-        int cnto=100000;
+        int cnto=30000;
         while (cnto-->0) {
 //            if (startNode == numClusters-1)startNode=0;
             AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(startNode));
@@ -319,7 +320,7 @@ public class BeautifulKMGSR {
                 Edge bb = adj.next();
                 temp.add(bb);
             }
-            int cnt=0;
+            int cnt1=0;
             Collections.shuffle(temp);
             for (Edge bb:temp){
                 String key = bb.getNode1().getId();
@@ -329,10 +330,10 @@ public class BeautifulKMGSR {
                 int val = hm.get(key);
                 if (val < lowestValue) {
                     lowestValue = val;
-                    lowest = cnt;
+                    lowest = cnt1;
 
                 }
-                cnt++;
+                cnt1++;
             }
 
 
