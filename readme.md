@@ -1,5 +1,8 @@
 Wub
 ==============
+
+Spotify has bought Echo Nest, and shut down the song analysis api, rendering most of this software useless. I've got a collection of songs analyzed for personal use.
+
 Break a song into beats and bars using Echo Nest, mix and match the pieces, and save the results as wave files.
 
 [![Wub Video](http://img.youtube.com/vi/ZnIUgSVO0Cs/0.jpg)](http://www.youtube.com/watch?v=ZnIUgSVO0Cs)<br>
