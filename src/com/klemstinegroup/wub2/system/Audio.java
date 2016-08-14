@@ -9,6 +9,8 @@ import com.klemstinegroup.wub2.test.Test3;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.*;
 
 import javax.sound.sampled.AudioFormat;
@@ -42,6 +44,7 @@ public class Audio {
     public static final int bufferSize = 8192;
     private Song cachedSong;
     private int cachedSongIndex;
+    public static ByteArrayOutputStream baos = new ByteArrayOutputStream();
     Node lastNode=null;
 
     public Audio() {
@@ -75,15 +78,14 @@ public class Audio {
     }
 
     private void startPlaying(ImagePanel tf, int numClusters) {
-        HashMap<String,Integer> hm=new HashMap<>();
-                line = getLine();
+        HashMap<String, Integer> hm = new HashMap<>();
+        line = getLine();
         new Thread(new Runnable() {
             public void run() {
                 top:
                 while (true) {
                     if (!queue.isEmpty()) {
                         AudioInterval i = queue.poll();
-
                         currentlyPlaying = i;
                         System.out.println("currently playing: " + i.payload);
                         if (i.payload != null) {
@@ -139,7 +141,7 @@ public class Audio {
                                             Node node = BeautifulKMGSR.graph.getNode(i.payload.segment + "");
                                             if (node!=null){
                                                 node.addAttribute("ui.style", "fill-color: rgb(255,0,0);");
-                                                node.addAttribute("ui.style", "size:40;");
+                                                node.addAttribute("ui.style", "size:25;");
                                             }
 
                                             lastNode=node;
@@ -215,6 +217,11 @@ public class Audio {
     }
 
     public void play(AudioInterval i) {
+        try {
+            baos.write(i.data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         queue.add(i);
     }
 

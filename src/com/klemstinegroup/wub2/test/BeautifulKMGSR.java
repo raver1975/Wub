@@ -14,15 +14,21 @@ import org.json.simple.JSONObject;
 import weka.clusterers.SimpleKMeans;
 import weka.core.*;
 
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
 import javax.swing.*;
 import java.awt.*;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 public class BeautifulKMGSR {
 
 
-    static String directory = "d:\\wubdata\\";
+    static String directory = "e:\\wub\\";
     private static final File[] list;
 
     static final int attLength = 28;
@@ -54,13 +60,13 @@ public class BeautifulKMGSR {
     static boolean enableAudioDuringTraining = true;
 //    private static boolean loadPrevSavedModel = true;
 
-    static int playback =456;
+    static int playback =1016;
     static int stretch = 1;
     static int playbackStart = playback;
     static int playbackEnd = playback + stretch;
 
 
-    public static final int numClusters = 1470;
+    public static final int numClusters = 1240;
 
     static float pitchFactor = 17f;
     static float timbreFactor = 17f;
@@ -304,7 +310,7 @@ public class BeautifulKMGSR {
         HashMap<String, Integer> hm = new HashMap<>();
 
         startNode = 0;
-        int cnto=30000;
+        int cnto=8000;
         while (cnto-->0) {
 //            if (startNode == numClusters-1)startNode=0;
             AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(startNode));
@@ -354,7 +360,12 @@ public class BeautifulKMGSR {
 
         }
 
-
+        byte[] output=Audio.baos.toByteArray();
+        try {
+            AudioSystem.write(new AudioInputStream(new ByteArrayInputStream(output),Audio.audioFormat,output.length), AudioFileFormat.Type.WAVE,new File("out.wav"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 //        while (iter.hasNext()){
 //            Object bbb = iter.next();
 //
