@@ -60,13 +60,15 @@ public class BeautifulKMGSR {
     static boolean enableAudioDuringTraining = true;
 //    private static boolean loadPrevSavedModel = true;
 
-    static int playback = 1016;
-    static int stretch = 3;
-    static int playbackStart = playback;
-    static int playbackEnd = playback + stretch;
+    static int[] playback=new int[]{430,432};
+    public static final int numClusters = 1100;
 
 
-    public static final int numClusters = 3100;
+//    static int playbackStart = playback;
+//    static int playbackEnd = playback + stretch;
+
+
+
 
     static float pitchFactor = 17f;
     static float timbreFactor = 17f;
@@ -131,13 +133,12 @@ public class BeautifulKMGSR {
         ArrayList<SegmentSong> coll = new ArrayList<>();
         Instances dataset = new Instances("my_dataset", attrs, 0);
         SegmentSong[] lastSeen = new SegmentSong[numClusters];
-        for (int songIter = playbackStart; songIter < list.length && songIter < playbackEnd; songIter++) {
+        for (int songIter:playback) {
 
 
 //            datasets[songIter] = dataset;
 
             Song song = LoadFromFile.loadSong(list[songIter]);
-            System.out.println("processing song #" + ((songIter - playbackStart) + 1) + "/" + Math.min(list.length, playbackEnd - playbackStart) + "\t" + list[songIter].getName());
             int cnt = 0;
             for (Segment s : song.analysis.getSegments()) {
                 Instance inst = getInstance(attlist, s);
@@ -200,7 +201,7 @@ public class BeautifulKMGSR {
         viewer.enableAutoLayout();
         View view = viewer.addDefaultView(false);
 
-        SegmentSong startNode = new SegmentSong(playback, 0);
+        SegmentSong startNode = new SegmentSong(playback[0], 0);
 
 //        for (int cnt=0;cnt<5000;cnt++){
 //            graph.addNode(cnt+"");
@@ -211,11 +212,11 @@ public class BeautifulKMGSR {
         int lastSong = -1;
 //        HashSet<String> edges = new HashSet<>();
         int cnt2 = 0;
-        for (int jj = 0; jj < stretch; jj++) {
-            Song song = SongManager.getRandom(playback + jj);
+        for (int songToPlay:playback) {
+            Song song = SongManager.getRandom(songToPlay);
 
             for (int cnt = 0; cnt < song.analysis.getSegments().size(); cnt++) {
-                SegmentSong pp = new SegmentSong(playback + jj, cnt);
+                SegmentSong pp = new SegmentSong(songToPlay, cnt);
                 SegmentSong play = map.get(pp);
 //            }
                 if (play == null) {
@@ -299,7 +300,7 @@ public class BeautifulKMGSR {
 
         HashMap<String, Integer> hm = new HashMap<>();
 
-        startNode = new SegmentSong(playback, 0);
+        startNode = new SegmentSong(playback[0], 0);
         int cnto = 8000;
         while (cnto-- > 0) {
 //            if (startNode == numClusters-1)startNode=0;
