@@ -138,7 +138,7 @@ public class Audio {
                                                 lastNode.addAttribute("ui.style", "fill-color: rgb("+color.getRed()+","+color.getGreen()+","+color.getBlue()+");");
                                                 lastNode.addAttribute("ui.style", "size: 15;");
                                             }
-                                            Node node = BeautifulKMGSR.graph.getNode(i.payload.segment + "");
+                                            Node node = BeautifulKMGSR.graph.getNode(i.payload.hashCode() + "");
                                             if (node!=null){
                                                 node.addAttribute("ui.style", "fill-color: rgb(255,0,0);");
                                                 node.addAttribute("ui.style", "size:25;");

@@ -60,13 +60,13 @@ public class BeautifulKMGSR {
     static boolean enableAudioDuringTraining = true;
 //    private static boolean loadPrevSavedModel = true;
 
-    static int playback =1016;
-    static int stretch = 1;
+    static int playback = 1016;
+    static int stretch = 3;
     static int playbackStart = playback;
     static int playbackEnd = playback + stretch;
 
 
-    public static final int numClusters = 1240;
+    public static final int numClusters = 3500;
 
     static float pitchFactor = 17f;
     static float timbreFactor = 17f;
@@ -190,19 +190,8 @@ public class BeautifulKMGSR {
 
 
         Audio audio = new Audio(tf, numClusters);
-        Song song = SongManager.getRandom(playback);
-        Song tempSong = null;
-        int lastSong = -1;
-        String out = "";
-        ArrayList<Integer> tem = new ArrayList<>();
-        for (int cnt = 0; cnt < song.analysis.getSegments().size(); cnt++) {
-            SegmentSong pp = map.get(new SegmentSong(playback, cnt));
-            if (!tem.contains(pp.segment)) {
-                tem.add(pp.segment);
-            }
-            out += (char) tem.indexOf(pp.segment);
 
-        }
+
         graph = new MultiGraph("id");
 //        graph.addAttribute("ui.quality");
 //        graph.addAttribute("ui.antialias");
@@ -210,114 +199,117 @@ public class BeautifulKMGSR {
         viewer.enableAutoLayout();
         View view = viewer.addDefaultView(false);
 
-        int startNode = 0;
+        SegmentSong startNode = new SegmentSong(playback, 0);
 
 //        for (int cnt=0;cnt<5000;cnt++){
 //            graph.addNode(cnt+"");
 //        }
-        HashSet<Integer> nodes = new HashSet<>();
+        HashMap<Integer, SegmentSong> nodes = new HashMap<>();
+        HashSet<Integer> nodeset = new HashSet<>();
+        Song tempSong = null;
+        int lastSong = -1;
 //        HashSet<String> edges = new HashSet<>();
-        int cnt;
-        for (cnt = 0; cnt < song.analysis.getSegments().size(); cnt++) {
-            SegmentSong pp = new SegmentSong(playback, cnt);
-            SegmentSong play = map.get(pp);
-//            }
-            if (play == null) {
-                System.out.println("null! " + pp);
-                continue;
-            }
-            if (lastSong != play.song) {
-                tempSong = SongManager.getRandom(play.song);
-                lastSong = play.song;
-            }
-//            AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(tem.indexOf(play.segment)));
+        int cnt2 = 0;
+        for (int jj = 0; jj < stretch; jj++) {
+            Song song = SongManager.getRandom(playback + jj);
 
-            if (!nodes.contains(startNode)) {
-                graph.addNode(startNode + "");
-                nodes.add(startNode);
-            }
-            if (!nodes.contains(play.segment)) {
-                graph.addNode(play.segment + "");
-                nodes.add(play.segment);
-            }
-//            if (!edges.contains(startNode + ":" + play.segment)) {
-            graph.addEdge(cnt + "", startNode + "", play.segment + "", true);
-//                edges.add(startNode + ":" + play.segment);
+            for (int cnt = 0; cnt < song.analysis.getSegments().size(); cnt++) {
+                SegmentSong pp = new SegmentSong(playback + jj, cnt);
+                SegmentSong play = map.get(pp);
 //            }
-            startNode = play.segment;
-//            ai.payload = play;
-//            audio.play(ai);
+                if (play == null) {
+                    System.out.println("null! " + pp);
+                    continue;
+                }
+
+                if (!nodeset.contains(startNode.hashCode())) {
+                    graph.addNode(startNode.hashCode() + "");
+                    nodeset.add(startNode.hashCode());
+                }
+                if (!nodeset.contains(play.hashCode())) {
+                    graph.addNode(play.hashCode() + "");
+                    nodeset.add(play.hashCode());
+                }
+                graph.addEdge((cnt2) + "", startNode.hashCode() + "", play.hashCode()+ "", true);
+                nodes.put(play.hashCode(), play);
+                startNode = new SegmentSong(play.song, play.segment);
+                cnt2++;
+            }
+//            graph.addEdge((cnt2++) + "", startNode.hashCode() + "", 0 + "", true);
         }
-        graph.addEdge((cnt++) + "", startNode + "", 0 + "", true);
+
 
         JFrame jframe = new JFrame("graphstream");
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.setSize(800, 600);
-        JPanel panel=new JPanel();
+        JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
         jframe.add(panel);
-        panel.add("Center",viewer.getDefaultView());
-        tf.setMinimumSize(new Dimension(100,100));
-        tf.setPreferredSize(new Dimension(100,100));
-        panel.add("North",tf);
+        panel.add("Center", viewer.getDefaultView());
+        tf.setMinimumSize(new Dimension(100, 100));
+        tf.setPreferredSize(new Dimension(100, 100));
+        panel.add("North", tf);
         jframe.setVisible(true);
 
 
-
-        JSONObject js = (JSONObject) song.analysis.getMap().get("meta");
-        String title = null;
-        String artist = null;
-        String album = null;
-        String genre = null;
-        Long seconds = null;
-
-        try {
-            title = (String) js.get("title");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            artist = (String) js.get("artist");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            album = (String) js.get("album");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            genre = (String) js.get("genre");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            seconds = (Long) js.get("seconds");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (seconds == null || seconds == 0) seconds = new Long(-61);
-
-        float scale = (int) (((float) numClusters / (float) song.analysis.getSegments().size()) * 1000) / 10f;
-        System.out.println("segments size=" + song.analysis.getSegments().size() + "\t" + scale + "%");
-        System.out.println("title\t" + title);
-        System.out.println("artist\t" + artist);
-        System.out.println("album\t" + album);
-        System.out.println("genre\t" + genre);
-        System.out.println("time\t" + seconds / 60 + ": " + seconds % 60);
+//        JSONObject js = (JSONObject) song.analysis.getMap().get("meta");
+//        String title = null;
+//        String artist = null;
+//        String album = null;
+//        String genre = null;
+//        Long seconds = null;
+//
+//        try {
+//            title = (String) js.get("title");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        try {
+//            artist = (String) js.get("artist");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        try {
+//            album = (String) js.get("album");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        try {
+//            genre = (String) js.get("genre");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        try {
+//            seconds = (Long) js.get("seconds");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        if (seconds == null || seconds == 0) seconds = new Long(-61);
+//
+//        float scale = (int) (((float) numClusters / (float) song.analysis.getSegments().size()) * 1000) / 10f;
+//        System.out.println("segments size=" + song.analysis.getSegments().size() + "\t" + scale + "%");
+//        System.out.println("title\t" + title);
+//        System.out.println("artist\t" + artist);
+//        System.out.println("album\t" + album);
+//        System.out.println("genre\t" + genre);
+//        System.out.println("time\t" + seconds / 60 + ": " + seconds % 60);
 
 
         HashMap<String, Integer> hm = new HashMap<>();
 
-        startNode = 0;
-        int cnto=8000;
-        while (cnto-->0) {
+        startNode = new SegmentSong(playback, 0);
+        int cnto = 8000;
+        while (cnto-- > 0) {
 //            if (startNode == numClusters-1)startNode=0;
-            AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(startNode));
-            ai.payload = new SegmentSong(playback, startNode);
+            if (lastSong != startNode.song) {
+                tempSong = SongManager.getRandom(startNode.song);
+                lastSong = startNode.song;
+            }
+            AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(startNode.segment));
+            ai.payload = new SegmentSong(startNode.song, startNode.segment);
             audio.play(ai);
 
-            Iterator<Edge> adj = graph.getNode(startNode + "").getEachLeavingEdge().iterator();
+            Iterator<Edge> adj = graph.getNode(startNode.hashCode() + "").getEachLeavingEdge().iterator();
             ArrayList<Edge> temp = new ArrayList<>();
             int lowest = 0;
             int lowestValue = Integer.MAX_VALUE;
@@ -326,9 +318,9 @@ public class BeautifulKMGSR {
                 Edge bb = adj.next();
                 temp.add(bb);
             }
-            int cnt1=0;
+            int cnt1 = 0;
             Collections.shuffle(temp);
-            for (Edge bb:temp){
+            for (Edge bb : temp) {
                 String key = bb.getNode1().getId();
                 if (!hm.containsKey(key)) {
                     hm.put(key, 0);
@@ -347,9 +339,12 @@ public class BeautifulKMGSR {
             int next = lowest;
 
             System.out.println("going down: " + next + " out of " + temp.size());
+            if (temp.size()==0)break;
             Edge selected = temp.get(next);
-            startNode = Integer.parseInt(selected.getNode1().getId());
+            startNode = nodes.get(Integer.parseInt(selected.getNode1().getId()));
+            System.out.println("************ "+(Integer.parseInt(selected.getNode1().getId()))+"\t"+nodes.get(Integer.parseInt(selected.getNode1().getId())));
             String key = selected.getNode1().getId();
+
             if (!hm.containsKey(key)) {
                 hm.put(key, 0);
             }
@@ -360,9 +355,9 @@ public class BeautifulKMGSR {
 
         }
 
-        byte[] output=Audio.baos.toByteArray();
+        byte[] output = Audio.baos.toByteArray();
         try {
-            AudioSystem.write(new AudioInputStream(new ByteArrayInputStream(output),Audio.audioFormat,output.length), AudioFileFormat.Type.WAVE,new File("out.wav"));
+            AudioSystem.write(new AudioInputStream(new ByteArrayInputStream(output), Audio.audioFormat, output.length), AudioFileFormat.Type.WAVE, new File("out.wav"));
         } catch (IOException e) {
             e.printStackTrace();
         }

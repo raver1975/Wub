@@ -19,7 +19,7 @@ public int song;
     }
 
     @Override public int hashCode(){
-        return Integer.hashCode(song);
+        return Integer.hashCode(song)*1000121+Integer.hashCode(segment)*457848421;
     }
 
 
