@@ -66,7 +66,7 @@ public class BeautifulKMGSR {
     static int playbackEnd = playback + stretch;
 
 
-    public static final int numClusters = 3500;
+    public static final int numClusters = 3300;
 
     static float pitchFactor = 17f;
     static float timbreFactor = 17f;
@@ -76,6 +76,7 @@ public class BeautifulKMGSR {
     public static ImagePanel tf;
     public static MultiGraph graph;
     public static int maxValue;
+    private static SegmentSong firstSaved = null;
 //    public static HashMap<String,Integer> hm;
 
 
@@ -230,12 +231,13 @@ public class BeautifulKMGSR {
                     graph.addNode(play.hashCode() + "");
                     nodeset.add(play.hashCode());
                 }
-                graph.addEdge((cnt2) + "", startNode.hashCode() + "", play.hashCode()+ "", true);
+                graph.addEdge((cnt2) + "", startNode.hashCode() + "", play.hashCode() + "", true);
+                if (nodes.isEmpty()) firstSaved = play;
                 nodes.put(play.hashCode(), play);
                 startNode = new SegmentSong(play.song, play.segment);
                 cnt2++;
             }
-//            graph.addEdge((cnt2++) + "", startNode.hashCode() + "", 0 + "", true);
+            graph.addEdge((cnt2++) + "", startNode.hashCode() + "", firstSaved.hashCode() + "", true);
         }
 
 
@@ -339,11 +341,13 @@ public class BeautifulKMGSR {
             int next = lowest;
 
             System.out.println("going down: " + next + " out of " + temp.size());
-            if (temp.size()==0)break;
-            Edge selected = temp.get(next);
-            startNode = nodes.get(Integer.parseInt(selected.getNode1().getId()));
-            System.out.println("************ "+(Integer.parseInt(selected.getNode1().getId()))+"\t"+nodes.get(Integer.parseInt(selected.getNode1().getId())));
-            String key = selected.getNode1().getId();
+            if (temp.size() == 0) startNode = firstSaved;
+            else {
+                Edge selected = temp.get(next);
+                startNode = nodes.get(Integer.parseInt(selected.getNode1().getId()));
+
+            }
+            String key = startNode.hashCode()+"";
 
             if (!hm.containsKey(key)) {
                 hm.put(key, 0);

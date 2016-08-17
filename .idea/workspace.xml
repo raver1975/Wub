@@ -4,9 +4,7 @@
     <list default="true" id="ab275348-9c2e-46dc-a9d5-a42ca3b2351e" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/map-universal.ser" afterPath="$PROJECT_DIR$/map-universal.ser" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/system/Audio.java" afterPath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/system/Audio.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/BeautifulKMGSR.java" afterPath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/BeautifulKMGSR.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/SegmentSong.java" afterPath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/SegmentSong.java" />
     </list>
     <ignored path="Wub.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -31,8 +29,8 @@
       <file leaf-file-name="BeautifulKMGSR.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/BeautifulKMGSR.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-459">
-              <caret line="68" column="44" selection-start-line="68" selection-start-column="44" selection-end-line="68" selection-end-column="44" />
+            <state relative-caret-position="238">
+              <caret line="73" column="38" selection-start-line="73" selection-start-column="38" selection-end-line="73" selection-end-column="38" />
               <folding />
             </state>
           </provider>
@@ -70,7 +68,11 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
               <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
+              <folding>
+                <marker date="1471402622248" expanded="true" signature="59:74969" ph="..." />
+                <marker date="1471402622248" expanded="true" signature="98:254" ph="..." />
+                <marker date="1471402622248" expanded="true" signature="74895:74958" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -724,12 +726,20 @@
       <updated>1471237210397</updated>
       <workItem from="1471237214848" duration="269000" />
       <workItem from="1471237551313" duration="1205000" />
-      <workItem from="1471389971367" duration="3386000" />
+      <workItem from="1471389971367" duration="4337000" />
     </task>
+    <task id="LOCAL-00001" summary="spans multiple songs">
+      <created>1471401705807</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1471401705807</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="7757000" />
+    <option name="totallyTimeSpent" value="8708000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="0" width="1934" height="1047" extended-state="0" />
@@ -817,6 +827,10 @@
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="spans multiple songs" />
+    <option name="LAST_COMMIT_MESSAGE" value="spans multiple songs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1194,7 +1208,11 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <marker date="1471402622248" expanded="true" signature="59:74969" ph="..." />
+            <marker date="1471402622248" expanded="true" signature="98:254" ph="..." />
+            <marker date="1471402622248" expanded="true" signature="74895:74958" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1231,8 +1249,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/BeautifulKMGSR.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-459">
-          <caret line="68" column="44" selection-start-line="68" selection-start-column="44" selection-end-line="68" selection-end-column="44" />
+        <state relative-caret-position="238">
+          <caret line="73" column="38" selection-start-line="73" selection-start-column="38" selection-end-line="73" selection-end-column="38" />
           <folding />
         </state>
       </provider>
