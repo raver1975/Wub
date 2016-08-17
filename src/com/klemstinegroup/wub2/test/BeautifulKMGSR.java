@@ -66,7 +66,7 @@ public class BeautifulKMGSR {
     static int playbackEnd = playback + stretch;
 
 
-    public static final int numClusters = 3300;
+    public static final int numClusters = 3100;
 
     static float pitchFactor = 17f;
     static float timbreFactor = 17f;
