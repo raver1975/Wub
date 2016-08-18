@@ -9,13 +9,11 @@ import org.graphstream.graph.Edge;
 import org.graphstream.graph.implementations.MultiGraph;
 import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.Viewer;
-import org.jgrapht.alg.EulerianCircuit;
 import org.json.simple.JSONObject;
 import weka.clusterers.SimpleKMeans;
 import weka.core.*;
 
 import javax.sound.sampled.AudioFileFormat;
-import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.swing.*;
@@ -28,7 +26,7 @@ import java.util.*;
 public class BeautifulKMGSR {
 
 
-    static String directory = "e:\\wub\\";
+    //    static String directory = "e:\\wub\\";
     private static final File[] list;
 
     static final int attLength = 28;
@@ -60,14 +58,16 @@ public class BeautifulKMGSR {
     static boolean enableAudioDuringTraining = true;
 //    private static boolean loadPrevSavedModel = true;
 
-    static int[] playback=new int[]{430,432,444};
-    public static final int numClusters =2200;
+    static int[] playback = new int[]{11};
+    public static final int decreaseClustersBy=50;
+    static int newSongLength = 500;
+
+
+    public static  int numClusters = -1;
 
 
 //    static int playbackStart = playback;
 //    static int playbackEnd = playback + stretch;
-
-
 
 
     static float pitchFactor = 17f;
@@ -84,7 +84,7 @@ public class BeautifulKMGSR {
 
     static {
 //        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        File[] list1 = new File(directory).listFiles();
+        File[] list1 = new File(SongManager.directory).listFiles();
         ArrayList<File> al = new ArrayList<>();
         for (File f : list1) {
             if (f.getAbsolutePath().endsWith(".au")) al.add(f);
@@ -95,7 +95,57 @@ public class BeautifulKMGSR {
 
 
     public static void main(String[] args) {
+        int totsegm = 0;
+        for (int v : playback) {
+            Song song1 = SongManager.getRandom(v);
+            JSONObject js = (JSONObject) song1.analysis.getMap().get("meta");
+            String title = null;
+            String artist = null;
+            String album = null;
+            String genre = null;
+            Long seconds = null;
 
+            try {
+                title = (String) js.get("title");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                artist = (String) js.get("artist");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                album = (String) js.get("album");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                genre = (String) js.get("genre");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                seconds = (Long) js.get("seconds");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (seconds == null || seconds == 0) seconds = new Long(-61);
+
+
+            int segm = song1.analysis.getSegments().size();
+            totsegm += segm;
+            float scale = (int) (((float) numClusters / (float) song1.analysis.getSegments().size()) * 1000) / 10f;
+            System.out.println("segments size=" + segm + "\t" + scale + "%");
+            System.out.println("title\t" + title);
+            System.out.println("artist\t" + artist);
+            System.out.println("album\t" + album);
+            System.out.println("genre\t" + genre);
+            System.out.println("time\t" + seconds / 60 + ": " + seconds % 60);
+        }
+        numClusters=totsegm-decreaseClustersBy;
+        System.out.println("total segments=" + totsegm);
+        System.out.println("nnum clusters=" + numClusters);
 
 //        frame.setSize(400, 300);
         tf = new ImagePanel();
@@ -133,7 +183,7 @@ public class BeautifulKMGSR {
         ArrayList<SegmentSong> coll = new ArrayList<>();
         Instances dataset = new Instances("my_dataset", attrs, 0);
         SegmentSong[] lastSeen = new SegmentSong[numClusters];
-        for (int songIter:playback) {
+        for (int songIter : playback) {
 
 
 //            datasets[songIter] = dataset;
@@ -212,7 +262,7 @@ public class BeautifulKMGSR {
         int lastSong = -1;
 //        HashSet<String> edges = new HashSet<>();
         int cnt2 = 0;
-        for (int songToPlay:playback) {
+        for (int songToPlay : playback) {
             Song song = SongManager.getRandom(songToPlay);
 
             for (int cnt = 0; cnt < song.analysis.getSegments().size(); cnt++) {
@@ -301,8 +351,8 @@ public class BeautifulKMGSR {
         HashMap<String, Integer> hm = new HashMap<>();
 
         startNode = new SegmentSong(playback[0], 0);
-        int cnto = 8000;
-        while (cnto-- > 0) {
+
+        while (newSongLength-- > 0) {
 //            if (startNode == numClusters-1)startNode=0;
             if (lastSong != startNode.song) {
                 tempSong = SongManager.getRandom(startNode.song);
@@ -348,7 +398,7 @@ public class BeautifulKMGSR {
                 startNode = nodes.get(Integer.parseInt(selected.getNode1().getId()));
 
             }
-            String key = startNode.hashCode()+"";
+            String key = startNode.hashCode() + "";
 
             if (!hm.containsKey(key)) {
                 hm.put(key, 0);
