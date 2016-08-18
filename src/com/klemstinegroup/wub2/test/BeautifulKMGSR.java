@@ -60,8 +60,8 @@ public class BeautifulKMGSR {
     static boolean enableAudioDuringTraining = true;
 //    private static boolean loadPrevSavedModel = true;
 
-    static int[] playback=new int[]{430,432};
-    public static final int numClusters = 1100;
+    static int[] playback=new int[]{430,432,444};
+    public static final int numClusters =2200;
 
 
 //    static int playbackStart = playback;
