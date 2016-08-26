@@ -32,33 +32,9 @@ public class BeautifulKMGSR {
     static final int attLength = 28;
     public static Attribute[] attlist;
 
-    //230
-    //245 uk dubstep tutorial
-    //246 good dub with voice
-    //290 is good
-    //296 bassnectar lights
-    //298 vnv nation
-    //300 icon of coil machines are us
-    //301 zeds dead, eyes on fire
-    //310 convenent bullet
-    //316 bassnectar enter the chamber
-    //323 bassnectar
-    //404 NIN slave screams
-    //407 rotersand almost wasted
-    //423 vnv nation true life remix
-    //430 gemini blue
-    //439 bassnectar nothing has been broken
-    //449 bassnectar paging sterophonic
-    //456 bassnectar timestretch
-    //1016 bassnectar basshead
-
-//    public static JFrame frame = new JFrame(BeautifulKMGSR.class.toString());
-
-    //    static boolean rnn = true;
     static boolean enableAudioDuringTraining = true;
-//    private static boolean loadPrevSavedModel = true;
 
-    static int[] playback = new int[]{11};
+    static int[] playback = new int[]{36};
     public static final int decreaseClustersBy=50;
     static int newSongLength = 500;
 
@@ -96,6 +72,7 @@ public class BeautifulKMGSR {
 
     public static void main(String[] args) {
         int totsegm = 0;
+        JTextArea jta=new JTextArea(4,100);
         for (int v : playback) {
             Song song1 = SongManager.getRandom(v);
             JSONObject js = (JSONObject) song1.analysis.getMap().get("meta");
@@ -136,12 +113,25 @@ public class BeautifulKMGSR {
             int segm = song1.analysis.getSegments().size();
             totsegm += segm;
             float scale = (int) (((float) numClusters / (float) song1.analysis.getSegments().size()) * 1000) / 10f;
+
             System.out.println("segments size=" + segm + "\t" + scale + "%");
             System.out.println("title\t" + title);
             System.out.println("artist\t" + artist);
             System.out.println("album\t" + album);
             System.out.println("genre\t" + genre);
             System.out.println("time\t" + seconds / 60 + ": " + seconds % 60);
+            jta.append("title\t" + title);
+            jta.append("\n");
+            jta.append("artist\t" + artist);
+            jta.append("\n");
+            jta.append("album\t" + album);
+            jta.append("\n");
+            jta.append("genre\t" + genre);
+            jta.append("\n");
+            jta.append("time\t" + seconds / 60 + ": " + seconds % 60);
+            jta.append("\n");
+            jta.append("----------------------------");
+            jta.append("\n");
         }
         numClusters=totsegm-decreaseClustersBy;
         System.out.println("total segments=" + totsegm);
@@ -222,7 +212,7 @@ public class BeautifulKMGSR {
             }
             SegmentSong gg = coll.get(best);
             lastSeen[io] = gg;
-            System.out.println("centroid io " + io + "\t" + gg);
+//            System.out.println("centroid io " + io + "\t" + gg);
 
 
         }
@@ -298,62 +288,20 @@ public class BeautifulKMGSR {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
         jframe.add(panel);
+
+
         panel.add("Center", viewer.getDefaultView());
         tf.setMinimumSize(new Dimension(100, 100));
         tf.setPreferredSize(new Dimension(100, 100));
-        panel.add("North", tf);
+        panel.add("South", tf);
+        panel.add("North",jta);
         jframe.setVisible(true);
-
-
-//        JSONObject js = (JSONObject) song.analysis.getMap().get("meta");
-//        String title = null;
-//        String artist = null;
-//        String album = null;
-//        String genre = null;
-//        Long seconds = null;
-//
-//        try {
-//            title = (String) js.get("title");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        try {
-//            artist = (String) js.get("artist");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        try {
-//            album = (String) js.get("album");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        try {
-//            genre = (String) js.get("genre");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        try {
-//            seconds = (Long) js.get("seconds");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        if (seconds == null || seconds == 0) seconds = new Long(-61);
-//
-//        float scale = (int) (((float) numClusters / (float) song.analysis.getSegments().size()) * 1000) / 10f;
-//        System.out.println("segments size=" + song.analysis.getSegments().size() + "\t" + scale + "%");
-//        System.out.println("title\t" + title);
-//        System.out.println("artist\t" + artist);
-//        System.out.println("album\t" + album);
-//        System.out.println("genre\t" + genre);
-//        System.out.println("time\t" + seconds / 60 + ": " + seconds % 60);
-
 
         HashMap<String, Integer> hm = new HashMap<>();
 
         startNode = new SegmentSong(playback[0], 0);
 
         while (newSongLength-- > 0) {
-//            if (startNode == numClusters-1)startNode=0;
             if (lastSong != startNode.song) {
                 tempSong = SongManager.getRandom(startNode.song);
                 lastSong = startNode.song;
@@ -391,7 +339,7 @@ public class BeautifulKMGSR {
 //            int next = (int) (Math.random() * temp.size());
             int next = lowest;
 
-            System.out.println("going down: " + next + " out of " + temp.size());
+//            System.out.println("going down: " + next + " out of " + temp.size());
             if (temp.size() == 0) startNode = firstSaved;
             else {
                 Edge selected = temp.get(next);
