@@ -34,7 +34,7 @@ public class BeautifulKMGSR {
 
     static boolean enableAudioDuringTraining = true;
 
-    static int[] playback = new int[]{36};
+    static int[] playback = new int[]{39};
     public static final int decreaseClustersBy=50;
     static int newSongLength = 500;
 
@@ -72,7 +72,7 @@ public class BeautifulKMGSR {
 
     public static void main(String[] args) {
         int totsegm = 0;
-        JTextArea jta=new JTextArea(4,100);
+        JTextArea jta=new JTextArea(4,20);
         for (int v : playback) {
             Song song1 = SongManager.getRandom(v);
             JSONObject js = (JSONObject) song1.analysis.getMap().get("meta");
@@ -293,8 +293,8 @@ public class BeautifulKMGSR {
         panel.add("Center", viewer.getDefaultView());
         tf.setMinimumSize(new Dimension(100, 100));
         tf.setPreferredSize(new Dimension(100, 100));
-        panel.add("South", tf);
-        panel.add("North",jta);
+        panel.add("North", tf);
+        panel.add("West",jta);
         jframe.setVisible(true);
 
         HashMap<String, Integer> hm = new HashMap<>();
