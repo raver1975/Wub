@@ -59,6 +59,7 @@ public class Audio {
     public static ByteArrayOutputStream baos = new ByteArrayOutputStream();
     Node lastNode = null;
     private int start;
+    private int lastSeg;
 
     public Audio() {
         this(null,null, 1);
@@ -183,11 +184,11 @@ public class Audio {
                                             g.setColor(Color.BLACK);
 
                                             g.drawString(i.payload.song + ":" + i.payload.segment, 60, 15 + tf.getHeight() / 2);
-                                            if (hm.get(i.payload.segment + "") == null)
-                                                hm.put(i.payload.segment + "", 0);
-                                            int val = hm.get(i.payload.segment + "") + 1;
-                                            hm.put(i.payload.segment + "", val);
-
+                                            if (hm.get(lastSeg+ "") == null)
+                                                hm.put(lastSeg+ "", 0);
+                                            int val = hm.get(lastSeg+ "") + 1;
+                                            hm.put(lastSeg + "", val);
+                                            lastSeg=i.payload.segment;
                                             Color color = ColorHelper.numberToColorPercentage((double) val / (double) BeautifulKMGSR.maxValue);
                                             if (lastNode != null) {
                                                 lastNode.addAttribute("ui.style", "fill-color: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ");");

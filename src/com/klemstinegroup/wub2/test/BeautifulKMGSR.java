@@ -35,7 +35,7 @@ public class BeautifulKMGSR {
 
     static boolean enableAudioDuringTraining = true;
 
-    static int[] playback = new int[]{41};
+    static int[] playback = new int[]{42};
     public static final int decreaseClustersBy = 50;
     static int newSongLength = 500;
 
