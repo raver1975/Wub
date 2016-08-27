@@ -46,24 +46,24 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="BeautifulKMGSR.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="BeautifulKMGSR.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/BeautifulKMGSR.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="255">
-              <caret line="37" column="40" selection-start-line="37" selection-start-column="40" selection-end-line="37" selection-end-column="40" />
+              <caret line="37" column="42" selection-start-line="37" selection-start-column="42" selection-end-line="37" selection-end-column="42" />
               <folding>
-                <element signature="e#10063#10436#0" expanded="true" />
-                <element signature="e#10435#10436#0" expanded="true" />
+                <element signature="e#10112#10556#0" expanded="true" />
+                <element signature="e#10555#10556#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Audio.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Audio.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/system/Audio.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="176">
-              <caret line="188" column="68" selection-start-line="188" selection-start-column="68" selection-end-line="188" selection-end-column="68" />
+            <state relative-caret-position="55">
+              <caret line="37" column="12" selection-start-line="37" selection-start-column="12" selection-end-line="37" selection-end-column="12" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -392,8 +392,8 @@
         <option value="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/Test3.java" />
         <option value="$APPLICATION_CONFIG_DIR$/consoles/groovy/groovy_console.groovy" />
         <option value="$PROJECT_DIR$/build.gradle" />
-        <option value="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/BeautifulKMGSR.java" />
         <option value="$PROJECT_DIR$/src/com/klemstinegroup/wub2/system/Audio.java" />
+        <option value="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/BeautifulKMGSR.java" />
       </list>
     </option>
   </component>
@@ -1142,7 +1142,7 @@
       <workItem from="1471450460386" duration="1595000" />
       <workItem from="1471512376234" duration="679000" />
       <workItem from="1472291850228" duration="4018000" />
-      <workItem from="1472295894589" duration="5405000" />
+      <workItem from="1472295894589" duration="6510000" />
     </task>
     <task id="LOCAL-00001" summary="spans multiple songs">
       <created>1471401705807</created>
@@ -1200,11 +1200,18 @@
       <option name="project" value="LOCAL" />
       <updated>1472300956645</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="fixed coloring of correct node">
+      <created>1472301318949</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1472301318949</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="23261000" />
+    <option name="totallyTimeSpent" value="24366000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -1300,7 +1307,8 @@
     <MESSAGE value="added jframe" />
     <MESSAGE value="javacv video create!" />
     <MESSAGE value="size of jframe" />
-    <option name="LAST_COMMIT_MESSAGE" value="size of jframe" />
+    <MESSAGE value="fixed coloring of correct node" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed coloring of correct node" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1594,6 +1602,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1714,23 +1723,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/BeautifulKMGSR.java">
+    <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/system/Audio.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="37" column="40" selection-start-line="37" selection-start-column="40" selection-end-line="37" selection-end-column="40" />
+        <state relative-caret-position="55">
+          <caret line="37" column="12" selection-start-line="37" selection-start-column="12" selection-end-line="37" selection-end-column="12" />
           <folding>
-            <element signature="e#10063#10436#0" expanded="true" />
-            <element signature="e#10435#10436#0" expanded="true" />
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/system/Audio.java">
+    <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/BeautifulKMGSR.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="188" column="68" selection-start-line="188" selection-start-column="68" selection-end-line="188" selection-end-column="68" />
+        <state relative-caret-position="255">
+          <caret line="37" column="42" selection-start-line="37" selection-start-column="42" selection-end-line="37" selection-end-column="42" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#10112#10556#0" expanded="true" />
+            <element signature="e#10555#10556#0" expanded="true" />
           </folding>
         </state>
       </provider>

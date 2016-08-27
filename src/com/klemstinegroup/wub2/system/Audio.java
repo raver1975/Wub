@@ -35,7 +35,7 @@ import static org.bytedeco.javacpp.avutil.AV_PIX_FMT_ARGB;
 
 public class Audio {
 
-    private final Java2DFrameConverter converter;
+    private Java2DFrameConverter converter;
     private Robot robot;
     public static FFmpegFrameRecorder recorder;
     public transient SourceDataLine line;
@@ -62,28 +62,30 @@ public class Audio {
     private int lastSeg;
 
     public Audio() {
-        this(null,null, 1);
+        this(null, null, 1);
     }
 
-    public Audio(JFrame jframe,ImagePanel ip, int numClusters) {
+    public Audio(JFrame jframe, ImagePanel ip, int numClusters) {
         queue = new LinkedList<AudioInterval>();
-        startPlaying(jframe,ip, numClusters);
+        startPlaying(jframe, ip, numClusters);
         try {
-            robot=new Robot();
+            robot = new Robot();
         } catch (AWTException e) {
             e.printStackTrace();
         }
-        recorder = new FFmpegFrameRecorder(new File("out.mp4"),jframe.getWidth(),jframe.getHeight(), 2);
-        recorder.setSampleRate((int)audioFormat.getSampleRate());
-        recorder.setAudioChannels(2);
-        recorder.setInterleaved(true);
-        recorder.setVideoQuality(0);
-        try {
-            recorder.start();
-        } catch (FrameRecorder.Exception e) {
-            e.printStackTrace();
+        if (BeautifulKMGSR.makeVideo) {
+            recorder = new FFmpegFrameRecorder(new File("out.mp4"), jframe.getWidth(), jframe.getHeight(), 2);
+            recorder.setSampleRate((int) audioFormat.getSampleRate());
+            recorder.setAudioChannels(2);
+            recorder.setInterleaved(true);
+            recorder.setVideoQuality(0);
+            try {
+                recorder.start();
+            } catch (FrameRecorder.Exception e) {
+                e.printStackTrace();
+            }
+            converter = new Java2DFrameConverter();
         }
-        converter=new Java2DFrameConverter();
     }
 
     ArrayList<Integer> tem = new ArrayList<>();
@@ -140,28 +142,23 @@ public class Audio {
 
                                         if (i.payload != null && i.payload.segment > -1) {
 
-                                            BufferedImage grab=robot.createScreenCapture(jframe.getBounds());
-                                            Frame frame=converter.convert(grab);
-//                                            recorder.setImageWidth(grab.getWidth());
-//                                            recorder.setImageHeight(grab.getHeight());
-//                                            System.out.println(grab.getWidth()+","+grab.getHeight());
-//                                            ByteBuffer bb=ByteBuffer.allocate(i.data.length);
-//                                            bb.put(i.data);
-                                            short[] samples=new short[i.data.length/2];
-                                            ByteBuffer.wrap(i.data).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(samples);
-                                            ShortBuffer sBuff = ShortBuffer.wrap(samples, 0, i.data.length/2);
-                                            frame.sampleRate=(int)audioFormat.getSampleRate();
-                                            frame.audioChannels=2;
-                                            frame.samples=new Buffer[]{(Buffer)sBuff};
-                                            frame.timestamp=start;
-                                            start+=500*(int)(1000*(i.data.length/2)/audioFormat.getSampleRate());
-                                            try {
-
-                                                recorder.record(frame, AV_PIX_FMT_ARGB );
-                                                recorder.setTimestamp(start);
-                                                //recorder.recordSamples((int)audioFormat.getSampleRate(),2,sBuff);
-                                            } catch (FrameRecorder.Exception e) {
-                                                e.printStackTrace();
+                                            if (BeautifulKMGSR.makeVideo) {
+                                                BufferedImage grab = robot.createScreenCapture(jframe.getBounds());
+                                                Frame frame = converter.convert(grab);
+                                                short[] samples = new short[i.data.length / 2];
+                                                ByteBuffer.wrap(i.data).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(samples);
+                                                ShortBuffer sBuff = ShortBuffer.wrap(samples, 0, i.data.length / 2);
+                                                frame.sampleRate = (int) audioFormat.getSampleRate();
+                                                frame.audioChannels = 2;
+                                                frame.samples = new Buffer[]{(Buffer) sBuff};
+                                                frame.timestamp = start;
+                                                start += 500 * (int) (1000 * (i.data.length / 2) / audioFormat.getSampleRate());
+                                                try {
+                                                    recorder.record(frame, AV_PIX_FMT_ARGB);
+                                                    recorder.setTimestamp(start);
+                                                } catch (FrameRecorder.Exception e) {
+                                                    e.printStackTrace();
+                                                }
                                             }
 
                                             ArrayList<Segment> list = new ArrayList<>();
@@ -184,11 +181,11 @@ public class Audio {
                                             g.setColor(Color.BLACK);
 
                                             g.drawString(i.payload.song + ":" + i.payload.segment, 60, 15 + tf.getHeight() / 2);
-                                            if (hm.get(lastSeg+ "") == null)
-                                                hm.put(lastSeg+ "", 0);
-                                            int val = hm.get(lastSeg+ "") + 1;
+                                            if (hm.get(lastSeg + "") == null)
+                                                hm.put(lastSeg + "", 0);
+                                            int val = hm.get(lastSeg + "") + 1;
                                             hm.put(lastSeg + "", val);
-                                            lastSeg=i.payload.segment;
+                                            lastSeg = i.payload.segment;
                                             Color color = ColorHelper.numberToColorPercentage((double) val / (double) BeautifulKMGSR.maxValue);
                                             if (lastNode != null) {
                                                 lastNode.addAttribute("ui.style", "fill-color: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ");");

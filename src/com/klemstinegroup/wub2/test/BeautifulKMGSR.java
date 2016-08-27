@@ -35,9 +35,11 @@ public class BeautifulKMGSR {
 
     static boolean enableAudioDuringTraining = true;
 
-    static int[] playback = new int[]{42};
+    static int[] playback = new int[]{1012};
     public static final int decreaseClustersBy = 50;
-    static int newSongLength = 500;
+    static int newSongLength = 5000;
+
+    public static boolean makeVideo = false;
 
 
     public static int numClusters = -1;
@@ -75,7 +77,7 @@ public class BeautifulKMGSR {
         int totsegm = 0;
         JTextArea jta = new JTextArea(4, 20);
         JFrame jframe = new JFrame("graphstream");
-        jframe.setSize(1820, 980);
+        jframe.setSize(1420, 980);
         for (int v : playback) {
             Song song1 = SongManager.getRandom(v);
             JSONObject js = (JSONObject) song1.analysis.getMap().get("meta");
@@ -288,10 +290,12 @@ public class BeautifulKMGSR {
         jframe.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-                try {
-                    Audio.recorder.stop();
-                } catch (FrameRecorder.Exception e) {
-                    e.printStackTrace();
+                if (makeVideo) {
+                    try {
+                        Audio.recorder.stop();
+                    } catch (FrameRecorder.Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 System.exit(0);
 
