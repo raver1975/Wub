@@ -72,7 +72,7 @@ public class Audio {
         } catch (AWTException e) {
             e.printStackTrace();
         }
-        recorder = new FFmpegFrameRecorder(new File("out.mp4"),800,600, 2);
+        recorder = new FFmpegFrameRecorder(new File("out.mp4"),jframe.getWidth(),jframe.getHeight(), 2);
         recorder.setSampleRate((int)audioFormat.getSampleRate());
         recorder.setAudioChannels(2);
         recorder.setInterleaved(true);
