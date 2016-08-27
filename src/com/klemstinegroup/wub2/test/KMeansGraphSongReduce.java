@@ -179,7 +179,7 @@ public class KMeansGraphSongReduce {
         ObjectManager.write(map, "map-universal.ser");
 
 
-        Audio audio = new Audio(tf, numClusters);
+        Audio audio = new Audio(frame,tf, numClusters);
         Song song = SongManager.getRandom(playback);
         Song tempSong = null;
         int lastSong = -1;

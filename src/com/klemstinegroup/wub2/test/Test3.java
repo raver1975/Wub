@@ -182,7 +182,7 @@ public class Test3 {
         ObjectManager.write(map, "map-universal.ser");
 
 
-        Audio audio = new Audio(tf, numClusters);
+        Audio audio = new Audio(new JFrame(),tf, numClusters);
         Song song = SongManager.getRandom(playback);
         Song tempSong = null;
         int lastSong = -1;

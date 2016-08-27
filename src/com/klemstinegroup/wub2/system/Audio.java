@@ -10,7 +10,12 @@ import com.klemstinegroup.wub2.test.Test3;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.ShortBuffer;
 import java.util.*;
 
 import javax.sound.sampled.AudioFormat;
@@ -21,11 +26,18 @@ import javax.sound.sampled.SourceDataLine;
 import javax.swing.*;
 
 import com.klemstinegroup.wub.*;
+import org.bytedeco.javacv.*;
+import org.bytedeco.javacv.Frame;
 import org.graphstream.graph.*;
 import org.graphstream.graph.Node;
 
+import static org.bytedeco.javacpp.avutil.AV_PIX_FMT_ARGB;
+
 public class Audio {
 
+    private final Java2DFrameConverter converter;
+    private Robot robot;
+    public static FFmpegFrameRecorder recorder;
     public transient SourceDataLine line;
     public transient Queue<AudioInterval> queue;
 
@@ -45,15 +57,32 @@ public class Audio {
     private Song cachedSong;
     private int cachedSongIndex;
     public static ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    Node lastNode=null;
+    Node lastNode = null;
+    private int start;
 
     public Audio() {
-        this(null, 1);
+        this(null,null, 1);
     }
 
-    public Audio(ImagePanel ip, int numClusters) {
+    public Audio(JFrame jframe,ImagePanel ip, int numClusters) {
         queue = new LinkedList<AudioInterval>();
-        startPlaying(ip, numClusters);
+        startPlaying(jframe,ip, numClusters);
+        try {
+            robot=new Robot();
+        } catch (AWTException e) {
+            e.printStackTrace();
+        }
+        recorder = new FFmpegFrameRecorder(new File("out.mp4"),800,600, 2);
+        recorder.setSampleRate((int)audioFormat.getSampleRate());
+        recorder.setAudioChannels(2);
+        recorder.setInterleaved(true);
+        recorder.setVideoQuality(0);
+        try {
+            recorder.start();
+        } catch (FrameRecorder.Exception e) {
+            e.printStackTrace();
+        }
+        converter=new Java2DFrameConverter();
     }
 
     ArrayList<Integer> tem = new ArrayList<>();
@@ -77,7 +106,7 @@ public class Audio {
 
     }
 
-    private void startPlaying(ImagePanel tf, int numClusters) {
+    private void startPlaying(JFrame jframe, ImagePanel tf, int numClusters) {
         HashMap<String, Integer> hm = new HashMap<>();
         line = getLine();
         new Thread(new Runnable() {
@@ -109,6 +138,31 @@ public class Audio {
                                         }
 
                                         if (i.payload != null && i.payload.segment > -1) {
+
+                                            BufferedImage grab=robot.createScreenCapture(jframe.getBounds());
+                                            Frame frame=converter.convert(grab);
+//                                            recorder.setImageWidth(grab.getWidth());
+//                                            recorder.setImageHeight(grab.getHeight());
+//                                            System.out.println(grab.getWidth()+","+grab.getHeight());
+//                                            ByteBuffer bb=ByteBuffer.allocate(i.data.length);
+//                                            bb.put(i.data);
+                                            short[] samples=new short[i.data.length/2];
+                                            ByteBuffer.wrap(i.data).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(samples);
+                                            ShortBuffer sBuff = ShortBuffer.wrap(samples, 0, i.data.length/2);
+                                            frame.sampleRate=(int)audioFormat.getSampleRate();
+                                            frame.audioChannels=2;
+                                            frame.samples=new Buffer[]{(Buffer)sBuff};
+                                            frame.timestamp=start;
+                                            start+=500*(int)(1000*(i.data.length/2)/audioFormat.getSampleRate());
+                                            try {
+
+                                                recorder.record(frame, AV_PIX_FMT_ARGB );
+                                                recorder.setTimestamp(start);
+                                                //recorder.recordSamples((int)audioFormat.getSampleRate(),2,sBuff);
+                                            } catch (FrameRecorder.Exception e) {
+                                                e.printStackTrace();
+                                            }
+
                                             ArrayList<Segment> list = new ArrayList<>();
                                             list.add(cachedSong.analysis.getSegments().get(i.payload.segment));
                                             double duration = cachedSong.analysis.getSegments().get(i.payload.segment).duration;
@@ -129,22 +183,23 @@ public class Audio {
                                             g.setColor(Color.BLACK);
 
                                             g.drawString(i.payload.song + ":" + i.payload.segment, 60, 15 + tf.getHeight() / 2);
-                                            if (hm.get(i.payload.segment+"")==null)hm.put(i.payload.segment+"",0);
-                                            int val=hm.get(i.payload.segment+"")+1;
-                                            hm.put(i.payload.segment+"",val);
+                                            if (hm.get(i.payload.segment + "") == null)
+                                                hm.put(i.payload.segment + "", 0);
+                                            int val = hm.get(i.payload.segment + "") + 1;
+                                            hm.put(i.payload.segment + "", val);
 
-                                            Color color=ColorHelper.numberToColorPercentage((double)val/(double)BeautifulKMGSR.maxValue);
-                                            if (lastNode!=null){
-                                                lastNode.addAttribute("ui.style", "fill-color: rgb("+color.getRed()+","+color.getGreen()+","+color.getBlue()+");");
+                                            Color color = ColorHelper.numberToColorPercentage((double) val / (double) BeautifulKMGSR.maxValue);
+                                            if (lastNode != null) {
+                                                lastNode.addAttribute("ui.style", "fill-color: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ");");
                                                 lastNode.addAttribute("ui.style", "size: 15;");
                                             }
                                             Node node = BeautifulKMGSR.graph.getNode(i.payload.hashCode() + "");
-                                            if (node!=null){
+                                            if (node != null) {
                                                 node.addAttribute("ui.style", "fill-color: rgb(255,0,0);");
                                                 node.addAttribute("ui.style", "size:25;");
                                             }
 
-                                            lastNode=node;
+                                            lastNode = node;
 
                                             tf.setImage(bi);
                                             tf.invalidate();

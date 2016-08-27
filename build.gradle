@@ -1,0 +1,26 @@
+apply plugin: 'idea'
+apply plugin: 'java'
+apply plugin: 'application'
+
+sourceSets {
+    main {
+        java {
+            srcDirs 'src'
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs 'libs/Algs4','libs/JGraphT'
+    }
+}
+configurations {
+    all*.exclude group: 'org.bytedeco', module: 'javacpp-presets'
+}
+dependencies {
+    compile group: 'org.bytedeco', name: 'javacv', version: '1.2'
+    compile group: 'org.bytedeco.javacpp-presets', name: 'opencv', version: '3.1.0-1.2', classifier: 'windows-x86_64'
+    compile group: 'org.bytedeco.javacpp-presets', name: 'ffmpeg', version: '3.1.2-1.2', classifier: 'windows-x86_64'
+}

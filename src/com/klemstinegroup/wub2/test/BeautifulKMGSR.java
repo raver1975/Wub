@@ -5,6 +5,7 @@ import com.klemstinegroup.wub2.system.Audio;
 import com.klemstinegroup.wub2.system.AudioInterval;
 import com.klemstinegroup.wub2.system.LoadFromFile;
 import com.klemstinegroup.wub2.system.Song;
+import org.bytedeco.javacv.FrameRecorder;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.implementations.MultiGraph;
 import org.graphstream.ui.view.View;
@@ -34,12 +35,12 @@ public class BeautifulKMGSR {
 
     static boolean enableAudioDuringTraining = true;
 
-    static int[] playback = new int[]{39};
-    public static final int decreaseClustersBy=50;
+    static int[] playback = new int[]{40};
+    public static final int decreaseClustersBy = 50;
     static int newSongLength = 500;
 
 
-    public static  int numClusters = -1;
+    public static int numClusters = -1;
 
 
 //    static int playbackStart = playback;
@@ -72,7 +73,9 @@ public class BeautifulKMGSR {
 
     public static void main(String[] args) {
         int totsegm = 0;
-        JTextArea jta=new JTextArea(4,20);
+        JTextArea jta = new JTextArea(4, 20);
+        JFrame jframe = new JFrame("graphstream");
+
         for (int v : playback) {
             Song song1 = SongManager.getRandom(v);
             JSONObject js = (JSONObject) song1.analysis.getMap().get("meta");
@@ -133,7 +136,7 @@ public class BeautifulKMGSR {
             jta.append("----------------------------");
             jta.append("\n");
         }
-        numClusters=totsegm-decreaseClustersBy;
+        numClusters = totsegm - decreaseClustersBy;
         System.out.println("total segments=" + totsegm);
         System.out.println("nnum clusters=" + numClusters);
 
@@ -231,7 +234,7 @@ public class BeautifulKMGSR {
         ObjectManager.write(map, "map-universal.ser");
 
 
-        Audio audio = new Audio(tf, numClusters);
+        Audio audio = new Audio(jframe, tf, numClusters);
 
 
         graph = new MultiGraph("id");
@@ -282,8 +285,18 @@ public class BeautifulKMGSR {
         }
 
 
-        JFrame jframe = new JFrame("graphstream");
-        jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jframe.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                try {
+                    Audio.recorder.stop();
+                } catch (FrameRecorder.Exception e) {
+                    e.printStackTrace();
+                }
+                System.exit(0);
+
+            }
+        });
         jframe.setSize(800, 600);
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
@@ -294,7 +307,7 @@ public class BeautifulKMGSR {
         tf.setMinimumSize(new Dimension(100, 100));
         tf.setPreferredSize(new Dimension(100, 100));
         panel.add("North", tf);
-        panel.add("West",jta);
+        panel.add("West", jta);
         jframe.setVisible(true);
 
         HashMap<String, Integer> hm = new HashMap<>();
