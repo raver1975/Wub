@@ -5,9 +5,12 @@ import com.klemstinegroup.wub2.system.Audio;
 import com.klemstinegroup.wub2.system.AudioInterval;
 import com.klemstinegroup.wub2.system.LoadFromFile;
 import com.klemstinegroup.wub2.system.Song;
+import com.mxgraph.layout.mxFastOrganicLayout;
 import org.bytedeco.javacv.FrameRecorder;
 import org.graphstream.graph.Edge;
+import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.MultiGraph;
+import org.graphstream.ui.layout.springbox.implementations.SpringBox;
 import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.Viewer;
 import org.json.simple.JSONObject;
@@ -35,7 +38,7 @@ public class BeautifulKMGSR {
 
     static boolean enableAudioDuringTraining = true;
 
-    static int[] playback = new int[]{1012};
+    static int[] playback = new int[]{98,99,100};
     public static final int decreaseClustersBy = 50;
     static int newSongLength = 5000;
 
@@ -58,6 +61,8 @@ public class BeautifulKMGSR {
     public static MultiGraph graph;
     public static int maxValue;
     private static SegmentSong firstSaved = null;
+    private static int width=1400;
+    private static int height=900;
 //    public static HashMap<String,Integer> hm;
 
 
@@ -77,7 +82,7 @@ public class BeautifulKMGSR {
         int totsegm = 0;
         JTextArea jta = new JTextArea(4, 20);
         JFrame jframe = new JFrame("graphstream");
-        jframe.setSize(1420, 980);
+        jframe.setSize(width, height);
         for (int v : playback) {
             Song song1 = SongManager.getRandom(v);
             JSONObject js = (JSONObject) song1.analysis.getMap().get("meta");
@@ -124,16 +129,18 @@ public class BeautifulKMGSR {
             System.out.println("artist\t" + artist);
             System.out.println("album\t" + album);
             System.out.println("genre\t" + genre);
-            System.out.println("time\t" + seconds / 60 + ": " + seconds % 60);
-            jta.append("title\t" + title);
+            String secs=seconds%60+"";
+            while (secs.length()<2)secs="0"+secs;
+            System.out.println("time\t" + seconds / 60 + ": " + secs);
+            jta.append("Title\t" + title);
             jta.append("\n");
-            jta.append("artist\t" + artist);
+            jta.append("Artist\t" + artist);
             jta.append("\n");
-            jta.append("album\t" + album);
+            jta.append("Album\t" + album);
             jta.append("\n");
-            jta.append("genre\t" + genre);
+            jta.append("Genre\t" + genre);
             jta.append("\n");
-            jta.append("time\t" + seconds / 60 + ": " + seconds % 60);
+            jta.append("Time\t" + seconds / 60 + ": " + secs);
             jta.append("\n");
             jta.append("----------------------------");
             jta.append("\n");
@@ -243,9 +250,11 @@ public class BeautifulKMGSR {
 //        graph.addAttribute("ui.quality");
 //        graph.addAttribute("ui.antialias");
         Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-        viewer.enableAutoLayout();
+        SpringBox sb=new SpringBox();
+//        sb.setForce(1.5f);
+//        sb.setQuality(0);
+        viewer.enableAutoLayout(sb);
         View view = viewer.addDefaultView(false);
-
         SegmentSong startNode = new SegmentSong(playback[0], 0);
 
 //        for (int cnt=0;cnt<5000;cnt++){
@@ -270,7 +279,7 @@ public class BeautifulKMGSR {
                 }
 
                 if (!nodeset.contains(startNode.hashCode())) {
-                    graph.addNode(startNode.hashCode() + "");
+                    Node n=graph.addNode(startNode.hashCode() + "");
                     nodeset.add(startNode.hashCode());
                 }
                 if (!nodeset.contains(play.hashCode())) {
@@ -313,6 +322,10 @@ public class BeautifulKMGSR {
         panel.add("North", tf);
         panel.add("West", jta);
         jframe.setVisible(true);
+        for (int i=0;i<graph.getNodeCount();i++){
+            graph.getNode(i).setAttribute("x",Math.random()*width);
+            graph.getNode(i).setAttribute("y",Math.random()*height);
+        }
 
         HashMap<String, Integer> hm = new HashMap<>();
 
