@@ -38,12 +38,12 @@ public class BeautifulKMGSR {
 
     static boolean enableAudioDuringTraining = true;
 
-    static int[] playback = new int[]{98,99,100};
-    public static final int decreaseClustersBy = 50;
-    static int newSongLength = 5000;
+    static int[] playback = new int[]{1016};
+    public static final int decreaseClustersBy = 103*playback.length;
+    static int newSongLength = 2000;
 
     public static boolean makeVideo = false;
-
+    private static boolean addTrackInfo=false;
 
     public static int numClusters = -1;
 
@@ -63,6 +63,7 @@ public class BeautifulKMGSR {
     private static SegmentSong firstSaved = null;
     private static int width=1400;
     private static int height=900;
+
 //    public static HashMap<String,Integer> hm;
 
 
@@ -81,7 +82,7 @@ public class BeautifulKMGSR {
     public static void main(String[] args) {
         int totsegm = 0;
         JTextArea jta = new JTextArea(4, 20);
-        JFrame jframe = new JFrame("graphstream");
+        JFrame jframe = new JFrame("Wub");
         jframe.setSize(width, height);
         for (int v : playback) {
             Song song1 = SongManager.getRandom(v);
@@ -131,7 +132,7 @@ public class BeautifulKMGSR {
             System.out.println("genre\t" + genre);
             String secs=seconds%60+"";
             while (secs.length()<2)secs="0"+secs;
-            System.out.println("time\t" + seconds / 60 + ": " + secs);
+            System.out.println("time\t" + seconds / 60 + ":" + secs);
             jta.append("Title\t" + title);
             jta.append("\n");
             jta.append("Artist\t" + artist);
@@ -247,11 +248,11 @@ public class BeautifulKMGSR {
 
 
         graph = new MultiGraph("id");
-//        graph.addAttribute("ui.quality");
-//        graph.addAttribute("ui.antialias");
+        graph.addAttribute("ui.quality");
+        graph.addAttribute("ui.antialias");
         Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
         SpringBox sb=new SpringBox();
-//        sb.setForce(1.5f);
+        sb.setForce(1.5f);
 //        sb.setQuality(0);
         viewer.enableAutoLayout(sb);
         View view = viewer.addDefaultView(false);
@@ -320,7 +321,7 @@ public class BeautifulKMGSR {
         tf.setMinimumSize(new Dimension(100, 100));
         tf.setPreferredSize(new Dimension(100, 100));
         panel.add("North", tf);
-        panel.add("West", jta);
+        if (addTrackInfo)panel.add("West", jta);
         jframe.setVisible(true);
         for (int i=0;i<graph.getNodeCount();i++){
             graph.getNode(i).setAttribute("x",Math.random()*width);
