@@ -74,7 +74,7 @@ public class Audio {
             e.printStackTrace();
         }
         if (BeautifulKMGSR.makeVideo) {
-            recorder = new FFmpegFrameRecorder(new File("out.mp4"), jframe.getWidth(), jframe.getHeight(), 2);
+            recorder = new FFmpegFrameRecorder(new File("out1.mp4"), jframe.getWidth(), jframe.getHeight(), 2);
             recorder.setSampleRate((int) audioFormat.getSampleRate());
             recorder.setAudioChannels(2);
             recorder.setInterleaved(true);
