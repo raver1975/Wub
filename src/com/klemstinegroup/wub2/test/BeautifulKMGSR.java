@@ -10,9 +10,12 @@ import org.bytedeco.javacv.FrameRecorder;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.MultiGraph;
+import org.graphstream.ui.graphicGraph.GraphicElement;
 import org.graphstream.ui.layout.springbox.implementations.SpringBox;
 import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.Viewer;
+import org.graphstream.ui.view.ViewerListener;
+import org.graphstream.ui.view.ViewerPipe;
 import org.json.simple.JSONObject;
 import weka.clusterers.SimpleKMeans;
 import weka.core.*;
@@ -22,6 +25,8 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -38,12 +43,13 @@ public class BeautifulKMGSR {
 
     static boolean enableAudioDuringTraining = true;
 
+    //    static int[] playback = new int[]{(int)(Math.random()*1500)};
     static int[] playback = new int[]{1016};
-    public static final int decreaseClustersBy = 103*playback.length;
-    static int newSongLength = 2000;
+    public static final int decreaseClustersBy = 103 * playback.length;
+    static int newSongLength = 5000;
 
-    public static boolean makeVideo = false;
-    private static boolean addTrackInfo=false;
+    public static boolean makeVideo = true;
+    private static boolean addTrackInfo = false;
 
     public static int numClusters = -1;
 
@@ -61,8 +67,10 @@ public class BeautifulKMGSR {
     public static MultiGraph graph;
     public static int maxValue;
     private static SegmentSong firstSaved = null;
-    private static int width=1400;
-    private static int height=900;
+    private static int width = 1400;
+    private static int height = 900;
+    private static int lastSong;
+    private static Song tempSong;
 
 //    public static HashMap<String,Integer> hm;
 
@@ -78,8 +86,14 @@ public class BeautifulKMGSR {
 
     }
 
+    public static HashMap<String, SegmentSong> nodes = new HashMap();
+
 
     public static void main(String[] args) {
+        new BeautifulKMGSR().init();
+    }
+
+    public void init() {
         int totsegm = 0;
         JTextArea jta = new JTextArea(4, 20);
         JFrame jframe = new JFrame("Wub");
@@ -130,8 +144,8 @@ public class BeautifulKMGSR {
             System.out.println("artist\t" + artist);
             System.out.println("album\t" + album);
             System.out.println("genre\t" + genre);
-            String secs=seconds%60+"";
-            while (secs.length()<2)secs="0"+secs;
+            String secs = seconds % 60 + "";
+            while (secs.length() < 2) secs = "0" + secs;
             System.out.println("time\t" + seconds / 60 + ":" + secs);
             jta.append("Title\t" + title);
             jta.append("\n");
@@ -251,17 +265,59 @@ public class BeautifulKMGSR {
         graph.addAttribute("ui.quality");
         graph.addAttribute("ui.antialias");
         Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-        SpringBox sb=new SpringBox();
+        SpringBox sb = new SpringBox();
         sb.setForce(1.5f);
 //        sb.setQuality(0);
         viewer.enableAutoLayout(sb);
         View view = viewer.addDefaultView(false);
+
+        tempSong = null;
+        lastSong = -1;
+        view.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                System.out.println("click!");
+                Collection<GraphicElement> ge = view.allNodesOrSpritesIn(e.getX() - 1, e.getY() - 1, e.getX() + 1, e.getY() + 1);
+                if (ge != null && ge.size() > 0) {
+                    System.out.println(ge.size());
+                    GraphicElement gg = ge.toArray(new GraphicElement[]{})[0];
+                    SegmentSong startNode = nodes.get(gg.getId());
+                    if (tempSong == null || lastSong != startNode.song) {
+                        tempSong = SongManager.getRandom(startNode.song);
+                        lastSong = startNode.song;
+                    }
+                        AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(startNode.segment));
+                        ai.payload = new SegmentSong(startNode.song, startNode.segment);
+                        audio.play(ai);
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
         SegmentSong startNode = new SegmentSong(playback[0], 0);
 
 //        for (int cnt=0;cnt<5000;cnt++){
 //            graph.addNode(cnt+"");
 //        }
-        HashMap<Integer, SegmentSong> nodes = new HashMap<>();
+        nodes = new HashMap<>();
         HashSet<Integer> nodeset = new HashSet<>();
         Song tempSong = null;
         int lastSong = -1;
@@ -280,7 +336,7 @@ public class BeautifulKMGSR {
                 }
 
                 if (!nodeset.contains(startNode.hashCode())) {
-                    Node n=graph.addNode(startNode.hashCode() + "");
+                    Node n = graph.addNode(startNode.hashCode() + "");
                     nodeset.add(startNode.hashCode());
                 }
                 if (!nodeset.contains(play.hashCode())) {
@@ -289,7 +345,7 @@ public class BeautifulKMGSR {
                 }
                 graph.addEdge((cnt2) + "", startNode.hashCode() + "", play.hashCode() + "", true);
                 if (nodes.isEmpty()) firstSaved = play;
-                nodes.put(play.hashCode(), play);
+                nodes.put(play.hashCode() + "", play);
                 startNode = new SegmentSong(play.song, play.segment);
                 cnt2++;
             }
@@ -321,88 +377,84 @@ public class BeautifulKMGSR {
         tf.setMinimumSize(new Dimension(100, 100));
         tf.setPreferredSize(new Dimension(100, 100));
         panel.add("North", tf);
-        if (addTrackInfo)panel.add("West", jta);
+        if (addTrackInfo) panel.add("West", jta);
         jframe.setVisible(true);
-        for (int i=0;i<graph.getNodeCount();i++){
-            graph.getNode(i).setAttribute("x",Math.random()*width);
-            graph.getNode(i).setAttribute("y",Math.random()*height);
+        for (int i = 0; i < graph.getNodeCount(); i++) {
+            graph.getNode(i).setAttribute("x", Math.random() * width);
+            graph.getNode(i).setAttribute("y", Math.random() * height);
         }
 
         HashMap<String, Integer> hm = new HashMap<>();
 
         startNode = new SegmentSong(playback[0], 0);
-
-        while (newSongLength-- > 0) {
-            if (lastSong != startNode.song) {
-                tempSong = SongManager.getRandom(startNode.song);
-                lastSong = startNode.song;
-            }
-            AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(startNode.segment));
-            ai.payload = new SegmentSong(startNode.song, startNode.segment);
-            audio.play(ai);
-
-            Iterator<Edge> adj = graph.getNode(startNode.hashCode() + "").getEachLeavingEdge().iterator();
-            ArrayList<Edge> temp = new ArrayList<>();
-            int lowest = 0;
-            int lowestValue = Integer.MAX_VALUE;
-//            int cnt = 0;
-            while (adj.hasNext()) {
-                Edge bb = adj.next();
-                temp.add(bb);
-            }
-            int cnt1 = 0;
-            Collections.shuffle(temp);
-            for (Edge bb : temp) {
-                String key = bb.getNode1().getId();
-                if (!hm.containsKey(key)) {
-                    hm.put(key, 0);
-                }
-                int val = hm.get(key);
-                if (val < lowestValue) {
-                    lowestValue = val;
-                    lowest = cnt1;
-
-                }
-                cnt1++;
-            }
-
-
-//            int next = (int) (Math.random() * temp.size());
-            int next = lowest;
-
-//            System.out.println("going down: " + next + " out of " + temp.size());
-            if (temp.size() == 0) startNode = firstSaved;
-            else {
-                Edge selected = temp.get(next);
-                startNode = nodes.get(Integer.parseInt(selected.getNode1().getId()));
-
-            }
-            String key = startNode.hashCode() + "";
-
-            if (!hm.containsKey(key)) {
-                hm.put(key, 0);
-            }
-            int val = hm.get(key);
-            hm.put(key, val + 1);
-            maxValue = Math.max(maxValue, val + 1);
-//            System.out.println(Arrays.toString(bb));
-
-        }
-
-        byte[] output = Audio.baos.toByteArray();
         try {
-            AudioSystem.write(new AudioInputStream(new ByteArrayInputStream(output), Audio.audioFormat, output.length), AudioFileFormat.Type.WAVE, new File("out.wav"));
-        } catch (IOException e) {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
-//        while (iter.hasNext()){
-//            Object bbb = iter.next();
+//        while (newSongLength-- > 0) {
+//            if (lastSong != startNode.song) {
+//                tempSong = SongManager.getRandom(startNode.song);
+//                lastSong = startNode.song;
+//            }
+//            AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(startNode.segment));
+//            ai.payload = new SegmentSong(startNode.song, startNode.segment);
+//            audio.play(ai);
 //
-//            Map.Entry<String, String> bbe = (Map.Entry<String, String>) bbb;
-//            System.out.println(bbb.toString());
+//            Iterator<Edge> adj = graph.getNode(startNode.hashCode() + "").getEachLeavingEdge().iterator();
+//            ArrayList<Edge> temp = new ArrayList<>();
+//            int lowest = 0;
+//            int lowestValue = Integer.MAX_VALUE;
+////            int cnt = 0;
+//            while (adj.hasNext()) {
+//                Edge bb = adj.next();
+//                temp.add(bb);
+//            }
+//            int cnt1 = 0;
+//            Collections.shuffle(temp);
+//            for (Edge bb : temp) {
+//                String key = bb.getNode1().getId();
+//                if (!hm.containsKey(key)) {
+//                    hm.put(key, 0);
+//                }
+//                int val = hm.get(key);
+//                if (val < lowestValue) {
+//                    lowestValue = val;
+//                    lowest = cnt1;
 //
+//                }
+//                cnt1++;
+//            }
+//
+//
+////            int next = (int) (Math.random() * temp.size());
+//            int next = lowest;
+//
+////            System.out.println("going down: " + next + " out of " + temp.size());
+//            if (temp.size() == 0) startNode = firstSaved;
+//            else {
+//                Edge selected = temp.get(next);
+//                startNode = nodes.get(Integer.parseInt(selected.getNode1().getId()));
+//
+//            }
+//            String key = startNode.hashCode() + "";
+//
+//            if (!hm.containsKey(key)) {
+//                hm.put(key, 0);
+//            }
+//            int val = hm.get(key);
+//            hm.put(key, val + 1);
+//            maxValue = Math.max(maxValue, val + 1);
+////            System.out.println(Arrays.toString(bb));
+//
+//        }
 
-
+//        byte[] output = Audio.baos.toByteArray();
+//        try {
+//            AudioSystem.write(new AudioInputStream(new ByteArrayInputStream(output), Audio.audioFormat, output.length), AudioFileFormat.Type.WAVE, new File("out.wav"));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     protected static double distance(Instance i1, Instance i2) {

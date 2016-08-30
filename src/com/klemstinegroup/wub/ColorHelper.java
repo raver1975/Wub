@@ -42,9 +42,9 @@ public class ColorHelper {
 	 *            should be from 0 unti 1
 	 * @return
 	 */
-	public static Color numberToColorPercentage(final double value) {
+	public static Color numberToColorPercentage(double value) {
 		if (value < 0 || value > 1) {
-			return null;
+			value=1;
 		}
 		Double d = value * factor;
 		int index = d.intValue();

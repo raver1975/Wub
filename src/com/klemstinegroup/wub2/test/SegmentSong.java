@@ -13,7 +13,7 @@ public class SegmentSong implements Serializable {
 public int song;
     public int segment;
 
-    SegmentSong(int song,int segment){
+    public SegmentSong(int song, int segment){
         this.segment=segment;
         this.song=song;
     }
