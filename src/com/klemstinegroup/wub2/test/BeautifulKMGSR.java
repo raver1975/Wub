@@ -41,10 +41,8 @@ public class BeautifulKMGSR {
     static final int attLength = 28;
     public static Attribute[] attlist;
 
-    static boolean enableAudioDuringTraining = true;
-
-    //    static int[] playback = new int[]{(int)(Math.random()*1500)};
-    static int[] playback = new int[]{1016};
+//        static int[] playback = new int[]{(int)(Math.random()*1500)};
+    static int[] playback = new int[]{1017};
     public static final int decreaseClustersBy = 103 * playback.length;
     static int newSongLength = 5000;
 
@@ -52,11 +50,6 @@ public class BeautifulKMGSR {
     private static boolean addTrackInfo = false;
 
     public static int numClusters = -1;
-
-
-//    static int playbackStart = playback;
-//    static int playbackEnd = playback + stretch;
-
 
     static float pitchFactor = 17f;
     static float timbreFactor = 17f;
@@ -313,6 +306,13 @@ public class BeautifulKMGSR {
             }
         });
         SegmentSong startNode = new SegmentSong(playback[0], 0);
+        if (tempSong == null || lastSong != startNode.song) {
+            tempSong = SongManager.getRandom(startNode.song);
+            lastSong = startNode.song;
+        }
+        AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(startNode.segment));
+        ai.payload = new SegmentSong(startNode.song, startNode.segment);
+        audio.play(ai);
 
 //        for (int cnt=0;cnt<5000;cnt++){
 //            graph.addNode(cnt+"");
