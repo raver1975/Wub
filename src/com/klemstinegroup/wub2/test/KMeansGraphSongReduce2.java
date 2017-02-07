@@ -26,7 +26,7 @@ import java.util.*;
 public class KMeansGraphSongReduce2 {
 
 
-    static String directory = "e:\\wub\\";
+    static String directory = "e:\\wubdata\\";
     private static final File[] list;
 
     static final int attLength = 28;
@@ -58,7 +58,7 @@ public class KMeansGraphSongReduce2 {
     static boolean enableAudioDuringTraining = true;
 //    private static boolean loadPrevSavedModel = true;
 
-    static int playback = 246;
+    static int playback = 1023;
     static int stretch = 1;
     static int playbackStart = playback;
     static int playbackEnd = playback + stretch;

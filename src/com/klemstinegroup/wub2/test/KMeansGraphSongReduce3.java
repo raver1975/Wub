@@ -36,7 +36,7 @@ import java.util.List;
 public class KMeansGraphSongReduce3 {
 
 
-    static String directory = "e:\\wub\\";
+    static String directory = "e:\\wubdata\\";
     private static final File[] list;
 
     static final int attLength = 28;

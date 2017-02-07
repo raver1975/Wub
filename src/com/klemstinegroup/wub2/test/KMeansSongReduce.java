@@ -18,7 +18,7 @@ import java.util.*;
 public class KMeansSongReduce {
 
 
-    static String directory = "e:\\wub\\";
+    static String directory = "e:\\wubdata\\";
     private static final File[] list;
 
     static final int attLength = 28;
@@ -50,13 +50,14 @@ public class KMeansSongReduce {
     static boolean enableAudioDuringTraining = true;
 //    private static boolean loadPrevSavedModel = true;
 
-    static int playback =1203;
+    static int playback =(int)(430);
+//    static int playback =(int)(Math.random()*1500);
     static int stretch = 1;
     static int playbackStart = playback;
     static int playbackEnd = playback + stretch;
 
 
-    public static final int numClusters =256;
+    public static final int numClusters =256*2;
 
     static float pitchFactor = 22f;
     static float timbreFactor = 17f;

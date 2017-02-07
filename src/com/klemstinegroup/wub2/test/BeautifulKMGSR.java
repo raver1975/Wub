@@ -38,9 +38,9 @@ public class BeautifulKMGSR {
 
     static boolean enableAudioDuringTraining = true;
 
-    static int[] playback = new int[]{1017};
-    public static final int decreaseClustersBy = 103*playback.length;
-    static int newSongLength = 2000;
+    static int[] playback = new int[]{430};
+    public static final int decreaseClustersBy = 50*playback.length;
+    static int newSongLength = 25000;
 
     public static boolean makeVideo = true;
     private static boolean addTrackInfo=false;
@@ -335,11 +335,6 @@ public class BeautifulKMGSR {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 while (newSongLength-- > 0) {
                     if (lastSong[0] != startNode[0].song) {
                         tempSong[0] = SongManager.getRandom(startNode[0].song);
