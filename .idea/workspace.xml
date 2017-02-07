@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ab275348-9c2e-46dc-a9d5-a42ca3b2351e" name="Default" comment="">
+    <list default="true" id="ab275348-9c2e-46dc-a9d5-a42ca3b2351e" name="Default" comment="fixed kmeanssongreduce">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/map-universal.ser" afterPath="$PROJECT_DIR$/map-universal.ser" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/system/Audio.java" afterPath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/system/Audio.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/BeautifulKMGSR.java" afterPath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/BeautifulKMGSR.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce2.java" afterPath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce2.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce3.java" afterPath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce3.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansSongReduce.java" afterPath="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansSongReduce.java" />
     </list>
     <ignored path="Wub.iws" />
@@ -52,58 +48,18 @@
       <file leaf-file-name="BeautifulKMGSR.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/BeautifulKMGSR.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="168">
-              <caret line="286" column="55" lean-forward="false" selection-start-line="286" selection-start-column="55" selection-end-line="286" selection-end-column="55" />
+            <state relative-caret-position="134">
+              <caret line="53" column="0" lean-forward="true" selection-start-line="53" selection-start-column="0" selection-end-line="57" selection-end-column="38" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Edge.class" pinned="false" current-in-tab="false">
-        <entry file="jar://$PROJECT_DIR$/libs/Graphstream/gs-core-1.3.jar!/org/graphstream/graph/Edge.class">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="17" column="23" lean-forward="false" selection-start-line="17" selection-start-column="23" selection-end-line="17" selection-end-column="23" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="hs_err_pid11720.log" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/hs_err_pid11720.log">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="194">
-              <caret line="264" column="139" lean-forward="false" selection-start-line="264" selection-start-column="139" selection-end-line="264" selection-end-column="139" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SongManager.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/SongManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="31" column="44" lean-forward="false" selection-start-line="31" selection-start-column="31" selection-end-line="31" selection-end-column="44" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="KMeansGraphSongReduce3.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce3.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="141" column="62" lean-forward="false" selection-start-line="141" selection-start-column="62" selection-end-line="141" selection-end-column="62" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="KMeansSongReduce.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="KMeansSongReduce.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansSongReduce.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-306">
-              <caret line="22" column="0" lean-forward="true" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+            <state relative-caret-position="369">
+              <caret line="70" column="35" lean-forward="false" selection-start-line="70" selection-start-column="35" selection-end-line="70" selection-end-column="35" />
               <folding />
             </state>
           </provider>
@@ -129,10 +85,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Audio.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Audio.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/system/Audio.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="246">
+            <state relative-caret-position="2669">
               <caret line="198" column="49" lean-forward="true" selection-start-line="198" selection-start-column="49" selection-end-line="198" selection-end-column="49" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -166,8 +122,8 @@
       <find>hashcode</find>
       <find>getNode</find>
       <find>Beau</find>
-      <find>addNode</find>
       <find>graph</find>
+      <find>addNode</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -489,8 +445,8 @@
         <option value="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce3.java" />
         <option value="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansGraphSongReduce2.java" />
         <option value="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/BeautifulKMGSR.java" />
-        <option value="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansSongReduce.java" />
         <option value="$PROJECT_DIR$/src/com/klemstinegroup/wub2/system/Audio.java" />
+        <option value="$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansSongReduce.java" />
       </list>
     </option>
   </component>
@@ -1125,7 +1081,7 @@
       <workItem from="1472413476212" duration="7757000" />
       <workItem from="1485226284793" duration="5014000" />
       <workItem from="1485271700783" duration="1995000" />
-      <workItem from="1486477542046" duration="806000" />
+      <workItem from="1486477542046" duration="1246000" />
     </task>
     <task id="LOCAL-00001" summary="spans multiple songs">
       <created>1471401705807</created>
@@ -1218,11 +1174,18 @@
       <option name="project" value="LOCAL" />
       <updated>1485232589790</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="fixed kmeanssongreduce">
+      <created>1486478374153</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1486478374153</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="40794000" />
+    <option name="totallyTimeSpent" value="41234000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1912" y="-8" width="1634" height="1066" extended-state="6" />
@@ -1333,7 +1296,8 @@
     <MESSAGE value="toggle video making on/off" />
     <MESSAGE value="randomize init position" />
     <MESSAGE value="wait one second before playing, prevents audio problems" />
-    <option name="LAST_COMMIT_MESSAGE" value="wait one second before playing, prevents audio problems" />
+    <MESSAGE value="fixed kmeanssongreduce" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed kmeanssongreduce" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1691,29 +1655,29 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/system/Audio.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2669">
+          <caret line="198" column="49" lean-forward="true" selection-start-line="198" selection-start-column="49" selection-end-line="198" selection-end-column="49" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/BeautifulKMGSR.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="286" column="55" lean-forward="false" selection-start-line="286" selection-start-column="55" selection-end-line="286" selection-end-column="55" />
+        <state relative-caret-position="134">
+          <caret line="53" column="0" lean-forward="true" selection-start-line="53" selection-start-column="0" selection-end-line="57" selection-end-column="38" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/test/KMeansSongReduce.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-306">
-          <caret line="22" column="0" lean-forward="true" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+        <state relative-caret-position="369">
+          <caret line="70" column="35" lean-forward="false" selection-start-line="70" selection-start-column="35" selection-end-line="70" selection-end-column="35" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/klemstinegroup/wub2/system/Audio.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="246">
-          <caret line="198" column="49" lean-forward="true" selection-start-line="198" selection-start-column="49" selection-end-line="198" selection-end-column="49" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
