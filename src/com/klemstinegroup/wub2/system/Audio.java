@@ -2,7 +2,8 @@ package com.klemstinegroup.wub2.system;
 
 import com.echonest.api.v4.Segment;
 import com.klemstinegroup.wub.ColorHelper;
-import com.klemstinegroup.wub2.test.BeautifulKMGSR;
+//import com.klemstinegroup.wub2.test.BeautifulKMGSR;
+import com.klemstinegroup.wub2.test.BeautifulKMGSRandReduce;
 import com.klemstinegroup.wub2.test.ImagePanel;
 import com.klemstinegroup.wub2.test.SongManager;
 import com.klemstinegroup.wub2.test.Test3;
@@ -73,7 +74,7 @@ public class Audio {
         } catch (AWTException e) {
             e.printStackTrace();
         }
-        if (BeautifulKMGSR.makeVideo) {
+        if (BeautifulKMGSRandReduce.makeVideo) {
             recorder = new FFmpegFrameRecorder(new File("out.mp4"), jframe.getWidth(), jframe.getHeight(), 2);
             recorder.setSampleRate((int) audioFormat.getSampleRate());
             recorder.setAudioChannels(2);
@@ -145,7 +146,7 @@ public class Audio {
 
                                         if (i.payload != null && i.payload.segment > -1) {
 
-                                            if (BeautifulKMGSR.makeVideo) {
+                                            if (BeautifulKMGSRandReduce.makeVideo) {
                                                 BufferedImage grab = robot.createScreenCapture(jframe.getBounds());
 //                                                System.out.println(grab.getWidth()+","+grab.getHeight());
                                                 Frame frame = converter.convert(grab);
@@ -177,26 +178,26 @@ public class Audio {
 
                                             for (int xi = -1; xi < 2; xi++) {
                                                 for (int yi = -1; yi < 2; yi++) {
-                                                    g.drawString(i.payload.song + ":" + i.payload.segment, 60 - xi, 15 + yi + tf.getHeight() / 2);
+                                                    g.drawString(i.payload2.song + ":" + i.payload2.segment, 60 - xi, 15 + yi + tf.getHeight() / 2);
 
                                                 }
 
                                             }
                                             g.setColor(Color.BLACK);
 
-                                            g.drawString(i.payload.song + ":" + i.payload.segment, 60, 15 + tf.getHeight() / 2);
+                                            g.drawString(i.payload2.song + ":" + i.payload2.segment, 60, 15 + tf.getHeight() / 2);
                                             if (hm.get(lastSeg + "") == null)
                                                 hm.put(lastSeg + "", 0);
                                             int val = hm.get(lastSeg + "") + 1;
                                             hm.put(lastSeg + "", val);
                                             lastSeg = i.payload.segment;
-                                            Color color = ColorHelper.numberToColorPercentage((double) val / (double) BeautifulKMGSR.maxValue);
+                                            Color color = ColorHelper.numberToColorPercentage((double) val / (double) BeautifulKMGSRandReduce.maxValue);
                                             if (lastNode != null) {
                                                 lastNode.addAttribute("ui.style", "fill-color: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ");");
                                                 lastNode.addAttribute("ui.style", "size: 15;");
                                             }
-                                            if (BeautifulKMGSR.graph!=null){
-                                                Node node = BeautifulKMGSR.graph.getNode(i.payload.hashCode() + "");
+                                            if (BeautifulKMGSRandReduce.graph!=null){
+                                                Node node = BeautifulKMGSRandReduce.graph.getNode(i.payload.hashCode() + "");
                                                 if (node != null) {
                                                     node.addAttribute("ui.style", "fill-color: rgb(255,0,0);");
                                                     node.addAttribute("ui.style", "size:25;");

@@ -47,20 +47,23 @@ public class KMeansSongReduce {
     //456 bassnectar timestretch
     //1016 bassnectar basshead
 
+
+    //200 raggae trapstep
+
     public static JFrame frame = new JFrame(KMeansSongReduce.class.toString());
 
     //    static boolean rnn = true;
     static boolean enableAudioDuringTraining = true;
 //    private static boolean loadPrevSavedModel = true;
 
-    static int playback =(int)(310);
-//    static int playback =(int)(Math.random()*1500);
+//    static int playback =298;
+    static int playback =(int)(Math.random()*1500);
     static int stretch = 1;
     static int playbackStart = playback;
     static int playbackEnd = playback + stretch;
 
 
-    public static final int numClusters =740;
+    public static final int numClusters =600;
 
 //    static float pitchFactor = 22f;
 //    static float timbreFactor = 17f;
@@ -68,10 +71,10 @@ public class KMeansSongReduce {
 //    static float durationFactor = 60f;
 
 
-    static float pitchFactor = 17f;
-    static float timbreFactor = 34f;
+    static float pitchFactor = 40f;
+    static float timbreFactor = 10f;
     static float loudFactor = 70f;
-    static float durationFactor = 90f;
+    static float durationFactor = 80f;
 
     public static ImagePanel tf;
 
