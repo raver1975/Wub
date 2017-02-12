@@ -79,8 +79,11 @@ public class Audio {
             recorder.setAudioChannels(2);
             recorder.setInterleaved(true);
             recorder.setVideoQuality(0);
+            recorder.setImageWidth(jframe.getWidth());
+            recorder.setImageHeight(jframe.getHeight());
             try {
                 recorder.start();
+                System.out.println("****recorder started");
             } catch (FrameRecorder.Exception e) {
                 e.printStackTrace();
             }
@@ -144,6 +147,7 @@ public class Audio {
 
                                             if (BeautifulKMGSR.makeVideo) {
                                                 BufferedImage grab = robot.createScreenCapture(jframe.getBounds());
+//                                                System.out.println(grab.getWidth()+","+grab.getHeight());
                                                 Frame frame = converter.convert(grab);
                                                 short[] samples = new short[i.data.length / 2];
                                                 ByteBuffer.wrap(i.data).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(samples);

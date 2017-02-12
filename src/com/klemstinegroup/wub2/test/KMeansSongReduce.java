@@ -5,6 +5,7 @@ import com.klemstinegroup.wub2.system.Audio;
 import com.klemstinegroup.wub2.system.AudioInterval;
 import com.klemstinegroup.wub2.system.LoadFromFile;
 import com.klemstinegroup.wub2.system.Song;
+import org.bytedeco.javacv.FrameRecorder;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import weka.clusterers.SimpleKMeans;
@@ -12,13 +13,15 @@ import weka.core.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.File;
 import java.util.*;
 
 public class KMeansSongReduce {
 
 
-    static String directory = "e:\\wubdata\\";
+    static String directory = "c:\\wubdata\\";
     private static final File[] list;
 
     static final int attLength = 28;
@@ -50,14 +53,14 @@ public class KMeansSongReduce {
     static boolean enableAudioDuringTraining = true;
 //    private static boolean loadPrevSavedModel = true;
 
-    static int playback =(int)(861);
+    static int playback =(int)(310);
 //    static int playback =(int)(Math.random()*1500);
     static int stretch = 1;
     static int playbackStart = playback;
     static int playbackEnd = playback + stretch;
 
 
-    public static final int numClusters =512;
+    public static final int numClusters =740;
 
 //    static float pitchFactor = 22f;
 //    static float timbreFactor = 17f;
@@ -66,7 +69,7 @@ public class KMeansSongReduce {
 
 
     static float pitchFactor = 17f;
-    static float timbreFactor = 17f;
+    static float timbreFactor = 34f;
     static float loudFactor = 70f;
     static float durationFactor = 90f;
 
@@ -75,6 +78,49 @@ public class KMeansSongReduce {
 
     static {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                try {
+                    System.out.println("closing audio");
+                    Audio.recorder.stop();
+                    System.out.println("closed audio");
+                } catch (FrameRecorder.Exception e1) {
+                    e1.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+
+            }
+        });
         File[] list1 = new File(directory).listFiles();
         ArrayList<File> al = new ArrayList<>();
         for (File f : list1) {
@@ -86,8 +132,6 @@ public class KMeansSongReduce {
 
 
     public static void main(String[] args) {
-
-
         frame.setSize(400, 300);
         tf = new ImagePanel();
         tf.setFont(new Font("Arial", Font.BOLD, 300));
@@ -216,7 +260,6 @@ public class KMeansSongReduce {
             audio.play(ai);
         }
 
-
 //        while (iter.hasNext()){
 //            Object bbb = iter.next();
 //
@@ -267,6 +310,7 @@ public class KMeansSongReduce {
         System.out.println("genre\t" + genre);
         System.out.println("time\t" + seconds / 60 + ": " + seconds % 60);
         Iterator iter = song.analysis.getMap().entrySet().iterator();
+
 
     }
 

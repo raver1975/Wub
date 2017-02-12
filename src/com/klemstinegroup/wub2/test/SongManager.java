@@ -29,7 +29,7 @@ import java.util.HashMap;
  * Created by Paul on 7/30/2016.
  */
 public class SongManager {
-    static String directory = "e:\\wubdata\\";
+    static String directory = "c:\\wubdata\\";
     private static final File[] list;
 
     static final int attLength = 28;
