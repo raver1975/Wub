@@ -125,7 +125,7 @@ public class Audio {
                     if (!queue.isEmpty()) {
                         AudioInterval i = queue.poll();
                         currentlyPlaying = i;
-                        System.out.println("currently playing: " + i.payload);
+                        System.out.println("currently playing: " + i.payload+"\t"+i.payload2);
                         if (i.payload != null) {
 //                            System.out.println("now playing " + i.payload);
 

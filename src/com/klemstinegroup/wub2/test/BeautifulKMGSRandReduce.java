@@ -21,6 +21,8 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -40,11 +42,11 @@ public class BeautifulKMGSRandReduce {
     //    static int[] playback = new int[]{(int)(Math.random()*1500)};
 //    static int[] playback = new int[]{181};
 
-    static int[] playback = new int[]{204};
+    static int[] playback = new int[]{(int)(Math.random()*1400),(int)(Math.random()*1400),(int)(Math.random()*1400),(int)(Math.random()*1400)};
 
-    public static final int decreaseClustersBy = 5 * playback.length;
+    public static final int decreaseClustersBy = 2;// * playback.length;
     public static final float segmentsKept = .75f;
-    static int newSongLength = 2500;
+//    public static int newSongLength = 2500;
 
     public static boolean makeVideo = true;
     private static boolean addTrackInfo = false;
@@ -136,8 +138,9 @@ public class BeautifulKMGSRandReduce {
                     int segm = song1.analysis.getSegments().size();
                     totsegm += segm;
                     // float scale = (int) (((float) numClusters / (float) song1.analysis.getSegments().size()) * 1000) / 10f;
-
-                    System.out.println("segments size=" + segm);
+                    System.out.println("------------------------------");
+                    System.out.println("segment #" +v);
+                    System.out.println("size = " + segm);
                     System.out.println("title\t" + title);
                     System.out.println("artist\t" + artist);
                     System.out.println("album\t" + album);
@@ -159,8 +162,8 @@ public class BeautifulKMGSRandReduce {
                     jta.append("\n");
                 }
                 System.out.println("total segments=" + totsegm);
-                System.out.println("path clusters=" + (totsegm - decreaseClustersBy));
-                System.out.println("kept clusters=" + ((int) (totsegm * segmentsKept)));
+                System.out.println(" path clusters=" + (totsegm - decreaseClustersBy));
+                System.out.println(" kept clusters=" + ((int) (totsegm * segmentsKept)));
 
 //        frame.setSize(400, 300);
                 tf = new ImagePanel();
@@ -229,9 +232,9 @@ public class BeautifulKMGSRandReduce {
                 }
 
 
-                jframe.addWindowListener(new java.awt.event.WindowAdapter() {
+                jframe.addWindowListener(new WindowAdapter() {
                     @Override
-                    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                    public void windowClosing(WindowEvent windowEvent) {
                         if (makeVideo) {
                             try {
                                 Audio.recorder.stop();
@@ -272,12 +275,13 @@ public class BeautifulKMGSRandReduce {
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        while (newSongLength-- > 0) {
-                            if (lastSong[0] != startNode[0].song) {
-                                tempSong[0] = SongManager.getRandom(startNode[0].song);
-                                lastSong[0] = startNode[0].song;
-                            }
+                        while (true) {
                             SegmentSong trans = map2.get(startNode[0]);
+                            if (lastSong[0] != trans.song) {
+                                tempSong[0] = SongManager.getRandom(trans.song);
+                                lastSong[0] = trans.song;
+                            }
+
 //                    System.out.println(trans);
                             AudioInterval ai2 = tempSong[0].getAudioInterval(tempSong[0].analysis.getSegments().get(trans.segment));
                             ai2.payload = new SegmentSong(startNode[0].song, startNode[0].segment);
@@ -339,12 +343,12 @@ public class BeautifulKMGSRandReduce {
 
                         }
 
-                        byte[] output = Audio.baos.toByteArray();
-                        try {
-                            AudioSystem.write(new AudioInputStream(new ByteArrayInputStream(output), Audio.audioFormat, output.length), AudioFileFormat.Type.WAVE, new File("out.wav"));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+//                        byte[] output = Audio.baos.toByteArray();
+//                        try {
+//                            AudioSystem.write(new AudioInputStream(new ByteArrayInputStream(output), Audio.audioFormat, output.length), AudioFileFormat.Type.WAVE, new File("out.wav"));
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
                     }
                 }).start();
 
@@ -405,7 +409,7 @@ public class BeautifulKMGSRandReduce {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("cluster found in " + ((System.currentTimeMillis() - time) / 1000) + "ms");
+        System.out.println("cluster found in " + ((System.currentTimeMillis() - time)) + " ms");
 
         // print out the cluster centroids
         Instances centroids = kmeans.getClusterCentroids();
