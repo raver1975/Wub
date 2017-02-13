@@ -42,9 +42,9 @@ public class BeautifulKMGSRandReduce {
     //    static int[] playback = new int[]{(int)(Math.random()*1500)};
 //    static int[] playback = new int[]{181};
 
-    static int[] playback = new int[]{(int)(Math.random()*1400),(int)(Math.random()*1400),(int)(Math.random()*1400),(int)(Math.random()*1400)};
+    static int[] playback = new int[]{(int)(Math.random()*1300),(int)(Math.random()*1300),(int)(Math.random()*1300)};
 
-    public static final int decreaseClustersBy = 2;// * playback.length;
+    public static final int decreaseClustersBy = 5;// * playback.length;
     public static final float segmentsKept = .75f;
 //    public static int newSongLength = 2500;
 
