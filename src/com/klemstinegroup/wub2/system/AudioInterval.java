@@ -14,6 +14,7 @@ public class AudioInterval implements Serializable {
     //public int lengthBytes;
     public byte[] data;
     public SegmentSong payload;
+    public SegmentSong payload2;
 
     //public int endBytes;
 //	int newbytestart;

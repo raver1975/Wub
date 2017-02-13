@@ -2,7 +2,11 @@ package com.klemstinegroup.wub2.system;
 
 import com.echonest.api.v4.Segment;
 import com.klemstinegroup.wub.ColorHelper;
-import com.klemstinegroup.wub2.test.*;
+//import com.klemstinegroup.wub2.test.BeautifulKMGSR;
+import com.klemstinegroup.wub2.test.BeautifulKMGSRandReduce;
+import com.klemstinegroup.wub2.test.ImagePanel;
+import com.klemstinegroup.wub2.test.SongManager;
+import com.klemstinegroup.wub2.test.Test3;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -37,8 +41,7 @@ public class Audio {
     public static FFmpegFrameRecorder recorder;
     public transient SourceDataLine line;
     public transient Queue<AudioInterval> queue;
-    private static Song tempSong;
-    private static int lastSong;
+
     transient int position = 0;
     transient AudioInterval currentlyPlaying;
     protected transient boolean breakPlay;
@@ -55,7 +58,8 @@ public class Audio {
     private Song cachedSong;
     private int cachedSongIndex;
     public static ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    Node lastNode = null;
+    Node lastNode1 = null;
+    Node lastNode2 = null;
     private int start;
     private int lastSeg;
 
@@ -64,6 +68,7 @@ public class Audio {
     }
 
     public Audio(JFrame jframe, ImagePanel ip, int numClusters) {
+
         queue = new LinkedList<AudioInterval>();
         startPlaying(jframe, ip, numClusters);
         try {
@@ -71,14 +76,17 @@ public class Audio {
         } catch (AWTException e) {
             e.printStackTrace();
         }
-        if (BeautifulKMGSR.makeVideo) {
+        if (BeautifulKMGSRandReduce.makeVideo) {
             recorder = new FFmpegFrameRecorder(new File("out.mp4"), jframe.getWidth(), jframe.getHeight(), 2);
             recorder.setSampleRate((int) audioFormat.getSampleRate());
             recorder.setAudioChannels(2);
             recorder.setInterleaved(true);
             recorder.setVideoQuality(0);
+            recorder.setImageWidth(jframe.getWidth());
+            recorder.setImageHeight(jframe.getHeight());
             try {
                 recorder.start();
+                System.out.println("****recorder started");
             } catch (FrameRecorder.Exception e) {
                 e.printStackTrace();
             }
@@ -117,7 +125,7 @@ public class Audio {
                     if (!queue.isEmpty()) {
                         AudioInterval i = queue.poll();
                         currentlyPlaying = i;
-                        System.out.println("currently playing: " + i.payload);
+                        System.out.println("currently playing: " + i.payload + "\t" + i.payload2);
                         if (i.payload != null) {
 //                            System.out.println("now playing " + i.payload);
 
@@ -140,8 +148,9 @@ public class Audio {
 
                                         if (i.payload != null && i.payload.segment > -1) {
 
-                                            if (BeautifulKMGSR.makeVideo) {
+                                            if (BeautifulKMGSRandReduce.makeVideo) {
                                                 BufferedImage grab = robot.createScreenCapture(jframe.getBounds());
+//                                                System.out.println(grab.getWidth()+","+grab.getHeight());
                                                 Frame frame = converter.convert(grab);
                                                 short[] samples = new short[i.data.length / 2];
                                                 ByteBuffer.wrap(i.data).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(samples);
@@ -166,77 +175,56 @@ public class Audio {
                                             BufferedImage bi = new SamplingGraph().createWaveForm(list, duration, i.data, audioFormat, tf.getWidth(), tf.getHeight());
                                             Graphics g = bi.getGraphics();
 
-                                            g.setFont(new Font("Arial", Font.BOLD, 30));
-                                            g.setColor(Color.RED);
+                                            g.setFont(new Font("Arial", Font.BOLD, 70));
+                                            g.setColor(Color.YELLOW);
 
                                             for (int xi = -1; xi < 2; xi++) {
                                                 for (int yi = -1; yi < 2; yi++) {
-                                                    g.drawString(i.payload.song + ":" + i.payload.segment, 60 - xi, 15 + yi + tf.getHeight() / 2);
+                                                    g.drawString("song #" + i.payload2.song, 60 - xi, 25 + yi + tf.getHeight() / 2);
+                                                    g.drawString("seq #" + i.payload2.segment, 550 - xi, 25 + yi + tf.getHeight() / 2);
+                                                    g.drawString("len " + i.data.length, 975 - xi, 25 + yi + tf.getHeight() / 2);
 
                                                 }
 
                                             }
-                                            g.setColor(Color.BLACK);
+                                            g.setColor(Color.RED);
+                                            g.drawString("song #" + i.payload2.song, 60, 25 + tf.getHeight() / 2);
+                                            g.drawString("seq #" + i.payload2.segment, 550, 25 + tf.getHeight() / 2);
+                                            g.drawString("len " + i.data.length, 975, 25 + tf.getHeight() / 2);
 
-                                            g.drawString(i.payload.song + ":" + i.payload.segment, 60, 15 + tf.getHeight() / 2);
                                             if (hm.get(lastSeg + "") == null)
                                                 hm.put(lastSeg + "", 0);
                                             int val = hm.get(lastSeg + "") + 1;
                                             hm.put(lastSeg + "", val);
                                             lastSeg = i.payload.segment;
+                                            Color color = ColorHelper.numberToColorPercentage((double) val / (double) BeautifulKMGSRandReduce.maxValue);
+                                            if (lastNode1 != null) {
+                                                lastNode1.addAttribute("ui.style", "fill-color: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ");");
+                                                lastNode1.addAttribute("ui.style", "size: 15;");
+                                            }
+//                                            if (lastNode2 != null) {
+//                                                lastNode2.addAttribute("ui.style", "fill-color: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ");");
+//                                                lastNode2.addAttribute("ui.style", "size: 15;");
+//                                            }
+                                            if (BeautifulKMGSRandReduce.graph != null) {
+                                                Node node1 = BeautifulKMGSRandReduce.graph.getNode(i.payload.hashCode() + "");
+                                                if (node1 != null) {
+                                                    node1.addAttribute("ui.style", "fill-color: rgb(255,0,0);");
+                                                    node1.addAttribute("ui.style", "size:25;");
+                                                }
+                                                lastNode1 = node1;
 
-                                            Color color = ColorHelper.numberToColorPercentage((double) val / (double) BeautifulKMGSR.maxValue);
-                                            if (lastNode != null)
-                                                lastNode.addAttribute("ui.style", "fill-color: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ");");
-                                            if (lastNode != null) lastNode.addAttribute("ui.style", "size: 15;");
-                                            Node node = BeautifulKMGSR.graph.getNode(i.payload.hashCode() + "");
-                                            if (node != null) {
-                                                node.addAttribute("ui.style", "fill-color: rgb(255,0,0);");
-                                                node.addAttribute("ui.style", "size:25;");
+                                                if (i.payload2 != i.payload) {
+                                                    Node node2 = BeautifulKMGSRandReduce.graph.getNode(i.payload2.hashCode() + "");
+                                                    if (node2 != null) {
+                                                        //node2.addAttribute("ui.style", "fill-color: rgb(255,0,0);");
+                                                        node2.addAttribute("ui.style", "size:20;");
+                                                    }
+
+                                                    lastNode2 = node2;
+                                                }
                                             }
 
-                                            lastNode = node;
-                                            if (queue.size() == 0) {
-                                                HashMap<String, Integer> hm1 = new HashMap<>();
-                                                Iterator<Edge> adj = node.getLeavingEdgeIterator();
-                                                ArrayList<Edge> temp = new ArrayList<>();
-                                                int lowest = 0;
-                                                int lowestValue = Integer.MAX_VALUE;
-//            int cnt = 0;
-                                                while (adj.hasNext()) {
-                                                    Edge bb = adj.next();
-                                                    temp.add(bb);
-                                                }
-                                                int cnt1 = 0;
-                                                Collections.shuffle(temp);
-                                                for (Edge bb : temp) {
-                                                    String key = bb.getNode1().getId();
-                                                    if (!hm1.containsKey(key)) {
-                                                        hm1.put(key, 0);
-                                                    }
-                                                    int val1 = hm1.get(key);
-                                                    if (val1 < lowestValue) {
-                                                        lowestValue = val1;
-                                                        lowest = cnt1;
-
-                                                    }
-                                                    cnt1++;
-                                                }
-
-
-//            int next = (int) (Math.random() * temp.size());
-                                                int next = lowest;
-                                                Edge selected = temp.get(next);
-                                                SegmentSong startNode = BeautifulKMGSR.nodes.get(selected.getNode1().getId());
-//                                                SegmentSong startNode=BeautifulKMGSR.nodes.get(next+"");
-                                                if (tempSong == null || lastSong != startNode.song) {
-                                                    tempSong = SongManager.getRandom(startNode.song);
-                                                    lastSong = startNode.song;
-                                                }
-                                                AudioInterval ai = tempSong.getAudioInterval(tempSong.analysis.getSegments().get(startNode.segment));
-                                                ai.payload = new SegmentSong(startNode.song, startNode.segment);
-                                                play(ai);
-                                            }
                                             tf.setImage(bi);
                                             tf.invalidate();
                                         }
