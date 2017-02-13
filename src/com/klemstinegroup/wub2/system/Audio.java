@@ -58,7 +58,8 @@ public class Audio {
     private Song cachedSong;
     private int cachedSongIndex;
     public static ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    Node lastNode = null;
+    Node lastNode1 = null;
+    Node lastNode2 = null;
     private int start;
     private int lastSeg;
 
@@ -67,6 +68,7 @@ public class Audio {
     }
 
     public Audio(JFrame jframe, ImagePanel ip, int numClusters) {
+
         queue = new LinkedList<AudioInterval>();
         startPlaying(jframe, ip, numClusters);
         try {
@@ -192,18 +194,31 @@ public class Audio {
                                             hm.put(lastSeg + "", val);
                                             lastSeg = i.payload.segment;
                                             Color color = ColorHelper.numberToColorPercentage((double) val / (double) BeautifulKMGSRandReduce.maxValue);
-                                            if (lastNode != null) {
-                                                lastNode.addAttribute("ui.style", "fill-color: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ");");
-                                                lastNode.addAttribute("ui.style", "size: 15;");
+                                            if (lastNode1 != null) {
+                                                lastNode1.addAttribute("ui.style", "fill-color: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ");");
+                                                lastNode1.addAttribute("ui.style", "size: 15;");
                                             }
-                                            if (BeautifulKMGSRandReduce.graph!=null){
-                                                Node node = BeautifulKMGSRandReduce.graph.getNode(i.payload.hashCode() + "");
-                                                if (node != null) {
-                                                    node.addAttribute("ui.style", "fill-color: rgb(255,0,0);");
-                                                    node.addAttribute("ui.style", "size:25;");
+//                                            if (lastNode2 != null) {
+//                                                lastNode2.addAttribute("ui.style", "fill-color: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ");");
+//                                                lastNode2.addAttribute("ui.style", "size: 15;");
+//                                            }
+                                            if (BeautifulKMGSRandReduce.graph != null) {
+                                                Node node1 = BeautifulKMGSRandReduce.graph.getNode(i.payload.hashCode() + "");
+                                                if (node1 != null) {
+                                                    node1.addAttribute("ui.style", "fill-color: rgb(255,0,0);");
+                                                    node1.addAttribute("ui.style", "size:25;");
                                                 }
+                                                lastNode1 = node1;
 
-                                                lastNode = node;
+                                                if (i.payload2 != i.payload) {
+                                                    Node node2 = BeautifulKMGSRandReduce.graph.getNode(i.payload2.hashCode() + "");
+                                                    if (node2 != null) {
+                                                        //node2.addAttribute("ui.style", "fill-color: rgb(255,0,0);");
+                                                        node2.addAttribute("ui.style", "size:20;");
+                                                    }
+
+                                                    lastNode2 = node2;
+                                                }
                                             }
 
                                             tf.setImage(bi);
