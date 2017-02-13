@@ -125,7 +125,7 @@ public class Audio {
                     if (!queue.isEmpty()) {
                         AudioInterval i = queue.poll();
                         currentlyPlaying = i;
-                        System.out.println("currently playing: " + i.payload+"\t"+i.payload2);
+                        System.out.println("currently playing: " + i.payload + "\t" + i.payload2);
                         if (i.payload != null) {
 //                            System.out.println("now playing " + i.payload);
 
@@ -175,19 +175,23 @@ public class Audio {
                                             BufferedImage bi = new SamplingGraph().createWaveForm(list, duration, i.data, audioFormat, tf.getWidth(), tf.getHeight());
                                             Graphics g = bi.getGraphics();
 
-                                            g.setFont(new Font("Arial", Font.BOLD, 30));
-                                            g.setColor(Color.RED);
+                                            g.setFont(new Font("Arial", Font.BOLD, 70));
+                                            g.setColor(Color.YELLOW);
 
                                             for (int xi = -1; xi < 2; xi++) {
                                                 for (int yi = -1; yi < 2; yi++) {
-                                                    g.drawString(i.payload2.song + ":" + i.payload2.segment, 60 - xi, 15 + yi + tf.getHeight() / 2);
+                                                    g.drawString("song #" + i.payload2.song, 60 - xi, 25 + yi + tf.getHeight() / 2);
+                                                    g.drawString("seq #" + i.payload2.segment, 550 - xi, 25 + yi + tf.getHeight() / 2);
+                                                    g.drawString("len " + i.data.length, 900 - xi, 25 + yi + tf.getHeight() / 2);
 
                                                 }
 
                                             }
-                                            g.setColor(Color.BLACK);
+                                            g.setColor(Color.RED);
+                                            g.drawString("song #" + i.payload2.song, 60, 25 + tf.getHeight() / 2);
+                                            g.drawString("seq #" + i.payload2.segment, 550, 25 + tf.getHeight() / 2);
+                                            g.drawString("len " + i.data.length, 900, 25 + tf.getHeight() / 2);
 
-                                            g.drawString(i.payload2.song + ":" + i.payload2.segment, 60, 15 + tf.getHeight() / 2);
                                             if (hm.get(lastSeg + "") == null)
                                                 hm.put(lastSeg + "", 0);
                                             int val = hm.get(lastSeg + "") + 1;
