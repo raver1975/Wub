@@ -27,6 +27,7 @@ import javax.sound.sampled.SourceDataLine;
 import javax.swing.*;
 
 import com.klemstinegroup.wub.*;
+import com.softsynth.jsyn.view.SoundTester;
 import org.bytedeco.javacv.*;
 import org.bytedeco.javacv.Frame;
 import org.graphstream.graph.*;
@@ -118,11 +119,14 @@ public class Audio {
     private void startPlaying(JFrame jframe, ImagePanel tf, int numClusters) {
         HashMap<String, Integer> hm = new HashMap<>();
         line = getLine();
+
         new Thread(new Runnable() {
             public void run() {
+                int cnt = 250;
                 top:
-                while (true) {
+                while (cnt-- > 0) {
                     if (!queue.isEmpty()) {
+                        cnt=250;
                         AudioInterval i = queue.poll();
                         currentlyPlaying = i;
                         System.out.println("currently playing: " + i.payload + "\t" + i.payload2);
@@ -160,7 +164,7 @@ public class Audio {
                                                 frame.samples = new Buffer[]{(Buffer) sBuff};
                                                 frame.timestamp = start;
                                                 start += 500 * (int) (1000 * (i.data.length / 2) / audioFormat.getSampleRate());
-                                                if (BeautifulKMGSRandReduce.makeVideo)try {
+                                                if (BeautifulKMGSRandReduce.makeVideo) try {
                                                     recorder.record(frame, AV_PIX_FMT_ARGB);
                                                     recorder.setTimestamp(start);
                                                 } catch (FrameRecorder.Exception e) {
@@ -266,15 +270,16 @@ public class Audio {
                         }
                         if (loop)
                             queue.add(i);
-                    } else
-
+                    } else {
                         currentlyPlaying = null;
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        try {
+                            Thread.sleep(10);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
+                System.exit(0);
             }
         }).
 

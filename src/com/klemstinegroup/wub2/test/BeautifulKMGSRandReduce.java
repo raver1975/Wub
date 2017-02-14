@@ -16,16 +16,11 @@ import org.json.simple.JSONObject;
 import weka.clusterers.SimpleKMeans;
 import weka.core.*;
 
-import javax.sound.sampled.AudioFileFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 public class BeautifulKMGSRandReduce {
@@ -49,8 +44,8 @@ public class BeautifulKMGSRandReduce {
 //    public static int newSongLength = 2500;
 
     public static boolean makeVideo = false;
+    public static boolean exitonSongexit = true;
     private static boolean addTrackInfo = true;
-
     //public static int numClusters = -1;
 
 
@@ -92,7 +87,9 @@ public class BeautifulKMGSRandReduce {
         JFrame jframe = new JFrame("Wub");
         jframe.setSize(width, height);
         jframe.setResizable(false);
-        if (makeVideo){jframe.setAlwaysOnTop(true);}
+        if (makeVideo) {
+            jframe.setAlwaysOnTop(true);
+        }
 
         for (int v : playback) {
             Song song1 = SongManager.getRandom(v);
@@ -265,25 +262,19 @@ public class BeautifulKMGSRandReduce {
 
         startNode[0] = new SegmentSong(playback[0], 0);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                while (true) {
-                    SegmentSong trans = map2.get(startNode[0]);
-                    if (lastSong[0] != trans.song) {
-                        tempSong[0] = SongManager.getRandom(trans.song);
-                        lastSong[0] = trans.song;
-                    }
+        int cnt3= (int) (Math.random()*10000+1000);
+        while (cnt3-->0) {
+
+            SegmentSong trans = map2.get(startNode[0]);
+            if (lastSong[0] != trans.song) {
+                tempSong[0] = SongManager.getRandom(trans.song);
+                lastSong[0] = trans.song;
+            }
 
 //                    System.out.println(trans);
-                    AudioInterval ai2 = tempSong[0].getAudioInterval(tempSong[0].analysis.getSegments().get(trans.segment));
-                    ai2.payload = new SegmentSong(startNode[0].song, startNode[0].segment);
-                    ai2.payload2 = new SegmentSong(trans.song, trans.segment);
+            AudioInterval ai2 = tempSong[0].getAudioInterval(tempSong[0].analysis.getSegments().get(trans.segment));
+            ai2.payload = new SegmentSong(startNode[0].song, startNode[0].segment);
+            ai2.payload2 = new SegmentSong(trans.song, trans.segment);
 
 //                    AudioInterval ai = tempSong[0].getAudioInterval(tempSong[0].analysis.getSegments().get(startNode[0].segment));
 //                    ai.payload = new SegmentSong(trans.song, trans.segment);
@@ -291,55 +282,55 @@ public class BeautifulKMGSRandReduce {
 //                   SegmentSong ais2=map.get(ai.payload);
 //                    AudioInterval ai2=  tempSong[0].getAudioInterval(tempSong[0].analysis.getSegments().get(ais2.segment));
 
-                    if (trans != null) audio.play(ai2);
+            if (trans != null) audio.play(ai2);
 
-                    Iterator<Edge> adj = graph.getNode(startNode[0].hashCode() + "").getEachLeavingEdge().iterator();
-                    ArrayList<Edge> temp = new ArrayList<>();
-                    int lowest = 0;
-                    int lowestValue = Integer.MAX_VALUE;
+            Iterator<Edge> adj = graph.getNode(startNode[0].hashCode() + "").getEachLeavingEdge().iterator();
+            ArrayList<Edge> temp = new ArrayList<>();
+            int lowest = 0;
+            int lowestValue = Integer.MAX_VALUE;
 //            int cnt = 0;
-                    while (adj.hasNext()) {
-                        Edge bb = adj.next();
-                        temp.add(bb);
-                    }
-                    int cnt1 = 0;
-                    Collections.shuffle(temp);
-                    for (Edge bb : temp) {
-                        String key = bb.getNode1().getId();
-                        if (!hm.containsKey(key)) {
-                            hm.put(key, 0);
-                        }
-                        int val = hm.get(key);
-                        if (val < lowestValue) {
-                            lowestValue = val;
-                            lowest = cnt1;
+            while (adj.hasNext()) {
+                Edge bb = adj.next();
+                temp.add(bb);
+            }
+            int cnt1 = 0;
+            Collections.shuffle(temp);
+            for (Edge bb : temp) {
+                String key = bb.getNode1().getId();
+                if (!hm.containsKey(key)) {
+                    hm.put(key, 0);
+                }
+                int val = hm.get(key);
+                if (val < lowestValue) {
+                    lowestValue = val;
+                    lowest = cnt1;
 
-                        }
-                        cnt1++;
-                    }
+                }
+                cnt1++;
+            }
 
 
 //            int next = (int) (Math.random() * temp.size());
-                    int next = lowest;
+            int next = lowest;
 
 //            System.out.println("going down: " + next + " out of " + temp.size());
-                    if (temp.size() == 0) startNode[0] = firstSaved;
-                    else {
-                        Edge selected = temp.get(next);
-                        startNode[0] = nodes.get(Integer.parseInt(selected.getNode1().getId()));
+            if (temp.size() == 0) startNode[0] = firstSaved;
+            else {
+                Edge selected = temp.get(next);
+                startNode[0] = nodes.get(Integer.parseInt(selected.getNode1().getId()));
 
-                    }
-                    String key = startNode[0].hashCode() + "";
+            }
+            String key = startNode[0].hashCode() + "";
 
-                    if (!hm.containsKey(key)) {
-                        hm.put(key, 0);
-                    }
-                    int val = hm.get(key);
-                    hm.put(key, val + 1);
-                    maxValue = Math.max(maxValue, val + 1);
+            if (!hm.containsKey(key)) {
+                hm.put(key, 0);
+            }
+            int val = hm.get(key);
+            hm.put(key, val + 1);
+            maxValue = Math.max(maxValue, val + 1);
 //            System.out.println(Arrays.toString(bb));
 
-                }
+//                }
 
 //                        byte[] output = Audio.baos.toByteArray();
 //                        try {
@@ -347,8 +338,7 @@ public class BeautifulKMGSRandReduce {
 //                        } catch (IOException e) {
 //                            e.printStackTrace();
 //                        }
-            }
-        }).start();
+        }
 
 //        while (iter.hasNext()){
 //            Object bbb = iter.next();
