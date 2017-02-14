@@ -92,7 +92,7 @@ public class BeautifulKMGSRandReduce {
         JFrame jframe = new JFrame("Wub");
         jframe.setSize(width, height);
         jframe.setResizable(false);
-        jframe.setAlwaysOnTop(true);
+        if (makeVideo){jframe.setAlwaysOnTop(true);}
 
         for (int v : playback) {
             Song song1 = SongManager.getRandom(v);
