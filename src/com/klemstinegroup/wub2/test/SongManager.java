@@ -35,7 +35,6 @@ public class SongManager {
         for (int i=0;i<26;i++) {
             String s=(char)('a'+i)+":\\wubdata\\";
             File f=new File(s);
-            System.out.println("trying: "+s);
             if (f.isDirectory()){
                 directory=s;
                 break;
