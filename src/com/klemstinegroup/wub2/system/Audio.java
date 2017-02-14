@@ -122,11 +122,11 @@ public class Audio {
 
         new Thread(new Runnable() {
             public void run() {
-                int cnt = 250;
+                int cnt = 2500;
                 top:
                 while (cnt-- > 0) {
                     if (!queue.isEmpty()) {
-                        cnt=250;
+                        cnt=2500;
                         AudioInterval i = queue.poll();
                         currentlyPlaying = i;
                         System.out.println("currently playing: " + i.payload + "\t" + i.payload2);
