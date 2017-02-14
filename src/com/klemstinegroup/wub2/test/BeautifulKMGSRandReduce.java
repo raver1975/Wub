@@ -48,7 +48,7 @@ public class BeautifulKMGSRandReduce {
     public static final float segmentsKept = .75f;
 //    public static int newSongLength = 2500;
 
-    public static boolean makeVideo = true;
+    public static boolean makeVideo = false;
     private static boolean addTrackInfo = true;
 
     //public static int numClusters = -1;

@@ -160,7 +160,7 @@ public class Audio {
                                                 frame.samples = new Buffer[]{(Buffer) sBuff};
                                                 frame.timestamp = start;
                                                 start += 500 * (int) (1000 * (i.data.length / 2) / audioFormat.getSampleRate());
-                                                try {
+                                                if (BeautifulKMGSRandReduce.makeVideo)try {
                                                     recorder.record(frame, AV_PIX_FMT_ARGB);
                                                     recorder.setTimestamp(start);
                                                 } catch (FrameRecorder.Exception e) {

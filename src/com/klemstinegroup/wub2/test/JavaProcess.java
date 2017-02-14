@@ -63,6 +63,7 @@ System.exit(0);
                 System.exit(0);
             }
         });
+
         jframe.getContentPane().add(cancel);
         jframe.pack();
         jframe.setVisible(true);
