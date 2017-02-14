@@ -29,7 +29,21 @@ import java.util.HashMap;
  * Created by Paul on 7/30/2016.
  */
 public class SongManager {
-    static String directory = "e:\\wubdata\\";
+
+    static String directory;
+    static {
+        for (int i=0;i<26;i++) {
+            String s=(char)('a'+i)+":\\wubdata\\";
+            File f=new File(s);
+            System.out.println("trying: "+s);
+            if (f.isDirectory()){
+                directory=s;
+                break;
+            }
+        }
+        System.out.println("directory = "+directory);
+    }
+
     private static final File[] list;
 
     static final int attLength = 28;

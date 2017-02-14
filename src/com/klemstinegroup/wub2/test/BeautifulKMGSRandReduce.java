@@ -64,6 +64,7 @@ public class BeautifulKMGSRandReduce {
     private static SegmentSong firstSaved = null;
     private static int width = 1400;
     private static int height = 900;
+    private static SegmentSong lastOne;
 
 //    public static HashMap<String,Integer> hm;
 
@@ -202,6 +203,7 @@ public class BeautifulKMGSRandReduce {
 
             for (int cnt = 0; cnt < song.analysis.getSegments().size(); cnt++) {
                 SegmentSong pp = new SegmentSong(songToPlay, cnt);
+                lastOne = pp;
                 SegmentSong play = map1.get(pp);
 //            }
                 if (play == null) {
@@ -261,10 +263,14 @@ public class BeautifulKMGSRandReduce {
         HashMap<String, Integer> hm = new HashMap<>();
 
         startNode[0] = new SegmentSong(playback[0], 0);
-
-        int cnt3= (int) (Math.random()*10000+1000);
-        while (cnt3-->0) {
-
+        int lastCnt = 4;
+        while (true) {
+            if (exitonSongexit && startNode[0].equals(lastOne)) {
+                lastCnt--;
+                if (lastCnt == 0) {
+                    break;
+                }
+            }
             SegmentSong trans = map2.get(startNode[0]);
             if (lastSong[0] != trans.song) {
                 tempSong[0] = SongManager.getRandom(trans.song);
