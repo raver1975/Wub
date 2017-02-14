@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Main-Class: com.klemstinegroup.wub2.test.JavaProcess
+
