@@ -78,7 +78,7 @@ public class Audio {
             e.printStackTrace();
         }
         if (BeautifulKMGSRandReduce.makeVideo) {
-            recorder = new FFmpegFrameRecorder(new File("out.mp4"), jframe.getWidth(), jframe.getHeight(), 2);
+            recorder = new FFmpegFrameRecorder(new File("out" + BeautifulKMGSRandReduce.playback[0] + ".mp4"), jframe.getWidth(), jframe.getHeight(), 2);
             recorder.setSampleRate((int) audioFormat.getSampleRate());
             recorder.setAudioChannels(2);
             recorder.setInterleaved(true);
@@ -126,7 +126,7 @@ public class Audio {
                 top:
                 while (cnt-- > 0) {
                     if (!queue.isEmpty()) {
-                        cnt=2500;
+                        cnt = 2500;
                         AudioInterval i = queue.poll();
                         currentlyPlaying = i;
                         System.out.println("currently playing: " + i.payload + "\t" + i.payload2);
@@ -279,7 +279,7 @@ public class Audio {
                         }
                     }
                 }
-                System.exit(0);
+                stop();
             }
         }).
 
@@ -309,4 +309,14 @@ public class Audio {
         queue.add(i);
     }
 
+    public static void stop() {
+        if (BeautifulKMGSRandReduce.makeVideo) {
+            try {
+                Audio.recorder.stop();
+            } catch (FrameRecorder.Exception e) {
+                e.printStackTrace();
+            }
+        }
+        System.exit(0);
+    }
 }

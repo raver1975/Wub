@@ -34,7 +34,7 @@ public class BeautifulKMGSRandReduce {
 
     static boolean enableAudioDuringTraining = true;
 
-    static int[] playback = new int[]{(int) (Math.random() * 1300)};
+    public static int[] playback = new int[]{(int) (Math.random() * 1300)};
 //    static int[] playback = new int[]{181};
 
 //    static int[] playback = new int[]{(int)(Math.random()*1300),(int)(Math.random()*1300),(int)(Math.random()*1300)};
@@ -235,14 +235,7 @@ public class BeautifulKMGSRandReduce {
                 jframe.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosing(WindowEvent windowEvent) {
-                        if (makeVideo) {
-                            try {
-                                Audio.recorder.stop();
-                            } catch (FrameRecorder.Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        System.exit(0);
+                        Audio.stop();
 
                     }
                 });
