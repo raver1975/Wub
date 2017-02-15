@@ -62,8 +62,8 @@ public class BeautifulKMGSRandReduce {
     public static MultiGraph graph;
     public static int maxValue;
     private static SegmentSong firstSaved = null;
-    private static int width = 1400;
-    private static int height = 900;
+    private static int width = 1200;
+    private static int height = 800;
 
 //    public static HashMap<String,Integer> hm;
 
@@ -257,6 +257,13 @@ public class BeautifulKMGSRandReduce {
                 HashMap<String, Integer> hm = new HashMap<>();
 
                 startNode[0] = new SegmentSong(playback[0], 0);
+
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
                 int cnn=250000;
                 while (cnn-->0) {
                     SegmentSong trans = map2.get(startNode[0]);

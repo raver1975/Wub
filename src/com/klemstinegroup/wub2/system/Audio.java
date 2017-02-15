@@ -83,13 +83,18 @@ public class Audio {
             recorder.setAudioChannels(2);
             recorder.setInterleaved(true);
             recorder.setVideoQuality(0);
+//            recorder.setVideoBitrate(10000000);
+//            recorder.setAudioBitrate(10000000);
             recorder.setImageWidth(jframe.getWidth());
             recorder.setImageHeight(jframe.getHeight());
             try {
                 recorder.start();
+                Thread.sleep(2000);
                 System.out.println("****recorder started");
             } catch (FrameRecorder.Exception e) {
                 e.printStackTrace();
+            } catch (InterruptedException e) {
+
             }
             converter = new Java2DFrameConverter();
         }
@@ -184,17 +189,17 @@ public class Audio {
 
                                             for (int xi = -1; xi < 2; xi++) {
                                                 for (int yi = -1; yi < 2; yi++) {
-                                                    g.drawString("song #" + i.payload2.song, 60 - xi, 25 + yi + tf.getHeight() / 2);
-                                                    g.drawString("seq #" + i.payload2.segment, 550 - xi, 25 + yi + tf.getHeight() / 2);
-                                                    g.drawString("len " + i.data.length, 975 - xi, 25 + yi + tf.getHeight() / 2);
+                                                    g.drawString("song #" + i.payload2.song, 10 - xi, 25 + yi + tf.getHeight() / 2);
+                                                    g.drawString("seq #" + i.payload2.segment, 460 - xi, 25 + yi + tf.getHeight() / 2);
+                                                    g.drawString("len " + i.data.length, 820 - xi, 25 + yi + tf.getHeight() / 2);
 
                                                 }
 
                                             }
                                             g.setColor(Color.RED);
-                                            g.drawString("song #" + i.payload2.song, 60, 25 + tf.getHeight() / 2);
-                                            g.drawString("seq #" + i.payload2.segment, 550, 25 + tf.getHeight() / 2);
-                                            g.drawString("len " + i.data.length, 975, 25 + tf.getHeight() / 2);
+                                            g.drawString("song #" + i.payload2.song, 10, 25 + tf.getHeight() / 2);
+                                            g.drawString("seq #" + i.payload2.segment, 460, 25 + tf.getHeight() / 2);
+                                            g.drawString("len " + i.data.length, 820, 25 + tf.getHeight() / 2);
 
                                             if (hm.get(lastSeg + "") == null)
                                                 hm.put(lastSeg + "", 0);

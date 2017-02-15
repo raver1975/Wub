@@ -61,8 +61,8 @@ public class BeautifulKMGSR {
     public static MultiGraph graph;
     public static int maxValue;
     private static SegmentSong firstSaved = null;
-    private static int width=1400;
-    private static int height=900;
+    private static int width=640;
+    private static int height=480;
 
 //    public static HashMap<String,Integer> hm;
 
