@@ -18,6 +18,8 @@ import java.io.OutputStream;
  */
 public final class JavaProcess {
 
+    private static boolean timerOn=true;
+
     public static void main(String[] args){
         JFrame jframe=new JFrame("exit");
         Button cancel=new Button("exit");
@@ -100,6 +102,22 @@ System.exit(0);
                 javaBin, "-cp", classpath, className);
 
         Process process = builder.start();
+        if (timerOn) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(5 * 60 * 1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if (process.isAlive()) {
+                        process.destroyForcibly();
+                    }
+
+                }
+            }).start();
+        }
        InputStream is=process.getInputStream();
         new Thread(new Runnable() {
             @Override
