@@ -43,7 +43,7 @@ public class BeautifulKMGSRandReduce {
     public static final float segmentsKept = .75f;
 //    public static int newSongLength = 2500;
 
-    public static boolean makeVideo = true;
+    public static boolean makeVideo = false;
     //    public static boolean exitonSongexit = true;
     private static boolean addTrackInfo = true;
     //public static int numClusters = -1;
@@ -264,8 +264,21 @@ public class BeautifulKMGSRandReduce {
                     e.printStackTrace();
                 }
 
-                int cnn=250000;
-                while (cnn-->0) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(BeautifulKMGSRandReduce.makeVideo ? (45 * 60 * 1000) : (5 * 60 * 1000));
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        Audio.stop();
+                        jframe.dispose();
+                    }
+                }).start();
+
+                int cnn = 250000;
+                while (cnn-- > 0) {
                     SegmentSong trans = map2.get(startNode[0]);
                     if (lastSong[0] != trans.song) {
                         tempSong[0] = SongManager.getRandom(trans.song);
@@ -339,6 +352,9 @@ public class BeautifulKMGSRandReduce {
 //                        } catch (IOException e) {
 //                            e.printStackTrace();
 //                        }
+
+
+
                 }
 
 //        while (iter.hasNext()){

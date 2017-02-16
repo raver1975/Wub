@@ -102,21 +102,6 @@ public final class JavaProcess {
                 javaBin,"-Xmx4000m", "-cp", classpath, className);
 
         Process process = builder.start();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(BeautifulKMGSRandReduce.makeVideo ? (45 * 60 * 1000) : (5 * 60 * 1000));
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if (process.isAlive()) {
-//                    process.destroyForcibly();
-                    jframe.dispose();
-                }
-
-            }
-        }).start();
         InputStream is = process.getInputStream();
         new Thread(new Runnable() {
             @Override
