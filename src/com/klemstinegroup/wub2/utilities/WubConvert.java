@@ -56,7 +56,7 @@ public class WubConvert {
 		
 		if (path.toString().toLowerCase().endsWith(".wub")) {
 			System.out.println("Converting:" + path);
-			AudioObject au = AudioObject.factory(path.toFile());
+			AudioObject au = AudioObject.factory(path.toFile(),null);
 			// for (Object bb:au.analysis.getMap().keySet()){
 			// System.out.println(bb);
 			//

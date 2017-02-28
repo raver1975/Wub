@@ -49,7 +49,7 @@ public class DirectoryConvert {
 	public static void process(Path path) {
 		if (path.toString().toLowerCase().endsWith(".mp3")) {
 			System.out.println("Converting:" + path);
-			AudioObject au = AudioObject.factory(path.toFile());
+			AudioObject au = AudioObject.factory(path.toFile(),null);
 			CentralCommand.remove(au);
 			au.mc.frame.dispose();
 			CentralCommand.ccn.nodes.clear();

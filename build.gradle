@@ -12,15 +12,30 @@ sourceSets {
 
 repositories {
     mavenCentral()
-    flatDir {
-        dirs 'libs/Algs4','libs/JGraphT'
-    }
 }
+
 configurations {
     all*.exclude group: 'org.bytedeco', module: 'javacpp-presets'
 }
 dependencies {
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.3'
+    compile group: 'org.apache.httpcomponents', name: 'httpcore', version: '4.4.6'
+    compile group: 'com.google.guava', name: 'guava', version: '11.0.2'
     compile group: 'org.bytedeco', name: 'javacv', version: '1.2'
+    compile group: 'net.sf.json-lib', name: 'json-lib', version: '2.4', classifier: 'jdk15'
+    compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
+    compile('se.michaelthelin.spotify:spotify-web-api-java:1.5.0')
     compile group: 'org.bytedeco.javacpp-presets', name: 'opencv', version: '3.1.0-1.2', classifier: 'windows-x86_64'
     compile group: 'org.bytedeco.javacpp-presets', name: 'ffmpeg', version: '3.1.2-1.2', classifier: 'windows-x86_64'
+    compile fileTree(include: ['*.jar'], dir: 'libs/Algs4')
+    compile fileTree(include: ['*.jar'], dir: 'libs/Graphstream')
+    compile fileTree(include: ['*.jar'], dir: 'libs/Guava')
+    compile fileTree(include: ['*.jar'], dir: 'libs/Hsqldb')
+    compile fileTree(include: ['*.jar'], dir: 'libs/JGraphT')
+    compile fileTree(include: ['*.jar'], dir: 'libs/MusicG')
+    compile fileTree(include: ['*.jar'], dir: 'libs/Sqljet')
+    compile fileTree(include: ['*.jar'], dir: 'libs/Tarsos')
+    compile fileTree(include: ['*.jar'], dir: 'libs/Weka')
+    compile fileTree(include: ['*.jar'], dir: 'libs/Wub')
+
 }

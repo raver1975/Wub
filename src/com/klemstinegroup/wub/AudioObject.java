@@ -69,7 +69,7 @@ public class AudioObject implements Serializable {
 	static String key = null;
 
 	public AudioObject(String file) {
-		this(new File(file));
+		this(new File(file),null);
 	}
 
 	public static AudioObject factory() {
@@ -84,16 +84,16 @@ public class AudioObject implements Serializable {
 				CentralCommand.loadPlay(chooser.getSelectedFile());
 				return null;
 			}
-			return factory(chooser.getSelectedFile());
+			return factory(chooser.getSelectedFile(),null);
 		}
 		return null;
 	}
 
 	public static AudioObject factory(String file) {
-		return factory(new File(file));
+		return factory(new File(file),null);
 	}
 
-	public static AudioObject factory(File file) {
+	public static AudioObject factory(File file,TrackAnalysis ta) {
 		File newFile = file;
 		String fileName = file.getName();
 		String extension = "";
@@ -123,7 +123,7 @@ public class AudioObject implements Serializable {
 				e.printStackTrace();
 			}
 		}
-		AudioObject au = new AudioObject(file);
+		AudioObject au = new AudioObject(file,ta);
 		try {
 			Serializer.store(au, newFile);
 		} catch (IOException e) {
@@ -134,7 +134,7 @@ public class AudioObject implements Serializable {
 		return au;
 	}
 
-	public AudioObject(final File file) {
+	public AudioObject(final File file,TrackAnalysis ta) {
 
 		this.file = file;
 		convert(file);
@@ -164,7 +164,7 @@ public class AudioObject implements Serializable {
 		dialog.setAlwaysOnTop(false);
 		dialog.setVisible(true);
 		msgLabel.setBackground(panel.getBackground());
-		analysis = echoNest(file);
+		if (ta!=null)analysis = ta;
 		init(true);
 		dialog.dispose();
 	}
@@ -246,7 +246,7 @@ public class AudioObject implements Serializable {
 		}).start();
 	}
 
-	public TrackAnalysis echoNest(File file) {
+	/*public TrackAnalysis echoNest(File file) {
 		int cnt = 0;
 		while (cnt < 5) {
 			try {
@@ -273,7 +273,7 @@ public class AudioObject implements Serializable {
 			}
 		}
 		return analysis;
-	}
+	}*/
 
 	public void convert(File soundFile) {
 		AudioInputStream mp3InputStream = null;
@@ -390,189 +390,6 @@ public class AudioObject implements Serializable {
 	//
 	// }
 
-	public void createReverseAudioObject() {
-		boolean savePause = pause;
-		pause = true;
-		final FakeTrackAnalysis fa = new FakeTrackAnalysis();
-
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		LinkedList<Interval> ll = new LinkedList<Interval>();
-		if (currentlyPlaying != null) {
-			ll.add(currentlyPlaying);
-		}
-		ll.addAll(queue);
-		int bytecnt = 0;
-		if (ll.size() == 0 && mc.hovering != null)
-			ll.add(mc.hovering);
-		if (ll.size() == 0)
-			return;
-		for (Interval i : ll) {
-			i.newbytestart = bytecnt;
-			baos.write(data, i.startBytes, i.lengthBytes);
-			bytecnt += i.lengthBytes;
-
-		}
-		byte[] by = baos.toByteArray();
-		fa.setDuration(convertByteToTime(by.length));
-		Collections.sort(ll, new Comparator<Interval>() {
-
-			@Override
-			public int compare(Interval o1, Interval o2) {
-				return Double.compare(o2.startBytes, o1.startBytes);
-			}
-
-		});
-		for (Interval i : ll) {
-
-			for (Segment e : analysis.getSegments()) {
-				if (e.getStart() >= i.te.getStart() - 1d && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + 1d) {
-					Segment f = null;
-					try {
-						f = (Segment) Serializer.deepclone(e);
-					} catch (ClassNotFoundException e1) {
-						e1.printStackTrace();
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-					f.start = fa.duration - (e.getStart() - i.te.getStart() + convertByteToTime(i.newbytestart));
-					fa.segments.add(f);
-				}
-			}
-
-			HashMap<String, Double> hm1 = new HashMap<String, Double>();
-			hm1.put("start", 0d);
-			hm1.put("duration", fa.getDuration());
-			hm1.put("confidence", 1d);
-			fa.sections.add(new TimedEvent(hm1));
-
-			for (TimedEvent e : analysis.getBars()) {
-				if (e.getStart() >= i.te.getStart() - tolerance && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + tolerance) {
-					HashMap<String, Double> hm = new HashMap<String, Double>();
-					hm.put("start", fa.duration - (e.getStart() - i.te.getStart() + convertByteToTime(i.newbytestart)));
-					hm.put("duration", e.getDuration());
-					hm.put("confidence", e.getConfidence());
-					fa.bars.add(new TimedEvent(hm));
-				}
-			}
-
-			for (TimedEvent e : analysis.getBeats()) {
-				if (e.getStart() >= i.te.getStart() - tolerance && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + tolerance) {
-					HashMap<String, Double> hm = new HashMap<String, Double>();
-					hm.put("start", fa.duration - (e.getStart() - i.te.getStart() + convertByteToTime(i.newbytestart)));
-					hm.put("duration", e.getDuration());
-					hm.put("confidence", e.getConfidence());
-					fa.beats.add(new TimedEvent(hm));
-				}
-			}
-
-			for (TimedEvent e : analysis.getTatums()) {
-				if (e.getStart() >= i.te.getStart() - tolerance && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + tolerance) {
-					HashMap<String, Double> hm = new HashMap<String, Double>();
-					hm.put("start", fa.duration - (e.getStart() - i.te.getStart() + convertByteToTime(i.newbytestart)));
-					hm.put("duration", e.getDuration());
-					hm.put("confidence", e.getConfidence());
-					fa.tatums.add(new TimedEvent(hm));
-				}
-			}
-
-			Collections.sort(fa.segments, new Comparator<TimedEvent>() {
-				@Override
-				public int compare(TimedEvent o1, TimedEvent o2) {
-					return Double.compare(o1.getStart(), o2.getStart());
-				}
-
-			});
-
-			Collections.sort(fa.bars, new Comparator<TimedEvent>() {
-				@Override
-				public int compare(TimedEvent o1, TimedEvent o2) {
-					return Double.compare(o1.getStart(), o2.getStart());
-				}
-
-			});
-			Collections.sort(fa.beats, new Comparator<TimedEvent>() {
-				@Override
-				public int compare(TimedEvent o1, TimedEvent o2) {
-					return Double.compare(o1.getStart(), o2.getStart());
-				}
-
-			});
-			Collections.sort(fa.tatums, new Comparator<TimedEvent>() {
-				@Override
-				public int compare(TimedEvent o1, TimedEvent o2) {
-					return Double.compare(o1.getStart(), o2.getStart());
-				}
-
-			});
-		}
-
-		reverse(by);
-
-		String fileName = file.getAbsolutePath();
-		String extension = "";
-		String filePrefix = "";
-		int i = fileName.lastIndexOf('.');
-		if (i > 0) {
-			extension = fileName.substring(i + 1);
-			filePrefix = fileName.substring(0, i);
-		}
-		String filePrefix1 = null;
-		do {
-			filecount++;
-			filePrefix1 = filePrefix + String.format("%03d", filecount);
-		} while (new File(filePrefix1 + ".wav").exists());
-		ByteArrayInputStream bais = new ByteArrayInputStream(by);
-		long length = (long) (by.length / audioFormat.getFrameSize());
-		AudioInputStream audioInputStreamTemp = new AudioInputStream(bais, audioFormat, length);
-		WaveFileWriter writer = new WaveFileWriter();
-		FileOutputStream fos;
-		try {
-			fos = new FileOutputStream(filePrefix1 + ".wav");
-			writer.write(audioInputStreamTemp, AudioFileFormat.Type.WAVE, fos);
-			fos.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		final File newFile = new File(filePrefix1 + ".wav");
-		final File newFileWub = new File(filePrefix1 + ".wub");
-		final AudioObject ao = new AudioObject(by, fa, newFile);
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				TrackAnalysis analysis1 = echoNest(newFile);
-				if (analysis1.getSegments().size() > 0) {
-					fa.segments.clear();
-					fa.segments.addAll(analysis1.getSegments());
-				}
-				if (analysis1.getSections().size() > 0) {
-					fa.sections.clear();
-					fa.sections.addAll(analysis1.getSections());
-				}
-				if (analysis1.getBars().size() > 0) {
-					fa.bars.clear();
-					fa.bars.addAll(analysis1.getBars());
-				}
-				if (analysis1.getBeats().size() > 0) {
-					fa.beats.clear();
-					fa.beats.addAll(analysis1.getBeats());
-				}
-				if (analysis1.getTatums().size() > 0) {
-					fa.tatums.clear();
-					fa.tatums.addAll(analysis1.getTatums());
-				}
-				ao.mc.paint1();
-				try {
-					Serializer.store(ao, newFileWub);
-
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}).start();
-		pause = savePause;
-
-	}
 
 	public void reverse(byte[] array) {
 		if (array == null) {
@@ -595,7 +412,7 @@ public class AudioObject implements Serializable {
 		}
 	}
 
-	public void createAudioObject() {
+	public void createAudioObject(TrackAnalysis ta) {
 		boolean savePause = pause;
 		pause = true;
 		final FakeTrackAnalysis fa = new FakeTrackAnalysis();
@@ -744,7 +561,7 @@ public class AudioObject implements Serializable {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				TrackAnalysis analysis1 = echoNest(newFile);
+				TrackAnalysis analysis1 = ta;
 				if (analysis1.getSegments().size() > 0) {
 					fa.segments.clear();
 					fa.segments.addAll(analysis1.getSegments());

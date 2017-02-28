@@ -23,7 +23,7 @@ public class TrackAnalysis implements Serializable {
 	private ArrayList<Segment> segments;
 
 	@SuppressWarnings("unchecked")
-	protected TrackAnalysis(Map map) {
+    public TrackAnalysis(Map map) {
 		this.map = map;
 		this.mq = new MQuery(map);
 	}
