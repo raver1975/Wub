@@ -36,8 +36,10 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
 import com.echonest.api.v4.Segment;
+import com.echonest.api.v4.Song;
 import com.echonest.api.v4.TimedEvent;
 import com.echonest.api.v4.TrackAnalysis;
+import com.klemstinegroup.wub3.BeautifulKMGSRandReducefromAudioObject;
 
 public class MusicCanvas extends JComponent implements MouseListener, MouseMotionListener, ComponentListener, KeyListener, MouseWheelListener {
 
@@ -777,7 +779,13 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 //		}
 		else if (e.getKeyCode() == KeyEvent.VK_F2) {
 			Collections.reverse((LinkedList) au.queue);
-		} else if (e.getKeyCode() == KeyEvent.VK_UP) {
+
+		}
+		else if (e.getKeyCode() == KeyEvent.VK_M) {
+			BeautifulKMGSRandReducefromAudioObject.bkrrao(new com.klemstinegroup.wub2.system.Song(au.data,analysis));
+		}
+
+		else if (e.getKeyCode() == KeyEvent.VK_UP) {
 			jbar.setValue(jbar.getValue() + jbar.getUnitIncrement());
 		} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 			jbar.setValue(jbar.getValue() - jbar.getUnitIncrement());

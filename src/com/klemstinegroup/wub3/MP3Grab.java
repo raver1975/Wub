@@ -11,6 +11,7 @@ import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.net.URL;
 import java.util.Scanner;
+import java.util.concurrent.*;
 
 /**
  * Created by Paul on 2/25/2017.
@@ -35,8 +36,28 @@ public class MP3Grab {
     public static void main(String[] args) {
         if (args.length == 0) {
             System.out.println("Please enter a spotify track url:");
-            Scanner sc = new Scanner(System.in);
-            String s = sc.nextLine();
+            Scanner scanner = new Scanner(System.in);
+            FutureTask<String> readNextLine = new FutureTask<String>(() -> {
+                return scanner.nextLine();
+            });
+
+            ExecutorService executor = Executors.newFixedThreadPool(2);
+            executor.execute(readNextLine);
+
+            String s=null;
+            try {
+                s = readNextLine.get(15000, TimeUnit.MILLISECONDS);
+
+            } catch (TimeoutException e) {
+                // handle time out
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
+
+
             if (s != null && s.length() > 0) spotifyId = s;
         }
         if (args.length == 1) {

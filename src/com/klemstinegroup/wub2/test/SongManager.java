@@ -30,7 +30,7 @@ import java.util.HashMap;
  */
 public class SongManager {
 
-    static String directory;
+    public static String directory;
     static {
         for (int i=0;i<26;i++) {
             String s=(char)('a'+i)+":\\wubdata\\";
