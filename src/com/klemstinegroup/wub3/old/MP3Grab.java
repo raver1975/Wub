@@ -1,7 +1,7 @@
-package com.klemstinegroup.wub3;
+package com.klemstinegroup.wub3.old;
 
 import com.echonest.api.v4.TrackAnalysis;
-import com.klemstinegroup.wub.AudioObject;
+import com.klemstinegroup.wub3.SpotifyUtils;
 import com.wrapper.spotify.models.Track;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -10,13 +10,12 @@ import org.json.simple.parser.ParseException;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.net.URL;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
+import java.util.Scanner;
 
 /**
  * Created by Paul on 2/25/2017.
  */
-public class Main2 {
+public class MP3Grab {
 
     //    public static String artist="Zomboy";
 //    public static String song="Like a bitch";
@@ -28,12 +27,31 @@ public class Main2 {
     }
 
 
-    public Main2() throws IOException, ParseException {
+    public MP3Grab() throws IOException, ParseException {
     }
 
-    public static void main(String[] args) throws IOException, ParseException, NoSuchAlgorithmException, KeyManagementException {
+    public static void main(String[] args)  {
+        if (args.length == 0) {
+            System.out.println("Please enter a spotify track url:");
+            Scanner sc = new Scanner(System.in);
+            String s=sc.nextLine();
+            if (s!=null&&s.length()>0)spotifyId = s;
+        }
+        if (args.length == 1) {
+            spotifyId = args[0];
+        }
+        spotifyId = spotifyId.replace("spotify:track:", "");
+        System.out.println(spotifyId);
+        try {
+            new MP3Grab().grab();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
+    public void grab() throws Exception {
         Track track = SpotifyUtils.getTrack(spotifyId);
+        System.out.println("got track info");
         JSONObject js1 = SpotifyUtils.getDownloadList(track.getArtists().get(0).getName() + " " + track.getName());
         JSONArray js2 = (JSONArray) js1.get("data");
         System.out.println(js2.toString());
@@ -52,7 +70,7 @@ public class Main2 {
                 System.out.println("Downloading song from: " + downloadUrl);
                 HttpsURLConnection conn = SpotifyUtils.getConnection(new URL(downloadUrl));
                 InputStream is = conn.getInputStream();
-                String outputFile = "mp3/" + spotifyId + "-" + i + ".mp3";
+                String outputFile = track.getArtists().get(0).getName()+"-"+track.getName()+ "-" + i + ".mp3";
 
                 File file = new File(outputFile);
                 if (!file.exists()) {
@@ -66,6 +84,7 @@ public class Main2 {
                     while ((len = is.read(buffer)) > 0) {
                         System.out.print("*");
                         if (cnt++ > 40) {
+                            tot++;
                             System.out.println();
 
                             System.out.print(tot + ":");
@@ -78,7 +97,7 @@ public class Main2 {
 
                 }
                 System.out.println("\nDone!");
-                   AudioObject au = AudioObject.factory(new File(outputFile),ta);
+                //   AudioObject au = AudioObject.factory(new File(outputFile),ta);
                 //  AudioObject ao=new AudioObject(new File(outputFile),ta);
 
             } else {

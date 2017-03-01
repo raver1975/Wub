@@ -1,6 +1,9 @@
-package com.klemstinegroup.wub3;
+package com.klemstinegroup.wub3.old;
 
 import com.echonest.api.v4.TrackAnalysis;
+import com.klemstinegroup.wub3.Credentials;
+import com.klemstinegroup.wub3.InvalidCertificateHostVerifier;
+import com.klemstinegroup.wub3.InvalidCertificateTrustManager;
 import com.wrapper.spotify.Api;
 import com.wrapper.spotify.exceptions.WebApiException;
 import com.wrapper.spotify.methods.TrackRequest;

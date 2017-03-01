@@ -1,6 +1,7 @@
 apply plugin: 'idea'
 apply plugin: 'java'
 apply plugin: 'application'
+apply plugin: 'gradle-one-jar'
 
 sourceSets {
     main {
@@ -12,6 +13,15 @@ sourceSets {
 
 repositories {
     mavenCentral()
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.github.rholder:gradle-one-jar:1.0.4'
+    }
 }
 
 configurations {
@@ -38,4 +48,9 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs/Weka')
     compile fileTree(include: ['*.jar'], dir: 'libs/Wub')
 
+}
+
+task compilejar(type: OneJar) {
+    mainClass = 'wub2.SpotifyToWub'
+    archiveName = 'Wub.jar'
 }

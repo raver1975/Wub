@@ -172,25 +172,3 @@ public class SpotifyUtils {
 }
 
 
-/**
- * ignore invalid Https certificate from OPAM
- * <p>see http://javaskeleton.blogspot.com.br/2011/01/avoiding-sunsecurityvalidatorvalidatore.html
- */
-class InvalidCertificateTrustManager implements X509TrustManager {
-    public X509Certificate[] getAcceptedIssuers() {
-        return null;
-    }
-
-    public void checkServerTrusted(X509Certificate[] paramArrayOfX509Certificate, String paramString) throws CertificateException {
-
-    }
-
-    public void checkClientTrusted(X509Certificate[] paramArrayOfX509Certificate, String paramString) throws CertificateException {
-    }
-}
-
-class InvalidCertificateHostVerifier implements HostnameVerifier {
-    public boolean verify(String paramString, SSLSession paramSSLSession) {
-        return true;
-    }
-}
