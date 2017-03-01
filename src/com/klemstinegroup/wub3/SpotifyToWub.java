@@ -68,7 +68,7 @@ public class SpotifyToWub {
                 InputStream is = conn.getInputStream();
 //                String outputFile = track.getArtists().get(0).getName()+"-"+track.getName()+"-"+name+ "-" + i + ".mp3";
                 String outputFile = "mp3/"+artist+"-"+title+ "-" + i + ".mp3";
-                outputFile=outputFile.replaceAll("[^a-zA-Z0-9.-]", "_");
+                outputFile=outputFile.replaceAll("[^a-zA-Z0-9.-/]", "_");
                 File file = new File(outputFile);
                 if (!file.exists()) {
                     OutputStream outstream = new FileOutputStream(file);

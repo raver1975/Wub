@@ -3,6 +3,8 @@ apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'gradle-one-jar'
 
+sourceCompatibility = 1.8
+
 sourceSets {
     main {
         java {
@@ -39,7 +41,6 @@ dependencies {
     compile group: 'org.bytedeco.javacpp-presets', name: 'ffmpeg', version: '3.1.2-1.2', classifier: 'windows-x86_64'
     compile fileTree(include: ['*.jar'], dir: 'libs/Algs4')
     compile fileTree(include: ['*.jar'], dir: 'libs/Graphstream')
-    compile fileTree(include: ['*.jar'], dir: 'libs/Guava')
     compile fileTree(include: ['*.jar'], dir: 'libs/Hsqldb')
     compile fileTree(include: ['*.jar'], dir: 'libs/JGraphT')
     compile fileTree(include: ['*.jar'], dir: 'libs/MusicG')
@@ -50,7 +51,7 @@ dependencies {
 
 }
 
-task compilejar(type: OneJar) {
-    mainClass = 'wub2.SpotifyToWub'
-    archiveName = 'Wub.jar'
+task compileMP3Grab(type: OneJar) {
+    mainClass = 'com.klemstinegroup.wub3.MP3Grab'
+    archiveName = 'Mp3Grab.jar'
 }

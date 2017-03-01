@@ -1,7 +1,6 @@
-package com.klemstinegroup.wub3.old;
+package com.klemstinegroup.wub3;
 
 import com.echonest.api.v4.TrackAnalysis;
-import com.klemstinegroup.wub3.SpotifyUtils;
 import com.wrapper.spotify.models.Track;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
