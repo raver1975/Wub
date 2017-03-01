@@ -1,6 +1,7 @@
 package com.klemstinegroup.wub3;
 
 import com.echonest.api.v4.TrackAnalysis;
+import com.klemstinegroup.wub.AudioObject;
 import com.wrapper.spotify.models.Track;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -25,16 +26,18 @@ public class MP3Grab {
         spotifyId = spotifyId.replace("spotify:track:", "");
     }
 
+    private boolean firstSongIsLoadedYet;
+
 
     public MP3Grab() throws IOException, ParseException {
     }
 
-    public static void main(String[] args)  {
+    public static void main(String[] args) {
         if (args.length == 0) {
             System.out.println("Please enter a spotify track url:");
             Scanner sc = new Scanner(System.in);
-            String s=sc.nextLine();
-            if (s!=null&&s.length()>0)spotifyId = s;
+            String s = sc.nextLine();
+            if (s != null && s.length() > 0) spotifyId = s;
         }
         if (args.length == 1) {
             spotifyId = args[0];
@@ -69,7 +72,7 @@ public class MP3Grab {
                 System.out.println("Downloading song from: " + downloadUrl);
                 HttpsURLConnection conn = SpotifyUtils.getConnection(new URL(downloadUrl));
                 InputStream is = conn.getInputStream();
-                String outputFile = track.getArtists().get(0).getName()+"-"+track.getName()+ "-" + i + ".mp3";
+                String outputFile = track.getArtists().get(0).getName() + "-" + track.getName() + "-" + i + ".mp3";
 
                 File file = new File(outputFile);
                 if (!file.exists()) {
@@ -96,9 +99,11 @@ public class MP3Grab {
 
                 }
                 System.out.println("\nDone!");
-                //   AudioObject au = AudioObject.factory(new File(outputFile),ta);
-                //  AudioObject ao=new AudioObject(new File(outputFile),ta);
-
+                if (!firstSongIsLoadedYet) {
+                    firstSongIsLoadedYet = true;
+                    System.out.println(outputFile);
+                    AudioObject au = AudioObject.factory(new File(outputFile), ta);
+                }
             } else {
                 System.out.println(duration + "\t" + data.toString());
             }

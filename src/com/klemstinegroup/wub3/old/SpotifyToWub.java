@@ -1,7 +1,8 @@
-package com.klemstinegroup.wub3;
+package com.klemstinegroup.wub3.old;
 
 import com.echonest.api.v4.TrackAnalysis;
 import com.klemstinegroup.wub.AudioObject;
+import com.klemstinegroup.wub3.SpotifyUtils;
 import com.wrapper.spotify.models.Track;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -51,7 +52,10 @@ public class SpotifyToWub {
         System.out.println(js2.toString());
 
         TrackAnalysis ta = SpotifyUtils.getAnalysis(id);
-
+//        File dir=new File("mp3");
+//        if (!dir.exists()||dir.isDirectory()){
+//            dir.mkdir();
+//        }
         System.out.println("Searching for duration " + ta.getDuration());
         for (int i = 0; i < js2.size(); i++) {
             JSONObject data = (JSONObject) js2.get(i);

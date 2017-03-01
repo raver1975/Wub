@@ -109,7 +109,8 @@ public class AudioObject implements Serializable {
 			return null;
 		}
 		if (!extension.equals("wub")) {
-			newFile = new File(file.getParent() + File.separator + filePrefix + ".wub");
+			System.out.println("****"+file.getParent());
+			newFile = new File((file.getParent()==null?"":(file.getParent() + File.separator)) + filePrefix + ".wub");
 			System.out.println(newFile.getAbsolutePath());
 		}
 		if (newFile.exists()) {
