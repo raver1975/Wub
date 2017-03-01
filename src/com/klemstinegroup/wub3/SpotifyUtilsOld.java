@@ -3,19 +3,17 @@ package com.klemstinegroup.wub3;
 import com.echonest.api.v4.TrackAnalysis;
 import com.wrapper.spotify.Api;
 import com.wrapper.spotify.exceptions.WebApiException;
-import com.wrapper.spotify.methods.AddTrackToPlaylistRequest;
-import com.wrapper.spotify.methods.PlaylistCreationRequest;
 import com.wrapper.spotify.methods.TrackRequest;
 import com.wrapper.spotify.methods.authentication.ClientCredentialsGrantRequest;
 import com.wrapper.spotify.models.AuthorizationCodeCredentials;
-import com.wrapper.spotify.models.ClientCredentials;
-import com.wrapper.spotify.models.Playlist;
 import com.wrapper.spotify.models.Track;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import javax.net.ssl.*;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
 import java.awt.*;
 import java.io.*;
 import java.net.*;
@@ -23,9 +21,6 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -33,33 +28,88 @@ import java.util.Scanner;
 /**
  * Created by Paul on 2/23/2017.
  */
-public class SpotifyUtils {
+public class SpotifyUtilsOld {
 
     private static Api api;
     private static String token;
 
     public static void main(String[] args) {
-        new SpotifyUtils();
+        new SpotifyUtilsOld();
     }
 
     public static void setAccessToken() {
-        System.out.println("Logging into spotify");
+
         api = Api.builder()
                 .clientId(Credentials.clientId)
                 .clientSecret(Credentials.clientSecret)
                 .redirectURI("http://127.0.0.1:8002")
                 .build();
-        final ClientCredentialsGrantRequest request = api.clientCredentialsGrant().build();
+        /* Create a request object. */
+        final ClientCredentialsGrantRequest request1 = api.clientCredentialsGrant().build();
+        /* Set the necessary scopes that the application will need from the user */
+        final List<String> scopes = Arrays.asList("playlist-read-private", "playlist-modify-private", "playlist-modify-public");
+        final String state = "someExpectedStateString";
+
+        String authorizeURL = api.createAuthorizeURL(scopes, state);
+        System.out.println(authorizeURL);
+        if (Desktop.isDesktopSupported()) {
+            try {
+                Desktop.getDesktop().browse(new URI(authorizeURL));
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }
+        Scanner keyboard = new Scanner(System.in);
+//        String code=keyboard.nextLine();
+        String code = null;
         try {
-            ClientCredentials clientCredentials = request.get();
-            token=clientCredentials.getAccessToken();
-            api.setAccessToken(token);
+            ServerSocket serverSocket = new ServerSocket(8002);
+            Socket socket = serverSocket.accept();
+            BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            String code1 = br.readLine();
+            code = code1.substring(code1.indexOf("=") + 1, code1.indexOf("&"));
+            System.out.println("Message: " + code);
+            System.out.println("Message: " + code1);
+
+            br.close();
+            serverSocket.close();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            AuthorizationCodeCredentials authorizationCodeCredentials = api.authorizationCodeGrant(code).build().get();
+            System.out.println("Successfully retrieved an access token! " + authorizationCodeCredentials.getAccessToken());
+            System.out.println("The access token expires in " + authorizationCodeCredentials.getExpiresIn() + " seconds");
+            System.out.println("Luckily, I can refresh it using this refresh token! " + authorizationCodeCredentials.getRefreshToken());
+            api.setAccessToken(authorizationCodeCredentials.getAccessToken());
+            api.setRefreshToken(authorizationCodeCredentials.getRefreshToken());
+            token = authorizationCodeCredentials.getAccessToken();
+
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (WebApiException e) {
             e.printStackTrace();
         }
+
+/* Use the request object to make the request, either asynchronously (getAsync) or synchronously (get) */
+//        try {
+//            ClientCredentials response = request1.get();
+//
+//            token = response.getAccessToken();
+//            api.setAccessToken(token);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (WebApiException e) {
+//            e.printStackTrace();
+//        }
     }
+
     protected static void downloadProcess(String s) {
 
         System.out.println(s);
@@ -172,25 +222,3 @@ public class SpotifyUtils {
 }
 
 
-/**
- * ignore invalid Https certificate from OPAM
- * <p>see http://javaskeleton.blogspot.com.br/2011/01/avoiding-sunsecurityvalidatorvalidatore.html
- */
-class InvalidCertificateTrustManager implements X509TrustManager {
-    public X509Certificate[] getAcceptedIssuers() {
-        return null;
-    }
-
-    public void checkServerTrusted(X509Certificate[] paramArrayOfX509Certificate, String paramString) throws CertificateException {
-
-    }
-
-    public void checkClientTrusted(X509Certificate[] paramArrayOfX509Certificate, String paramString) throws CertificateException {
-    }
-}
-
-class InvalidCertificateHostVerifier implements HostnameVerifier {
-    public boolean verify(String paramString, SSLSession paramSSLSession) {
-        return true;
-    }
-}
