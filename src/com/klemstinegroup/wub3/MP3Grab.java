@@ -44,7 +44,7 @@ public class MP3Grab {
             ExecutorService executor = Executors.newFixedThreadPool(2);
             executor.execute(readNextLine);
 
-            String s=null;
+            String s = null;
             try {
                 s = readNextLine.get(15000, TimeUnit.MILLISECONDS);
 
@@ -55,7 +55,6 @@ public class MP3Grab {
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-
 
 
             if (s != null && s.length() > 0) spotifyId = s;
@@ -83,50 +82,54 @@ public class MP3Grab {
 
         System.out.println("Searching for duration " + ta.getDuration());
         for (int i = 0; i < js2.size(); i++) {
-            JSONObject data = (JSONObject) js2.get(i);
-            long duration = (Long) data.get("duration");
-            if (Math.abs((int) duration - (double) ta.getDuration()) < 2d) {
-                System.out.println("*****" + duration + "\t" + data.toString());
+            try {
+                JSONObject data = (JSONObject) js2.get(i);
+                long duration = (Long) data.get("duration");
+                if (Math.abs((int) duration - (double) ta.getDuration()) < 2d) {
+                    System.out.println("*****" + duration + "\t" + data.toString());
 
-                String downloadUrl = (String) data.get("download");
+                    String downloadUrl = (String) data.get("download");
 
-                System.out.println("Downloading song from: " + downloadUrl);
-                HttpsURLConnection conn = SpotifyUtils.getConnection(new URL(downloadUrl));
-                InputStream is = conn.getInputStream();
-                String outputFile = track.getArtists().get(0).getName() + "-" + track.getName() + "-" + i + ".mp3";
+                    System.out.println("Downloading song from: " + downloadUrl);
+                    HttpsURLConnection conn = SpotifyUtils.getConnection(new URL(downloadUrl));
+                    InputStream is = conn.getInputStream();
+                    String outputFile = track.getArtists().get(0).getName() + "-" + track.getName() + "-" + i + ".mp3";
 
-                File file = new File(outputFile);
-                if (!file.exists()) {
-                    OutputStream outstream = new FileOutputStream(file);
-                    byte[] buffer = new byte[4096];
-                    int len;
-                    int tot = 0;
-                    int cnt = 0;
-                    int rows = 0;
-                    System.out.print(tot + ":");
-                    while ((len = is.read(buffer)) > 0) {
-                        System.out.print("*");
-                        if (cnt++ > 40) {
-                            tot++;
-                            System.out.println();
+                    File file = new File(outputFile);
+                    if (!file.exists()) {
+                        OutputStream outstream = new FileOutputStream(file);
+                        byte[] buffer = new byte[4096];
+                        int len;
+                        int tot = 0;
+                        int cnt = 0;
+                        int rows = 0;
+                        System.out.print(tot + ":");
+                        while ((len = is.read(buffer)) > 0) {
+                            System.out.print("*");
+                            if (cnt++ > 40) {
+                                tot++;
+                                System.out.println();
 
-                            System.out.print(tot + ":");
-                            cnt = 0;
+                                System.out.print(tot + ":");
+                                cnt = 0;
 
+                            }
+                            outstream.write(buffer, 0, len);
                         }
-                        outstream.write(buffer, 0, len);
-                    }
-                    outstream.close();
+                        outstream.close();
 
+                    }
+                    System.out.println("\nDone!");
+                    if (!firstSongIsLoadedYet) {
+                        firstSongIsLoadedYet = true;
+                        System.out.println(outputFile);
+                        AudioObject au = AudioObject.factory(new File(outputFile), ta);
+                    }
+                } else {
+                    System.out.println(duration + "\t" + data.toString());
                 }
-                System.out.println("\nDone!");
-                if (!firstSongIsLoadedYet) {
-                    firstSongIsLoadedYet = true;
-                    System.out.println(outputFile);
-                    AudioObject au = AudioObject.factory(new File(outputFile), ta);
-                }
-            } else {
-                System.out.println(duration + "\t" + data.toString());
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
