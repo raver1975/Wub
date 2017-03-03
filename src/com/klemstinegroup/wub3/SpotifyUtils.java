@@ -76,7 +76,7 @@ public class SpotifyUtils {
     }
 
     public static JSONObject getDownloadList(String q) {
-        String urlString = "https://datmusic.xyz/search?q=" + q.toString();
+        String urlString = "https://datmusic.xyz/search?q=" + URLEncoder.encode(q.toString());
         System.out.println(urlString);
         URL url=null;
         try {
