@@ -3,10 +3,8 @@ package com.klemstinegroup.wub2.system;
 import com.echonest.api.v4.Segment;
 import com.klemstinegroup.wub.ColorHelper;
 //import com.klemstinegroup.wub2.test.BeautifulKMGSR;
-import com.klemstinegroup.wub2.test.BeautifulKMGSRandReduce;
-import com.klemstinegroup.wub2.test.ImagePanel;
-import com.klemstinegroup.wub2.test.SongManager;
-import com.klemstinegroup.wub2.test.Test3;
+import com.klemstinegroup.wub2.test.*;
+//import com.klemstinegroup.wub2.test.SongManager;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -27,6 +25,8 @@ import javax.sound.sampled.SourceDataLine;
 import javax.swing.*;
 
 import com.klemstinegroup.wub.*;
+import com.klemstinegroup.wub3.BeautifulKMGSRandReducefromAudioObject;
+import com.klemstinegroup.wub3.MP3Grab;
 import com.softsynth.jsyn.view.SoundTester;
 import org.bytedeco.javacv.*;
 import org.bytedeco.javacv.Frame;
@@ -77,8 +77,8 @@ public class Audio {
         } catch (AWTException e) {
             e.printStackTrace();
         }
-        if (BeautifulKMGSRandReduce.makeVideo) {
-            recorder = new FFmpegFrameRecorder(new File("out" + BeautifulKMGSRandReduce.playback[0] + ".mp4"), jframe.getWidth(), jframe.getHeight(), 2);
+        if (BeautifulKMGSRandReducefromAudioObject.makeVideo) {
+            recorder = new FFmpegFrameRecorder(new File("out" + MP3Grab.spotifyId + ".mp4"), jframe.getWidth(), jframe.getHeight(), 2);
             recorder.setSampleRate((int) audioFormat.getSampleRate());
             recorder.setAudioChannels(2);
             recorder.setInterleaved(true);
@@ -149,15 +149,18 @@ public class Audio {
                                         double normd = ((double) norm / (double) numClusters) * 100d;
 
 //                                tf.invalidate();
-
-                                        if (cachedSong == null || cachedSongIndex != i.payload.song) {
-                                            cachedSong = SongManager.getRandom(i.payload.song);
-                                            cachedSongIndex = i.payload.song;
+                                        if (i.payload.song == -1) {
+                                            cachedSong = BeautifulKMGSRandReducefromAudioObject.firstSong;
+                                            cachedSongIndex = -1;
+                                        } else {
+                                            if (cachedSong == null || cachedSongIndex != i.payload.song) {
+                                                cachedSong = SongManager.getRandom(i.payload.song);
+                                                cachedSongIndex = i.payload.song;
+                                            }
                                         }
-
                                         if (i.payload != null && i.payload.segment > -1) {
 
-                                            if (BeautifulKMGSRandReduce.makeVideo) {
+                                            if (BeautifulKMGSRandReducefromAudioObject.makeVideo) {
                                                 BufferedImage grab = robot.createScreenCapture(jframe.getBounds());
 //                                                System.out.println(grab.getWidth()+","+grab.getHeight());
                                                 Frame frame = converter.convert(grab);
@@ -169,7 +172,7 @@ public class Audio {
                                                 frame.samples = new Buffer[]{(Buffer) sBuff};
                                                 frame.timestamp = start;
                                                 start += 500 * (int) (1000 * (i.data.length / 2) / audioFormat.getSampleRate());
-                                                if (BeautifulKMGSRandReduce.makeVideo) try {
+                                                if (BeautifulKMGSRandReducefromAudioObject.makeVideo) try {
                                                     recorder.record(frame, AV_PIX_FMT_ARGB);
                                                     recorder.setTimestamp(start);
                                                 } catch (FrameRecorder.Exception e) {
@@ -200,23 +203,25 @@ public class Audio {
                                             g.drawString("song #" + i.payload2.song, 10, 25 + tf.getHeight() / 2);
                                             g.drawString("seq #" + i.payload2.segment, 460, 25 + tf.getHeight() / 2);
                                             g.drawString("len " + i.data.length, 820, 25 + tf.getHeight() / 2);
-
-                                            if (hm.get(lastSeg + "") == null)
+                                            int val = 0;
+                                            if (hm.get(lastSeg + "") == null) {
                                                 hm.put(lastSeg + "", 0);
-                                            int val = hm.get(lastSeg + "") + 1;
+                                            } else {
+                                                val = hm.get(lastSeg + "") + 1;
+                                            }
                                             hm.put(lastSeg + "", val);
                                             lastSeg = i.payload.segment;
-                                            Color color = ColorHelper.numberToColorPercentage((double) val / (double) BeautifulKMGSRandReduce.maxValue);
+                                            Color color = ColorHelper.numberToColorPercentage((double) val / (double) BeautifulKMGSRandReducefromAudioObject.maxValue);
                                             if (lastNode1 != null) {
                                                 lastNode1.addAttribute("ui.style", "fill-color: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ");");
                                                 lastNode1.addAttribute("ui.style", "size: 15;");
                                             }
-//                                            if (lastNode2 != null) {
-//                                                lastNode2.addAttribute("ui.style", "fill-color: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ");");
-//                                                lastNode2.addAttribute("ui.style", "size: 15;");
-//                                            }
-                                            if (BeautifulKMGSRandReduce.graph != null) {
-                                                Node node1 = BeautifulKMGSRandReduce.graph.getNode(i.payload.hashCode() + "");
+                                            if (lastNode2 != null) {
+                                                lastNode2.addAttribute("ui.style", "fill-color: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ");");
+                                                lastNode2.addAttribute("ui.style", "size: 15;");
+                                            }
+                                            if (BeautifulKMGSRandReducefromAudioObject.graph != null) {
+                                                Node node1 = BeautifulKMGSRandReducefromAudioObject.graph.getNode(i.payload.hashCode() + "");
                                                 if (node1 != null) {
                                                     node1.addAttribute("ui.style", "fill-color: rgb(255,0,0);");
                                                     node1.addAttribute("ui.style", "size:25;");
@@ -224,7 +229,7 @@ public class Audio {
                                                 lastNode1 = node1;
 
                                                 if (i.payload2 != i.payload) {
-                                                    Node node2 = BeautifulKMGSRandReduce.graph.getNode(i.payload2.hashCode() + "");
+                                                    Node node2 = BeautifulKMGSRandReducefromAudioObject.graph.getNode(i.payload2.hashCode() + "");
                                                     if (node2 != null) {
                                                         //node2.addAttribute("ui.style", "fill-color: rgb(255,0,0);");
                                                         node2.addAttribute("ui.style", "size:20;");
@@ -315,7 +320,7 @@ public class Audio {
     }
 
     public static void stop() {
-        if (BeautifulKMGSRandReduce.makeVideo) {
+        if (BeautifulKMGSRandReducefromAudioObject.makeVideo) {
             try {
                 Audio.recorder.stop();
             } catch (FrameRecorder.Exception e) {

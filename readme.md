@@ -1,13 +1,17 @@
 Wub
 ==============
+* UPDATE:(3/3/2017)
+----
+Wub lives again! Analyzes and downloads any song from Spotify.
 
-Spotify has bought Echo Nest, and shut down the song analysis api, rendering most of this software useless. I've got a collection of songs analyzed for personal use.
 
-Break a song into beats and bars using Echo Nest, mix and match the pieces, and save the results as wave files.
+* Break a song into beats and bars using Echo Nest, mix and match the pieces, and save the results as wave files.
 
+* Have the computer compose a song remix for you. Just press "m" for the magic!
+----
 [![Wub Video](http://img.youtube.com/vi/ZnIUgSVO0Cs/0.jpg)](http://www.youtube.com/watch?v=ZnIUgSVO0Cs)<br>
 [*Youtube Video*](http://www.youtube.com/watch?v=ZnIUgSVO0Cs)
-
+----
 
 Wub it in!
 ----

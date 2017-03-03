@@ -756,12 +756,13 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 		if (e.getKeyChar() == ' ')
 			au.pause = !au.pause;
 		else if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+
 			AudioObject.factory();
-		else if (e.getKeyCode() == KeyEvent.VK_F1)
+		else if (e.getKeyCode() == KeyEvent.VK_L)
 			au.loop = !au.loop;
-		else if (e.getKeyCode() == KeyEvent.VK_F3)
+		else if (e.getKeyCode() == KeyEvent.VK_S)
 			au.breakPlay = true;
-		else if (e.getKeyCode() == KeyEvent.VK_F4) {
+		else if (e.getKeyCode() == KeyEvent.VK_C) {
 			au.queue.clear();
 			au.breakPlay = true;
 		} else if (e.getKeyCode() == KeyEvent.VK_F5) {
@@ -777,7 +778,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 //			au.pause=true;
 //			au.breakPlay=true;
 //		}
-		else if (e.getKeyCode() == KeyEvent.VK_F2) {
+		else if (e.getKeyCode() == KeyEvent.VK_R) {
 			Collections.reverse((LinkedList) au.queue);
 
 		}
@@ -793,7 +794,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 			js.getHorizontalScrollBar().setValue(js.getHorizontalScrollBar().getValue() - js.getHorizontalScrollBar().getUnitIncrement());
 		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			js.getHorizontalScrollBar().setValue(js.getHorizontalScrollBar().getValue() + js.getHorizontalScrollBar().getUnitIncrement());
-		} else if (e.getKeyCode() == KeyEvent.VK_F8) {
+		} else if (e.getKeyCode() == KeyEvent.VK_F6) {
 			Node n = new Node(new Rectangle2D.Double(0, 0, 1, 40), this.au);
 			CentralCommand.addRectangle(n);
 
