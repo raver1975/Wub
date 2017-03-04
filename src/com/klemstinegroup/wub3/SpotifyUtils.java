@@ -26,7 +26,7 @@ public class SpotifyUtils {
 
     private static String HOST ="https://datmusic.xyz";
     private static boolean localHost=false;
-    static{
+   static{
         if (localHost)HOST="http://127.0.0.1:8000";
     }
     private static Api api;

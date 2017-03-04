@@ -32,7 +32,7 @@ public class BeautifulKMGSRandReducefromAudioObject {
     public static final int decreaseClustersBy = 15;// * playback.length;
     public static final float segmentsKept = .75f;
     public static boolean makeVideo = false;
-    private static boolean addTrackInfo = true;
+    private static boolean addTrackInfo = false;
 
     static float pitchFactor = 17f;
     static float timbreFactor = 17f;

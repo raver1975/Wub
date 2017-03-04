@@ -12,6 +12,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
 import java.util.Scanner;
 import java.util.concurrent.*;
 
@@ -20,7 +21,8 @@ import java.util.concurrent.*;
  */
 public class MP3Grab {
 
-public static String spotifyId="spotify:track:5ghIJDpPoe3CfHMGu71E6T";
+    private static String queryOverride = null;
+    public static String spotifyId = "spotify:track:5ghIJDpPoe3CfHMGu71E6T";
 //    public static String spotifyId = "spotify:track:6z0zyXMTA0ans4OoTAO2Bm";
 
     static {
@@ -74,7 +76,12 @@ public static String spotifyId="spotify:track:5ghIJDpPoe3CfHMGu71E6T";
     public void grab() throws Exception {
         Track track = SpotifyUtils.getTrack(spotifyId);
         System.out.println("got track info");
-        JSONObject js1 = SpotifyUtils.getDownloadList(track.getArtists().get(0).getName() + " " + track.getName());
+        JSONObject js1 = null;
+        if (queryOverride != null && !queryOverride.isEmpty()) {
+            js1=SpotifyUtils.getDownloadList(queryOverride);
+        } else {
+            js1=SpotifyUtils.getDownloadList(track.getArtists().get(0).getName() + " " + track.getName());
+        }
         JSONArray js2 = (JSONArray) js1.get("data");
         System.out.println(js2.toString());
 
@@ -89,7 +96,7 @@ public static String spotifyId="spotify:track:5ghIJDpPoe3CfHMGu71E6T";
                     System.out.println("*****" + duration + "\t" + data.toString());
 
                     String downloadUrl = (String) data.get("download");
-                    downloadUrl=downloadUrl.replaceAll("127.0.0.1","127.0.0.1:8000");
+                    downloadUrl = downloadUrl.replaceAll("127.0.0.1", "127.0.0.1:8000");
                     System.out.println("Downloading song from: " + downloadUrl);
 
                     URLConnection conn = SpotifyUtils.getConnection(new URL(downloadUrl));
