@@ -9,7 +9,9 @@ import org.json.simple.parser.ParseException;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Scanner;
 import java.util.concurrent.*;
 
@@ -18,10 +20,8 @@ import java.util.concurrent.*;
  */
 public class MP3Grab {
 
-    //    public static String artist="Zomboy";
-//    public static String song="Like a bitch";
-//public static String spotifyId="4xbRzFWVo7etLSA0ZCBMQG";
-    public static String spotifyId = "spotify:track:6z0zyXMTA0ans4OoTAO2Bm";
+public static String spotifyId="spotify:track:5ghIJDpPoe3CfHMGu71E6T";
+//    public static String spotifyId = "spotify:track:6z0zyXMTA0ans4OoTAO2Bm";
 
     static {
         spotifyId = spotifyId.replace("spotify:track:", "");
@@ -89,9 +89,10 @@ public class MP3Grab {
                     System.out.println("*****" + duration + "\t" + data.toString());
 
                     String downloadUrl = (String) data.get("download");
-
+                    downloadUrl=downloadUrl.replaceAll("127.0.0.1","127.0.0.1:8000");
                     System.out.println("Downloading song from: " + downloadUrl);
-                    HttpsURLConnection conn = SpotifyUtils.getConnection(new URL(downloadUrl));
+
+                    URLConnection conn = SpotifyUtils.getConnection(new URL(downloadUrl));
                     InputStream is = conn.getInputStream();
                     String outputFile = track.getArtists().get(0).getName() + "-" + track.getName() + "-" + i + ".mp3";
 

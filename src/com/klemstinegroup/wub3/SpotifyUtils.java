@@ -24,6 +24,11 @@ import java.security.NoSuchAlgorithmException;
  */
 public class SpotifyUtils {
 
+    private static String HOST ="https://datmusic.xyz";
+    private static boolean localHost=false;
+    static{
+        if (localHost)HOST="http://127.0.0.1:8000";
+    }
     private static Api api;
     private static String token;
 
@@ -57,26 +62,28 @@ public class SpotifyUtils {
 
 
 
-        public static HttpsURLConnection getConnection( URL url) throws KeyManagementException, NoSuchAlgorithmException, IOException{
+        public static URLConnection getConnection( URL url) throws KeyManagementException, NoSuchAlgorithmException, IOException{
             SSLContext ctx = SSLContext.getInstance("TLS");
                 ctx.init(null, new TrustManager[] { new InvalidCertificateTrustManager() }, null);
             SSLContext.setDefault(ctx);
 
 //            String authEncoded = Base64.encodeBytes(authStr.getBytes());
 
-            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+            URLConnection connection =null;
+            if (localHost)connection=(HttpURLConnection) url.openConnection();
+            else connection=(HttpsURLConnection)url.openConnection();
 
-            connection.setRequestMethod("GET");
+            //connection.setRequestMethod("GET");
             connection.setDoOutput(true);
 //            connection.setRequestProperty("Authorization", "Basic " + authEncoded);
 
-                connection.setHostnameVerifier(new InvalidCertificateHostVerifier());
+               if (!localHost) ((HttpsURLConnection)connection).setHostnameVerifier(new InvalidCertificateHostVerifier());
 
             return connection;
     }
 
     public static JSONObject getDownloadList(String q) {
-        String urlString = "https://datmusic.xyz/search?q=" + URLEncoder.encode(q.toString());
+        String urlString = HOST+"/search?q=" + URLEncoder.encode(q.toString());
         System.out.println(urlString);
         URL url=null;
         try {
@@ -85,7 +92,9 @@ public class SpotifyUtils {
             e.printStackTrace();
         }
         try {
-            InputStream is =getConnection(url).getInputStream();
+
+            URLConnection connection = getConnection(url);
+            InputStream is =connection.getInputStream();
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             String line = null;
             String s = "";

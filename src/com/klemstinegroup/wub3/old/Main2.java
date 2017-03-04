@@ -10,7 +10,9 @@ import org.json.simple.parser.ParseException;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
@@ -51,7 +53,7 @@ public class Main2 {
                 String downloadUrl = (String) data.get("download");
 
                 System.out.println("Downloading song from: " + downloadUrl);
-                HttpsURLConnection conn = SpotifyUtils.getConnection(new URL(downloadUrl));
+                URLConnection conn = SpotifyUtils.getConnection(new URL(downloadUrl));
                 InputStream is = conn.getInputStream();
                 String outputFile = "mp3/" + spotifyId + "-" + i + ".mp3";
 
