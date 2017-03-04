@@ -24,11 +24,13 @@ import java.security.NoSuchAlgorithmException;
  */
 public class SpotifyUtils {
 
-    private static String HOST ="https://datmusic.xyz";
-    private static boolean localHost=false;
-   static{
-        if (localHost)HOST="http://127.0.0.1:8000";
+    private static String HOST = "https://datmusic.xyz";
+    private static boolean localHost = false;
+
+    static {
+        if (localHost) HOST = "http://127.0.0.1:8000";
     }
+
     private static Api api;
     private static String token;
 
@@ -46,7 +48,7 @@ public class SpotifyUtils {
         final ClientCredentialsGrantRequest request = api.clientCredentialsGrant().build();
         try {
             ClientCredentials clientCredentials = request.get();
-            token=clientCredentials.getAccessToken();
+            token = clientCredentials.getAccessToken();
             api.setAccessToken(token);
         } catch (IOException e) {
             e.printStackTrace();
@@ -54,47 +56,48 @@ public class SpotifyUtils {
             e.printStackTrace();
         }
     }
-    protected static void downloadProcess(String s) {
 
-        System.out.println(s);
-
+    public static String getRandomID() {
+        if (token == null) setAccessToken();
+        Track track = RandomSong.getRandom(api);
+        System.out.println(track.getArtists().get(0).getName() + "\t" + track.getName());
+        System.out.println(track.getId());
+        return track.getId();
     }
 
-
-
-        public static URLConnection getConnection( URL url) throws KeyManagementException, NoSuchAlgorithmException, IOException{
-            SSLContext ctx = SSLContext.getInstance("TLS");
-                ctx.init(null, new TrustManager[] { new InvalidCertificateTrustManager() }, null);
-            SSLContext.setDefault(ctx);
+    public static URLConnection getConnection(URL url) throws KeyManagementException, NoSuchAlgorithmException, IOException {
+        SSLContext ctx = SSLContext.getInstance("TLS");
+        ctx.init(null, new TrustManager[]{new InvalidCertificateTrustManager()}, null);
+        SSLContext.setDefault(ctx);
 
 //            String authEncoded = Base64.encodeBytes(authStr.getBytes());
 
-            URLConnection connection =null;
-            if (localHost)connection=(HttpURLConnection) url.openConnection();
-            else connection=(HttpsURLConnection)url.openConnection();
+        URLConnection connection = null;
+        if (localHost) connection = (HttpURLConnection) url.openConnection();
+        else connection = (HttpsURLConnection) url.openConnection();
 
-            //connection.setRequestMethod("GET");
-            connection.setDoOutput(true);
+        //connection.setRequestMethod("GET");
+        connection.setDoOutput(true);
 //            connection.setRequestProperty("Authorization", "Basic " + authEncoded);
 
-               if (!localHost) ((HttpsURLConnection)connection).setHostnameVerifier(new InvalidCertificateHostVerifier());
+        if (!localHost) ((HttpsURLConnection) connection).setHostnameVerifier(new InvalidCertificateHostVerifier());
 
-            return connection;
+        return connection;
     }
 
     public static JSONObject getDownloadList(String q) {
-        String urlString = HOST+"/search?q=" + URLEncoder.encode(q.toString());
+        String urlString = HOST + "/search?q=" + URLEncoder.encode(q.toString());
         System.out.println(urlString);
-        URL url=null;
+        URL url = null;
         try {
-            url=new URL(urlString);
+            url = new URL(urlString);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
         try {
 
             URLConnection connection = getConnection(url);
-            InputStream is =connection.getInputStream();
+            InputStream is = connection.getInputStream();
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             String line = null;
             String s = "";

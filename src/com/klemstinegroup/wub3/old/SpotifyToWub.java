@@ -2,6 +2,7 @@ package com.klemstinegroup.wub3.old;
 
 import com.echonest.api.v4.TrackAnalysis;
 import com.klemstinegroup.wub.AudioObject;
+import com.klemstinegroup.wub3.RandomSong;
 import com.klemstinegroup.wub3.SpotifyUtils;
 import com.wrapper.spotify.models.Track;
 import org.json.simple.JSONArray;
@@ -27,6 +28,7 @@ public class SpotifyToWub {
 
     public static void main(String[] args)  {
         String spotifyId = "spotify:track:6z0zyXMTA0ans4OoTAO2Bm";
+
         if (args.length == 0) {
             System.out.println("Please enter a spotify track url:");
             Scanner sc = new Scanner(System.in);

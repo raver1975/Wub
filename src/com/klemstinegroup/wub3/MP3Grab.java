@@ -37,7 +37,7 @@ public class MP3Grab {
 
     public static void main(String[] args) {
         if (args.length == 0) {
-            System.out.println("Please enter a spotify track url:");
+            System.out.println("Please enter a spotify track url or wub file:");
             Scanner scanner = new Scanner(System.in);
             FutureTask<String> readNextLine = new FutureTask<String>(() -> {
                 return scanner.nextLine();
@@ -48,7 +48,14 @@ public class MP3Grab {
 
             String s = null;
             try {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        spotifyId=SpotifyUtils.getRandomID();
+                    }
+                }).start();
                 s = readNextLine.get(15000, TimeUnit.MILLISECONDS);
+
 
             } catch (TimeoutException e) {
                 // handle time out
@@ -58,6 +65,11 @@ public class MP3Grab {
                 e.printStackTrace();
             }
 
+
+            if (new File(s).exists()){
+                AudioObject au = AudioObject.factory(s);
+                return;
+            }
 
             if (s != null && s.length() > 0) spotifyId = s;
         }
