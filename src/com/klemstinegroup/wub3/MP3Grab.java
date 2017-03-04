@@ -66,7 +66,7 @@ public class MP3Grab {
             }
 
 
-            if (new File(s).exists()){
+            if (s!=null &&new File(s).exists()){
                 AudioObject au = AudioObject.factory(s);
                 return;
             }
