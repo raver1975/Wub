@@ -12,7 +12,7 @@ public class Settings {
     public static final float segmentsKept = .75f;
 
     static float pitchFactor = 17f;
-    static float timbreFactor = 17f;
+    static float timbreFactor = 25f;
     static float loudFactor = 70f;
     static float durationFactor = 90f;
 
