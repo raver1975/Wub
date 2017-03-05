@@ -549,7 +549,7 @@ public class Shell extends Thread {
                 break;
             }
         }
-        return (String[]) words.toArray(new String[words.size()]);
+        return words.toArray(new String[words.size()]);
     }
 
     // inherited from thread.

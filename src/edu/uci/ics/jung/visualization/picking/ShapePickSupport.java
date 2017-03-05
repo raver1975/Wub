@@ -59,7 +59,7 @@ public class ShapePickSupport<V, E> implements GraphElementAccessor<V,E> {
      * </ul>
 	 *
 	 */
-	public static enum Style { LOWEST, CENTERED, HIGHEST };
+	public enum Style { LOWEST, CENTERED, HIGHEST }
 
     protected float pickSize;
     
@@ -362,7 +362,7 @@ public class ShapePickSupport<V, E> implements GraphElementAccessor<V,E> {
     		Collection<V> unfiltered = layout.getGraph().getVertices();
     		Collection<V> filtered = new LinkedHashSet<V>();
     		for(V v : unfiltered) {
-    			if(isVertexRendered(Context.<Graph<V,E>,V>getInstance(layout.getGraph(),v))) {
+    			if(isVertexRendered(Context.getInstance(layout.getGraph(),v))) {
     				filtered.add(v);
     			}
     		}
@@ -377,7 +377,7 @@ public class ShapePickSupport<V, E> implements GraphElementAccessor<V,E> {
     		Collection<E> unfiltered = layout.getGraph().getEdges();
     		Collection<E> filtered = new LinkedHashSet<E>();
     		for(E e : unfiltered) {
-    			if(isEdgeRendered(Context.<Graph<V,E>,E>getInstance(layout.getGraph(),e))) {
+    			if(isEdgeRendered(Context.getInstance(layout.getGraph(),e))) {
     				filtered.add(e);
     			}
     		}
@@ -446,8 +446,8 @@ public class ShapePickSupport<V, E> implements GraphElementAccessor<V,E> {
 		V v1 = endpoints.getFirst();
 		V v2 = endpoints.getSecond();
 		boolean endpointsTest = vertexIncludePredicate == null ||
-			(vertexIncludePredicate.apply(Context.<Graph<V,E>,V>getInstance(g,v1)) && 
-					vertexIncludePredicate.apply(Context.<Graph<V,E>,V>getInstance(g,v2)));
+			(vertexIncludePredicate.apply(Context.getInstance(g,v1)) &&
+					vertexIncludePredicate.apply(Context.getInstance(g,v2)));
 		return edgeTest && endpointsTest;
 	}
 

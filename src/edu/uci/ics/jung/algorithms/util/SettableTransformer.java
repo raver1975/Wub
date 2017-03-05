@@ -27,5 +27,5 @@ public interface SettableTransformer<I, O> extends Function<I, O>
      * @param input the value whose output value is being specified
      * @param output the output value for {@code input}
      */
-    public void set(I input, O output);
+    void set(I input, O output);
 }

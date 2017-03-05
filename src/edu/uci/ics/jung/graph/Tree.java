@@ -32,14 +32,14 @@ public interface Tree<V,E> extends Forest<V,E>
      * from <code>vertex</code> to the root of this tree
      * @see #getHeight()
      */
-    public int getDepth(V vertex);
+    int getDepth(V vertex);
     
     /**
      * Returns the maximum depth in this tree.
      * @return the maximum depth in this tree
      * @see #getDepth(Object)
      */
-    public int getHeight();
+    int getHeight();
     
     /**
      * Returns the root of this tree.
@@ -48,5 +48,5 @@ public interface Tree<V,E> extends Forest<V,E>
      * vertex depth is measured.
      * @return the root of this tree
      */
-    public V getRoot();
+    V getRoot();
 }

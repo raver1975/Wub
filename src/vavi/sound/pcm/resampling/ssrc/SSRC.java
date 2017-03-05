@@ -1700,7 +1700,6 @@ public class SSRC {
                     f = (1 / (double) 0x7fffffff) * s;
                     break;
             }
-            ;
 
             if (fpi.available() == 0) {
 //            if (fpi.position() == fpi.size()) {

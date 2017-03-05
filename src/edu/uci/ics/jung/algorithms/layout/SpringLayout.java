@@ -60,7 +60,7 @@ public class SpringLayout<V, E> extends AbstractLayout<V,E> implements Iterative
     */
     @SuppressWarnings("unchecked")
     public SpringLayout(Graph<V,E> g) {
-        this(g, (Function<E,Integer>)Functions.<Integer>constant(30));
+        this(g, Functions.constant(30));
     }
 
     /**

@@ -207,7 +207,7 @@ public class DijkstraDistance<V,E> implements Distance<V>
                         }
                         else
                         {
-                            double w_dist = ((Double)sd.estimatedDistances.get(w)).doubleValue();
+                            double w_dist = sd.estimatedDistances.get(w).doubleValue();
                             if (new_dist < w_dist) // update tentative distance & path for w
                                 sd.update(w, e, new_dist);
                         }
@@ -237,7 +237,7 @@ public class DijkstraDistance<V,E> implements Distance<V>
     protected Collection<E> getEdgesToCheck(V v)
     {
         if (g instanceof Graph)
-            return ((Graph<V,E>)g).getOutEdges(v);
+            return g.getOutEdges(v);
         else
             return g.getIncidentEdges(v);
 

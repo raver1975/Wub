@@ -143,7 +143,7 @@ public class TreeCollapseDemo extends JApplet {
         vv.getRenderContext().setVertexShapeTransformer(new ClusterVertexShapeFunction<String>());
         // add a listener for ToolTips
         vv.setVertexToolTipTransformer(new ToStringLabeller());
-        vv.getRenderContext().setArrowFillPaintTransformer(Functions.<Paint>constant(Color.lightGray));
+        vv.getRenderContext().setArrowFillPaintTransformer(Functions.constant(Color.lightGray));
         rings = new Rings();
 
         Container content = getContentPane();

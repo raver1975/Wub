@@ -73,7 +73,7 @@ public class AddNodeDemo extends javax.swing.JApplet {
     public void init() {
 
         //create a graph
-    	Graph<Number,Number> ig = Graphs.<Number,Number>synchronizedDirectedGraph(new DirectedSparseMultigraph<Number,Number>());
+    	Graph<Number,Number> ig = Graphs.synchronizedDirectedGraph(new DirectedSparseMultigraph<Number,Number>());
 
         ObservableGraph<Number,Number> og = new ObservableGraph<Number,Number>(ig);
         og.addGraphEventListener(new GraphEventListener<Number,Number>() {
@@ -111,7 +111,7 @@ public class AddNodeDemo extends javax.swing.JApplet {
                 if (switchLayout.getText().indexOf("Spring") > 0) {
                     switchLayout.setText("Switch to FRLayout");
                     layout = new SpringLayout<Number,Number>(g,
-                        Functions.<Integer>constant(EDGE_LENGTH));
+                        Functions.constant(EDGE_LENGTH));
                     layout.setSize(d);
                     vv.getModel().setGraphLayout(layout, d);
                 } else {

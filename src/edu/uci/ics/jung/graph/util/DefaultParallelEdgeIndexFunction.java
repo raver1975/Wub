@@ -57,7 +57,7 @@ public class DefaultParallelEdgeIndexFunction<V,E> implements EdgeIndexFunction<
     public int getIndex(Graph<V, E> graph, E e)
     {
     	
-        Integer index = edge_index.get(Context.<Graph<V,E>,E>getInstance(graph,e));
+        Integer index = edge_index.get(Context.getInstance(graph,e));
         	//edge_index.get(e);
         if(index == null) {
         	Pair<V> endpoints = graph.getEndpoints(e);
@@ -92,11 +92,11 @@ public class DefaultParallelEdgeIndexFunction<V,E> implements EdgeIndexFunction<
     	int count=0;
     	for(E other : commonEdgeSet) {
     		if(e.equals(other) == false) {
-    			edge_index.put(Context.<Graph<V,E>,E>getInstance(graph,other), count);
+    			edge_index.put(Context.getInstance(graph,other), count);
     			count++;
     		}
     	}
-    	edge_index.put(Context.<Graph<V,E>,E>getInstance(graph,e), count);
+    	edge_index.put(Context.getInstance(graph,e), count);
     	return count;
      }
     
@@ -111,11 +111,11 @@ public class DefaultParallelEdgeIndexFunction<V,E> implements EdgeIndexFunction<
     	int count=0;
     	for(E other : commonEdgeSet) {
     		if(e.equals(other) == false) {
-    			edge_index.put(Context.<Graph<V,E>,E>getInstance(graph,other), count);
+    			edge_index.put(Context.getInstance(graph,other), count);
     			count++;
     		}
     	}
-    	edge_index.put(Context.<Graph<V,E>,E>getInstance(graph,e), count);
+    	edge_index.put(Context.getInstance(graph,e), count);
     	return count;
     }
 

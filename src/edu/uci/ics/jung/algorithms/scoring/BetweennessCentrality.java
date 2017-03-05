@@ -48,7 +48,7 @@ public class BetweennessCentrality<V, E>
 	public BetweennessCentrality(Graph<V, E> graph) 
 	{
 		initialize(graph);
-		computeBetweenness(new LinkedList<V>(), Functions.<Integer>constant(1));
+		computeBetweenness(new LinkedList<V>(), Functions.constant(1));
 	}
 
 	/**

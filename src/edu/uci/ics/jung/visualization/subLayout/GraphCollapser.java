@@ -28,7 +28,7 @@ public class GraphCollapser  {
     }
     
     Graph createGraph() throws InstantiationException, IllegalAccessException {
-        return (Graph)originalGraph.getClass().newInstance();
+        return originalGraph.getClass().newInstance();
     }
     
     public Graph collapse(Graph inGraph, Graph clusterGraph) {

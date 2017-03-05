@@ -76,7 +76,7 @@ abstract public class AbstractLayout<V, E> implements Layout<V,E> {
     protected AbstractLayout(Graph<V,E> graph, Function<V,Point2D> initializer) {
 		this.graph = graph;
 		Function<V, Point2D> chain = 
-			Functions.<V,Point2D,Point2D>compose(
+			Functions.compose(
 					new Function<Point2D,Point2D>(){
 						public Point2D apply(Point2D p) {
 							return (Point2D)p.clone();
@@ -109,7 +109,7 @@ abstract public class AbstractLayout<V, E> implements Layout<V,E> {
     protected AbstractLayout(Graph<V,E> graph, Function<V,Point2D> initializer, Dimension size) {
 		this.graph = graph;
 		Function<V, Point2D> chain = 
-			Functions.<V,Point2D,Point2D>compose(
+			Functions.compose(
 					new Function<Point2D,Point2D>(){
 						public Point2D apply(Point2D p) {
 							return (Point2D)p.clone();
@@ -172,7 +172,7 @@ abstract public class AbstractLayout<V, E> implements Layout<V,E> {
     		throw new IllegalArgumentException("Layout cannot be initialized with itself");
     	}
 		Function<V, Point2D> chain = 
-			Functions.<V,Point2D,Point2D>compose(
+			Functions.compose(
 					new Function<Point2D,Point2D>(){
 						public Point2D apply(Point2D p) {
 							return (Point2D)p.clone();

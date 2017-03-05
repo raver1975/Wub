@@ -29,12 +29,12 @@ public interface KPartiteGraph<V,E> extends Graph<V,E>
      * @param partition <code>Predicate</code> which defines a partition
      * @return all vertices satisfying <code>partition</code>
      */
-    public Collection<V> getVertices(Predicate<V> partition);
+    Collection<V> getVertices(Predicate<V> partition);
 
     /**
      * Returns the set of <code>Predicate</code> instances which define this graph's partitions.
      * @return the set of <code>Predicate</code> instances which define this graph's partitions
      */
-    public Collection<Predicate<V>> getPartitions();
+    Collection<Predicate<V>> getPartitions();
 
 }

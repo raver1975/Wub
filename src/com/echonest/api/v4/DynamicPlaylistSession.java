@@ -25,7 +25,7 @@ public class DynamicPlaylistSession {
 
         ban_artist, favorite_artist, ban_song, skip_song, favorite_song,
         play_song, unplay_song, rate_song
-    };
+    }
 
     DynamicPlaylistSession(EchoNestAPI en, String sessionID) {
         this.en = en;

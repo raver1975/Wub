@@ -23,7 +23,7 @@ import com.google.common.base.Function;
  */
 public interface SettableVertexShapeTransformer<V> extends Function<V,Shape>
 {
-    public abstract void setSizeTransformer(Function<V,Integer> vsf);
+    void setSizeTransformer(Function<V, Integer> vsf);
 
-    public abstract void setAspectRatioTransformer(Function<V,Float> varf);
+    void setAspectRatioTransformer(Function<V, Float> varf);
 }

@@ -192,7 +192,7 @@ public interface VisualizationServer<V, E> {
      * an interface for the preRender and postRender
      */
     interface Paintable {
-        public void paint(Graphics g);
-        public boolean useTransform();
+        void paint(Graphics g);
+        boolean useTransform();
     }
 }

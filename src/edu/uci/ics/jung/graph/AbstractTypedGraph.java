@@ -60,7 +60,7 @@ public abstract class AbstractTypedGraph<V,E> extends AbstractGraph<V, E>
 	 */
 	public Collection<E> getEdges(EdgeType edge_type) 
 	{
-		return hasEqualEdgeType(edge_type) ? this.getEdges() : Collections.<E>emptySet();
+		return hasEqualEdgeType(edge_type) ? this.getEdges() : Collections.emptySet();
 	}
 
 	/**

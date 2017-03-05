@@ -248,10 +248,7 @@ public class DAGLayout<V, E> extends SpringLayout<V,E> {
 	 */
 	@Override
 	public boolean done() {
-		if (stoppingIncrements && incrementsLeft == 0)
-			return true;
-		else
-			return false;
+        return stoppingIncrements && incrementsLeft == 0;
 	}
 
 	/**

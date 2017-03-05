@@ -28,7 +28,7 @@ public class BasicEdgeLabelRenderer<V,E> implements Renderer.EdgeLabel<V,E> {
 	
 	public Component prepareRenderer(RenderContext<V,E> rc, EdgeLabelRenderer graphLabelRenderer, Object value, 
 			boolean isSelected, E edge) {
-		return rc.getEdgeLabelRenderer().<E>getEdgeLabelRendererComponent(rc.getScreenDevice(), value, 
+		return rc.getEdgeLabelRenderer().getEdgeLabelRendererComponent(rc.getScreenDevice(), value,
 				rc.getEdgeFontTransformer().apply(edge), isSelected, edge);
 	}
     
@@ -40,11 +40,11 @@ public class BasicEdgeLabelRenderer<V,E> implements Renderer.EdgeLabel<V,E> {
         Pair<V> endpoints = graph.getEndpoints(e);
         V v1 = endpoints.getFirst();
         V v2 = endpoints.getSecond();
-        if (!rc.getEdgeIncludePredicate().apply(Context.<Graph<V,E>,E>getInstance(graph,e)))
+        if (!rc.getEdgeIncludePredicate().apply(Context.getInstance(graph,e)))
             return;
 
-        if (!rc.getVertexIncludePredicate().apply(Context.<Graph<V,E>,V>getInstance(graph,v1)) || 
-            !rc.getVertexIncludePredicate().apply(Context.<Graph<V,E>,V>getInstance(graph,v2)))
+        if (!rc.getVertexIncludePredicate().apply(Context.getInstance(graph,v1)) ||
+            !rc.getVertexIncludePredicate().apply(Context.getInstance(graph,v2)))
             return;
 
         Point2D p1 = layout.apply(v1);
@@ -61,7 +61,7 @@ public class BasicEdgeLabelRenderer<V,E> implements Renderer.EdgeLabel<V,E> {
         float distY = y2 - y1;
         double totalLength = Math.sqrt(distX * distX + distY * distY);
 
-        double closeness = rc.getEdgeLabelClosenessTransformer().apply(Context.<Graph<V,E>,E>getInstance(graph, e)).doubleValue();
+        double closeness = rc.getEdgeLabelClosenessTransformer().apply(Context.getInstance(graph, e)).doubleValue();
 
         int posX = (int) (x1 + (closeness) * distX);
         int posY = (int) (y1 + (closeness) * distY);

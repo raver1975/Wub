@@ -30,8 +30,8 @@ public class SequentialParity extends DataSet {
 	}
 	
 	private static List<DataSequence> generateSequences(Random r, int total_sequences, int max_sequence_length) {
-		List<DataSequence> result = new ArrayList<>();;
-		for (int s = 0; s < total_sequences; s++) {
+		List<DataSequence> result = new ArrayList<>();
+        for (int s = 0; s < total_sequences; s++) {
 			DataSequence sequence = new DataSequence();
 			int tot = 0;
 			int tempSequenceLength = r.nextInt(max_sequence_length) + 1;

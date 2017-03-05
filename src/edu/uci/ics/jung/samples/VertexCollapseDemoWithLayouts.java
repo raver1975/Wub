@@ -398,7 +398,7 @@ public class VertexCollapseDemoWithLayouts extends JApplet {
             try
             {
                 Constructor<? extends Layout> constructor = layoutC
-                        .getConstructor(new Class[] {Graph.class});
+                        .getConstructor(Graph.class);
                 Object o = constructor.newInstance(constructorArgs);
                 Layout l = (Layout) o;
                 l.setInitializer(vv.getGraphLayout());

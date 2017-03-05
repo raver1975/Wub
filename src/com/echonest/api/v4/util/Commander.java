@@ -285,9 +285,9 @@ public class Commander {
 
                     if (usePost) {
                         if (urc instanceof HttpURLConnection) {
-                            ((HttpURLConnection) urc).setRequestMethod("POST");
-                            ((HttpURLConnection) urc).setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                            ((HttpURLConnection) urc).setRequestProperty("Content-Length", "0");
+                            urc.setRequestMethod("POST");
+                            urc.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                            urc.setRequestProperty("Content-Length", "0");
                         }
                     }
 
@@ -499,7 +499,7 @@ public class Commander {
             try {
                 JSONObject jobj = (JSONObject) parser.parse(resultString);
                 checkStatus(jobj);
-                return (Map) jobj;
+                return jobj;
             } catch (ParseException e) {
                 throw new IOException("Parse Exception", e);
             }

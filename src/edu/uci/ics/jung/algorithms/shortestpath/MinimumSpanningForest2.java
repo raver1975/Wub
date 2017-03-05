@@ -29,7 +29,7 @@ public class MinimumSpanningForest2<V,E> {
 	protected Graph<V,E> graph;
 	protected Forest<V,E> forest;
 	protected Function<? super E,Double> weights = 
-		(Function<E,Double>)Functions.<Double>constant(1.0);
+		(Function<E,Double>)Functions.constant(1.0);
 	
 	/**
 	 * Create a Forest from the supplied Graph and supplied Supplier, which

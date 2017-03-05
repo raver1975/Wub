@@ -24,5 +24,5 @@ public interface EdgeScorer<E, S>
      * @param e the edge whose score is requested
      * @return the algorithm's score for this edge
      */
-    public S getEdgeScore(E e);
+    S getEdgeScore(E e);
 }

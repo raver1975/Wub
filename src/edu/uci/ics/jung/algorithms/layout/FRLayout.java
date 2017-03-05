@@ -294,11 +294,7 @@ public class FRLayout<V, E> extends AbstractLayout<V, E> implements IterativeCon
      * @return true once the current iteration has passed the maximum count.
      */
     public boolean done() {
-        if (currentIteration > mMaxIterations || temperature < 1.0/max_dimension)
-        {
-            return true;
-        }
-        return false;
+        return currentIteration > mMaxIterations || temperature < 1.0 / max_dimension;
     }
 
     @SuppressWarnings("serial")

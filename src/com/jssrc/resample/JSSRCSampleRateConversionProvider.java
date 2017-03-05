@@ -121,11 +121,7 @@ public class JSSRCSampleRateConversionProvider extends FormatConversionProvider 
                 ((inputSampleSize == 16) && (outputSampleSize == 16))) {
 
             if ((inputEncoding == AudioFormat.Encoding.PCM_SIGNED)) {
-                if ((outputEncoding == AudioFormat.Encoding.PCM_SIGNED)) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return (outputEncoding == AudioFormat.Encoding.PCM_SIGNED);
             } else {
                 return false;
             }

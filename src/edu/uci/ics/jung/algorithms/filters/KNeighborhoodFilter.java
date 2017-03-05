@@ -35,7 +35,7 @@ public class KNeighborhoodFilter<V,E> implements Filter<V,E> {
 	/**
 	 * The type of edge to follow for defining the neighborhood.
 	 */
-	public static enum EdgeType { IN_OUT, IN, OUT }
+	public enum EdgeType { IN_OUT, IN, OUT }
 	private Set<V> rootNodes;
 	private int radiusK;
 	private EdgeType edgeType;

@@ -138,9 +138,9 @@ public class GraphZoomScrollPaneDemo {
         				Color.white, Color.blue,
         				vv.getPickedVertexState(),
         				false));
-        vv.getRenderContext().setEdgeDrawPaintTransformer(Functions.<Paint>constant(Color.lightGray));
-        vv.getRenderContext().setArrowFillPaintTransformer(Functions.<Paint>constant(Color.lightGray));
-        vv.getRenderContext().setArrowDrawPaintTransformer(Functions.<Paint>constant(Color.lightGray));
+        vv.getRenderContext().setEdgeDrawPaintTransformer(Functions.constant(Color.lightGray));
+        vv.getRenderContext().setArrowFillPaintTransformer(Functions.constant(Color.lightGray));
+        vv.getRenderContext().setArrowDrawPaintTransformer(Functions.constant(Color.lightGray));
         
         // add my listeners for ToolTips
         vv.setVertexToolTipTransformer(new ToStringLabeller());

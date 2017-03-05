@@ -74,8 +74,8 @@ public class EmbeddedReberGrammar extends DataSet {
 		states[18] = new State(new Transition[] {new Transition(14,P), new Transition(15,V)});
 		
 		for (int sequence = 0; sequence < sequences; sequence++) {
-			List<DataStep> steps = new ArrayList<>();;		
-			int state_id = 0;
+			List<DataStep> steps = new ArrayList<>();
+            int state_id = 0;
 			while (true) {
 				int transition = -1;
 				if (states[state_id].transitions.length == 1) {

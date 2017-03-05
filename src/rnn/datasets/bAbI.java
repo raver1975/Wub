@@ -287,8 +287,8 @@ public class bAbI extends DataSet{
 	private List<DataSequence> getSequences(List<Story> stories) {
 		int inputDimension = inputVocab.size();
 		int outputDimension = outputVocab.size();
-		List<DataSequence> sequences = new ArrayList<>();;
-		for (Story story : stories) {
+		List<DataSequence> sequences = new ArrayList<>();
+        for (Story story : stories) {
 			
 			List<DataStep> steps = new ArrayList<>();
 			

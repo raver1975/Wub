@@ -73,7 +73,7 @@ public class GradientEdgePaintTransformer<V, E>
             xF = (xF + xB) / 2;
             yF = (yF + yB) / 2;
         } 
-        if(selfLoop.apply(Context.<Graph<V,E>,E>getInstance(layout.getGraph(), e))) {
+        if(selfLoop.apply(Context.getInstance(layout.getGraph(), e))) {
         	yF += 50;
         	xF += 50;
         }

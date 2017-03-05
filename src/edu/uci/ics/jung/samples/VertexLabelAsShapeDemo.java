@@ -91,15 +91,15 @@ public class VertexLabelAsShapeDemo extends JApplet {
         vv.getRenderContext().setVertexLabelTransformer(
         		// this chains together Functions so that the html tags
         		// are prepended to the toString method output
-        		Functions.<Object,String,String>compose(
+        		Functions.compose(
         				new Function<String,String>(){
 							public String apply(String input) {
 								return "<html><center>Vertex<p>"+input;
 							}}, new ToStringLabeller()));
         vv.getRenderContext().setVertexShapeTransformer(vlasr);
         vv.getRenderContext().setVertexLabelRenderer(new DefaultVertexLabelRenderer(Color.red));
-        vv.getRenderContext().setEdgeDrawPaintTransformer(Functions.<Paint>constant(Color.yellow));
-        vv.getRenderContext().setEdgeStrokeTransformer(Functions.<Stroke>constant(new BasicStroke(2.5f)));
+        vv.getRenderContext().setEdgeDrawPaintTransformer(Functions.constant(Color.yellow));
+        vv.getRenderContext().setEdgeStrokeTransformer(Functions.constant(new BasicStroke(2.5f)));
         
         // customize the renderer
         vv.getRenderer().setVertexRenderer(new GradientVertexRenderer<String,Number>(Color.gray, Color.white, true));

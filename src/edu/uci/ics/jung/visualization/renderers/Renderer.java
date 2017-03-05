@@ -40,8 +40,8 @@ public interface Renderer<V,E> {
 		@SuppressWarnings("rawtypes")
 		class NOOP implements Vertex {
 			public void paintVertex(RenderContext rc, Layout layout, Object v) {}
-		};
-	}
+		}
+    }
     
 	interface Edge<V,E> {
 		void paintEdge(RenderContext<V,E> rc, Layout<V,E> layout, E e);

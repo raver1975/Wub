@@ -435,7 +435,7 @@ public class VertexImageShaperDemo extends JApplet {
         
         public Icon apply(V v) {
             if(fillImages) {
-                return (Icon)iconMap.get(v);
+                return iconMap.get(v);
             } else {
                 return null;
             }
@@ -471,7 +471,7 @@ public class VertexImageShaperDemo extends JApplet {
         }
 
         public Shape transform(V v) {
-			Icon icon = (Icon) iconMap.get(v);
+			Icon icon = iconMap.get(v);
 
 			if (icon != null && icon instanceof ImageIcon) {
 

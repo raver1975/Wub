@@ -128,7 +128,7 @@ public class MultiViewDemo extends JApplet {
         
         vv1.getRenderContext().setEdgeShapeTransformer(EdgeShape.line(graph));
         vv2.getRenderContext().setVertexShapeTransformer(
-        		Functions.<Shape>constant(new Rectangle2D.Float(-6,-6,12,12)));
+        		Functions.constant(new Rectangle2D.Float(-6,-6,12,12)));
 
         vv2.getRenderContext().setEdgeShapeTransformer(EdgeShape.quadCurve(graph));
         

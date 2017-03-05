@@ -108,7 +108,7 @@ public class CachingEdgeRenderer<V, E> extends BasicEdgeRenderer<V, E>
             // see if arrows are too small to bother drawing
             if(scalex < .3 || scaley < .3) return;
             
-            if (rc.getEdgeArrowPredicate().apply(Context.<Graph<V,E>,E>getInstance(graph, e))) {
+            if (rc.getEdgeArrowPredicate().apply(Context.getInstance(graph, e))) {
             	
                 Stroke new_stroke = rc.getEdgeArrowStrokeTransformer().apply(e);
                 Stroke old_stroke = g.getStroke();
@@ -128,7 +128,7 @@ public class CachingEdgeRenderer<V, E> extends BasicEdgeRenderer<V, E>
                     AffineTransform at = 
                         edgeArrowRenderingSupport.getArrowTransform(rc, edgeShape, destVertexShape);
                     if(at == null) return;
-                    Shape arrow = rc.getEdgeArrowTransformer().apply(Context.<Graph<V,E>,E>getInstance(graph, e));
+                    Shape arrow = rc.getEdgeArrowTransformer().apply(Context.getInstance(graph, e));
                     arrow = at.createTransformedShape(arrow);
                     g.setPaint(rc.getArrowFillPaintTransformer().apply(e));
                     g.fill(arrow);
@@ -146,7 +146,7 @@ public class CachingEdgeRenderer<V, E> extends BasicEdgeRenderer<V, E>
                     if(arrowHit) {
                         AffineTransform at = edgeArrowRenderingSupport.getReverseArrowTransform(rc, edgeShape, vertexShape, !isLoop);
                         if(at == null) return;
-                        Shape arrow = rc.getEdgeArrowTransformer().apply(Context.<Graph<V,E>,E>getInstance(graph, e));
+                        Shape arrow = rc.getEdgeArrowTransformer().apply(Context.getInstance(graph, e));
                         arrow = at.createTransformedShape(arrow);
                         g.setPaint(rc.getArrowFillPaintTransformer().apply(e));
                         g.fill(arrow);

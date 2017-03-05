@@ -161,7 +161,7 @@ public class LensDemo extends JApplet {
         
         final Function<? super String,Shape> ovals = vv.getRenderContext().getVertexShapeTransformer();
         final Function<? super String,Shape> squares = 
-        	Functions.<Shape>constant(new Rectangle2D.Float(-10,-10,20,20));
+        	Functions.constant(new Rectangle2D.Float(-10,-10,20,20));
 
         // add a listener for ToolTips
         vv.setVertexToolTipTransformer(new ToStringLabeller());
@@ -294,7 +294,7 @@ public class LensDemo extends JApplet {
                 if(e.getStateChange() == ItemEvent.SELECTED) {
                     visualizationModel.setGraphLayout(gridLayout);
                     vv.getRenderContext().setVertexShapeTransformer(squares);
-                    vv.getRenderContext().setVertexLabelTransformer(Functions.<String>constant(null));
+                    vv.getRenderContext().setVertexLabelTransformer(Functions.constant(null));
                     vv.repaint();
                 }
             }});

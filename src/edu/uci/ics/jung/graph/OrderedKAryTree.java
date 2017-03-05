@@ -111,7 +111,7 @@ public class OrderedKAryTree<V, E> extends AbstractTypedGraph<V, E> implements T
         if (!containsVertex(vertex)) 
         	return null;
         List<E> edges = vertex_data.get(vertex).child_edges;
-        return edges == null ? Collections.<E>emptySet() : 
+        return edges == null ? Collections.emptySet() :
         	new ImmutableList.Builder<E>().addAll(edges).build();
     }
   

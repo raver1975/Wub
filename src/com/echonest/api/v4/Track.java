@@ -36,7 +36,8 @@ public class Track extends ENItem {
          * track analysis failed
          */
         ERROR
-    };
+    }
+
     private TrackAnalysis analysis = null;
     private AnalysisStatus currentStatus = AnalysisStatus.UNKNOWN;
 

@@ -123,7 +123,7 @@ public class WorldMapGraphDemo extends JApplet {
         Dimension layoutSize = new Dimension(2000,1000);
         
         Layout<String,Number> layout = new StaticLayout<String,Number>(graph,
-        		Functions.<String,String[],Point2D>compose(
+        		Functions.compose(
         				new LatLonPixelTransformer(new Dimension(2000,1000)),
         				new CityTransformer(map))
         		);

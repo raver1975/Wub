@@ -9,7 +9,7 @@ public class DynamicPlaylistSteerParams extends Params {
 
         tempo, loudness, danceability, energy, song_hotttnesss,
         artist_hotttnesss, artist_familiarity
-    };
+    }
 
     /**
      * Add a minimum constraint

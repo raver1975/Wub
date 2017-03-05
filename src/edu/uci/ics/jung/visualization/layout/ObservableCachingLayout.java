@@ -51,7 +51,7 @@ public class ObservableCachingLayout<V, E> extends LayoutDecorator<V,E>
 
     public ObservableCachingLayout(Layout<V, E> delegate) {
     	super(delegate);
-		Function<V, Point2D> chain = Functions.<V, Point2D, Point2D> compose(
+		Function<V, Point2D> chain = Functions.compose(
 				new Function<Point2D, Point2D>() {
 					public Point2D apply(Point2D p) {
 						return (Point2D) p.clone();

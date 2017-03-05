@@ -199,7 +199,7 @@ public class GraphZoomScrollPane extends JPanel {
         Point2D first = null;
         Point2D second = null;
         
-        Point2D[] pointArray = (Point2D[])points.toArray(new Point2D[points.size()]);
+        Point2D[] pointArray = points.toArray(new Point2D[points.size()]);
         if(pointArray.length > 1) {
             first = pointArray[0];
             second = pointArray[1];
@@ -244,7 +244,7 @@ public class GraphZoomScrollPane extends JPanel {
         intersector.intersectLine(new Line2D.Double(v0, v1));
         points = intersector.getPoints();
         
-        pointArray = (Point2D[])points.toArray(new Point2D[points.size()]);
+        pointArray = points.toArray(new Point2D[points.size()]);
         if(pointArray.length > 1) {
             first = pointArray[0];
             second = pointArray[1];

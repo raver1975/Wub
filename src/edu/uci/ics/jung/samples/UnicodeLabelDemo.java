@@ -166,7 +166,7 @@ public class UnicodeLabelDemo {
          */
         public String getLabel(V v) {
             if(showLabels) {
-                return (String)map.get(v);
+                return map.get(v);
             } else {
                 return "";
             }

@@ -46,7 +46,7 @@ public class Indexer {
 	 * @return a bidirectional map from collection elements to start-based indices
 	 */
 	public static <T> BiMap<T,Integer> create(Collection<T> collection, int start) {
-		BiMap<T,Integer> map = HashBiMap.<T,Integer>create();
+		BiMap<T,Integer> map = HashBiMap.create();
 		int i=start;
 		for(T t : collection) {
 			map.put(t,i++);

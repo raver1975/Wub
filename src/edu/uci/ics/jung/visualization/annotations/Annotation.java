@@ -26,7 +26,7 @@ public class Annotation<T> {
 	protected Point2D location;
 	protected Layer layer;
 	protected boolean fill;
-	public static enum Layer { LOWER, UPPER }
+	public enum Layer { LOWER, UPPER }
 	
 	public Annotation(T annotation, Layer layer, Paint paint, 
 			boolean fill, Point2D location) {

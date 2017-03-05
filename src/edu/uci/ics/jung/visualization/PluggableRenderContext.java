@@ -47,10 +47,10 @@ public class PluggableRenderContext<V, E> implements RenderContext<V, E> {
 	protected float arrowPlacementTolerance = 1;
     protected Predicate<Context<Graph<V,E>,V>> vertexIncludePredicate = Predicates.alwaysTrue();
     protected Function<? super V,Stroke> vertexStrokeTransformer = 
-    	Functions.<Stroke>constant(new BasicStroke(1.0f));
+    	Functions.constant(new BasicStroke(1.0f));
     
     protected Function<? super V,Shape> vertexShapeTransformer = 
-        		Functions.<Shape>constant(
+        		Functions.constant(
         		new Ellipse2D.Float(-10,-10,20,20));
 
     protected Function<? super V,String> vertexLabelTransformer = Functions.constant(null);
@@ -59,16 +59,16 @@ public class PluggableRenderContext<V, E> implements RenderContext<V, E> {
         Functions.constant(new Font("Helvetica", Font.PLAIN, 12));
     
     protected Function<? super V,Paint> vertexDrawPaintTransformer = 
-    	Functions.<Paint>constant(Color.BLACK);
+    	Functions.constant(Color.BLACK);
     protected Function<? super V,Paint> vertexFillPaintTransformer = 
-    	Functions.<Paint>constant(Color.RED);
+    	Functions.constant(Color.RED);
     
     protected Function<? super E,String> edgeLabelTransformer = 
     	Functions.constant(null);
     protected Function<? super E,Stroke> edgeStrokeTransformer = 
-    	Functions.<Stroke>constant(new BasicStroke(1.0f));
+    	Functions.constant(new BasicStroke(1.0f));
     protected Function<? super E,Stroke> edgeArrowStrokeTransformer = 
-    	Functions.<Stroke>constant(new BasicStroke(1.0f));
+    	Functions.constant(new BasicStroke(1.0f));
     
     protected Function<? super Context<Graph<V,E>,E>,Shape> edgeArrowTransformer = 
         new DirectionalEdgeArrowTransformer<V,E>(10, 8, 4);
@@ -83,17 +83,17 @@ public class PluggableRenderContext<V, E> implements RenderContext<V, E> {
     protected Function<? super E,Paint> edgeFillPaintTransformer =
         Functions.constant(null);
     protected Function<? super E,Paint> edgeDrawPaintTransformer =
-        Functions.<Paint>constant(Color.black);
+        Functions.constant(Color.black);
     protected Function<? super E,Paint> arrowFillPaintTransformer =
-        Functions.<Paint>constant(Color.black);
+        Functions.constant(Color.black);
     protected Function<? super E,Paint> arrowDrawPaintTransformer =
-        Functions.<Paint>constant(Color.black);
+        Functions.constant(Color.black);
     
     protected EdgeIndexFunction<V,E> parallelEdgeIndexFunction = 
-        DefaultParallelEdgeIndexFunction.<V,E>getInstance();
+        DefaultParallelEdgeIndexFunction.getInstance();
     
     protected EdgeIndexFunction<V,E> incidentEdgeIndexFunction = 
-        IncidentEdgeIndexFunction.<V,E>getInstance();
+        IncidentEdgeIndexFunction.getInstance();
     
     protected MultiLayerTransformer multiLayerTransformer = new BasicTransformer();
     

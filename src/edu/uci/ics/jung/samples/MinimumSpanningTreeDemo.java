@@ -102,8 +102,8 @@ public class MinimumSpanningTreeDemo extends JApplet {
         
         MinimumSpanningForest2<String,Number> prim = 
         	new MinimumSpanningForest2<String,Number>(graph,
-        		new DelegateForest<String,Number>(), DelegateTree.<String,Number>getFactory(),
-        		Functions.<Double>constant(1.0));
+        		new DelegateForest<String,Number>(), DelegateTree.getFactory(),
+        		Functions.constant(1.0));
         
         tree = prim.getForest();
         

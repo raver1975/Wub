@@ -306,8 +306,8 @@ public class PluggableRendererDemo extends JApplet implements ActionListener
         vv.getRenderContext().setEdgeShapeTransformer(EdgeShape.line(graph));
         vv.getRenderContext().setEdgeArrowPredicate(show_arrow);
         
-        vv.getRenderContext().setArrowFillPaintTransformer(Functions.<Paint>constant(Color.lightGray));
-        vv.getRenderContext().setArrowDrawPaintTransformer(Functions.<Paint>constant(Color.black));
+        vv.getRenderContext().setArrowFillPaintTransformer(Functions.constant(Color.lightGray));
+        vv.getRenderContext().setArrowDrawPaintTransformer(Functions.constant(Color.black));
         JPanel jp = new JPanel();
         jp.setLayout(new BorderLayout());
         
@@ -354,7 +354,7 @@ public class PluggableRendererDemo extends JApplet implements ActionListener
 					return count++;
 				}};
         Graph<Integer,Number> g = 
-        	MixedRandomGraphGenerator.<Integer,Number>generateMixedRandomGraph(graphFactory, vertexFactory, edgeFactory,
+        	MixedRandomGraphGenerator.generateMixedRandomGraph(graphFactory, vertexFactory, edgeFactory,
         		edge_weight, 20, seedVertices);
         es = new NumberFormattingTransformer<Number>(Functions.forMap(edge_weight));
         
@@ -753,7 +753,7 @@ public class PluggableRendererDemo extends JApplet implements ActionListener
         	if(source.isSelected()) {
         		vv.getRenderContext().setEdgeFillPaintTransformer( edgeFillPaint );
         	} else {
-        		vv.getRenderContext().setEdgeFillPaintTransformer( Functions.<Paint>constant(null) );
+        		vv.getRenderContext().setEdgeFillPaintTransformer( Functions.constant(null) );
         	}
         }
         vv.repaint();
@@ -843,10 +843,7 @@ public class PluggableRendererDemo extends JApplet implements ActionListener
         protected boolean drawHeavy(E e)
         {
             double value = edge_weight.get(e).doubleValue();
-            if (value > 0.7)
-                return true;
-            else
-                return false;
+            return value > 0.7;
         }
         
     }
@@ -967,10 +964,7 @@ public class PluggableRendererDemo extends JApplet implements ActionListener
             if (graph.getEdgeType(e) == EdgeType.DIRECTED && show_d) {
                 return true;
             }
-            if (graph.getEdgeType(e) == EdgeType.UNDIRECTED && show_u) {
-                return true;
-            }
-            return false;
+            return graph.getEdgeType(e) == EdgeType.UNDIRECTED && show_u;
         }
     }
     

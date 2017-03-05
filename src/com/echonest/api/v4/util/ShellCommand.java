@@ -23,12 +23,12 @@ public interface ShellCommand {
      * @return		a command result
      *
      */
-    public String execute(Shell ci, String[] args) throws Exception;
+    String execute(Shell ci, String[] args) throws Exception;
 
     /**
      * Returns a one line description of the command
      *
      * @return a one-liner help message
      */
-    public String getHelp();
+    String getHelp();
 }

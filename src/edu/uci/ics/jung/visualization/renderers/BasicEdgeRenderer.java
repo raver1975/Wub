@@ -43,15 +43,15 @@ public class BasicEdgeRenderer<V,E> implements Renderer.Edge<V,E> {
     public void paintEdge(RenderContext<V,E> rc, Layout<V, E> layout, E e) {
         GraphicsDecorator g2d = rc.getGraphicsContext();
         Graph<V,E> graph = layout.getGraph();
-        if (!rc.getEdgeIncludePredicate().apply(Context.<Graph<V,E>,E>getInstance(graph,e)))
+        if (!rc.getEdgeIncludePredicate().apply(Context.getInstance(graph,e)))
             return;
         
         // don't draw edge if either incident vertex is not drawn
         Pair<V> endpoints = graph.getEndpoints(e);
         V v1 = endpoints.getFirst();
         V v2 = endpoints.getSecond();
-        if (!rc.getVertexIncludePredicate().apply(Context.<Graph<V,E>,V>getInstance(graph,v1)) || 
-            !rc.getVertexIncludePredicate().apply(Context.<Graph<V,E>,V>getInstance(graph,v2)))
+        if (!rc.getVertexIncludePredicate().apply(Context.getInstance(graph,v1)) ||
+            !rc.getVertexIncludePredicate().apply(Context.getInstance(graph,v2)))
             return;
         
         Stroke new_stroke = rc.getEdgeStrokeTransformer().apply(e);
@@ -225,7 +225,7 @@ public class BasicEdgeRenderer<V,E> implements Renderer.Edge<V,E> {
             // see if arrows are too small to bother drawing
             if(scalex < .3 || scaley < .3) return;
             
-            if (rc.getEdgeArrowPredicate().apply(Context.<Graph<V,E>,E>getInstance(graph, e))) {
+            if (rc.getEdgeArrowPredicate().apply(Context.getInstance(graph, e))) {
             	
                 Stroke new_stroke = rc.getEdgeArrowStrokeTransformer().apply(e);
                 Stroke old_stroke = g.getStroke();
@@ -245,7 +245,7 @@ public class BasicEdgeRenderer<V,E> implements Renderer.Edge<V,E> {
                     AffineTransform at = 
                         edgeArrowRenderingSupport.getArrowTransform(rc, edgeShape, destVertexShape);
                     if(at == null) return;
-                    Shape arrow = rc.getEdgeArrowTransformer().apply(Context.<Graph<V,E>,E>getInstance(graph, e));
+                    Shape arrow = rc.getEdgeArrowTransformer().apply(Context.getInstance(graph, e));
                     arrow = at.createTransformedShape(arrow);
                     g.setPaint(rc.getArrowFillPaintTransformer().apply(e));
                     g.fill(arrow);
@@ -263,7 +263,7 @@ public class BasicEdgeRenderer<V,E> implements Renderer.Edge<V,E> {
                     if(arrowHit) {
                         AffineTransform at = edgeArrowRenderingSupport.getReverseArrowTransform(rc, edgeShape, vertexShape, !isLoop);
                         if(at == null) return;
-                        Shape arrow = rc.getEdgeArrowTransformer().apply(Context.<Graph<V,E>,E>getInstance(graph, e));
+                        Shape arrow = rc.getEdgeArrowTransformer().apply(Context.getInstance(graph, e));
                         arrow = at.createTransformedShape(arrow);
                         g.setPaint(rc.getArrowFillPaintTransformer().apply(e));
                         g.fill(arrow);

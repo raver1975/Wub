@@ -29,7 +29,7 @@ public interface Forest<V,E> extends DirectedGraph<V,E> {
      * @see Graph#getPredecessors(Object)
      * @see #getParentEdge(Object)
      */
-    public V getParent(V vertex);
+    V getParent(V vertex);
     
     /**
      * Returns the edge connecting <code>vertex</code> to its parent in
@@ -48,7 +48,7 @@ public interface Forest<V,E> extends DirectedGraph<V,E> {
      * @see Graph#getInEdges(Object)
      * @see #getParent(Object)
      */
-    public E getParentEdge(V vertex);
+    E getParentEdge(V vertex);
     
     /**
      * Returns the children of <code>vertex</code> in this tree.
@@ -62,7 +62,7 @@ public interface Forest<V,E> extends DirectedGraph<V,E> {
      * @see Graph#getSuccessors(Object)
      * @see #getChildEdges(Object)
      */
-    public Collection<V> getChildren(V vertex);
+    Collection<V> getChildren(V vertex);
     
     /**
      * Returns the edges connecting <code>vertex</code> to its children 
@@ -77,7 +77,7 @@ public interface Forest<V,E> extends DirectedGraph<V,E> {
      * @see Graph#getOutEdges(Object)
      * @see #getChildren(Object)
      */
-    public Collection<E> getChildEdges(V vertex);
+    Collection<E> getChildEdges(V vertex);
     
     /**
      * Returns the number of children that <code>vertex</code> has in this tree.
@@ -92,5 +92,5 @@ public interface Forest<V,E> extends DirectedGraph<V,E> {
      * @see #getChildren(Object)
      * @see Graph#getSuccessorCount(Object)
      */
-    public int getChildCount(V vertex);
+    int getChildCount(V vertex);
 }

@@ -33,7 +33,7 @@ public class BasicVertexRenderer<V,E> implements Renderer.Vertex<V,E> {
 
     public void paintVertex(RenderContext<V,E> rc, Layout<V,E> layout, V v) {
     	Graph<V,E> graph = layout.getGraph();
-        if (rc.getVertexIncludePredicate().apply(Context.<Graph<V,E>,V>getInstance(graph,v))) {
+        if (rc.getVertexIncludePredicate().apply(Context.getInstance(graph,v))) {
         	paintIconForVertex(rc, v, layout);
         }
     }

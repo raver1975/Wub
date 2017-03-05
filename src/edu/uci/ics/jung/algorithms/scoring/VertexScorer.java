@@ -24,5 +24,5 @@ public interface VertexScorer<V, S>
      * @param v the vertex whose score is requested
      * @return the algorithm's score for this vertex
      */
-    public S getVertexScore(V v);
+    S getVertexScore(V v);
 }

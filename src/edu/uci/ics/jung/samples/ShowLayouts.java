@@ -112,7 +112,7 @@ public class ShowLayouts extends JApplet {
             try
             {
                 Constructor<? extends Layout<Integer, Number>> constructor = layoutC
-                        .getConstructor(new Class[] {Graph.class});
+                        .getConstructor(Graph.class);
                 Object o = constructor.newInstance(constructorArgs);
                 Layout<Integer,Number> l = (Layout<Integer,Number>) o;
                 l.setInitializer(vv.getGraphLayout());
@@ -136,9 +136,8 @@ public class ShowLayouts extends JApplet {
     @SuppressWarnings({ "rawtypes", "unchecked" })
 	private static JPanel getGraphPanel()
     {
-        g_array = 
-            (Graph<? extends Object,? extends Object>[])
-            new Graph<?,?>[graph_names.length];
+        g_array =
+                new Graph<?,?>[graph_names.length];
         
         Supplier<Graph<Integer,Number>> graphFactory =
     		new Supplier<Graph<Integer,Number>>() {

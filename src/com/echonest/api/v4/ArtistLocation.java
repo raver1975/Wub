@@ -69,10 +69,7 @@ public class ArtistLocation {
         if ((this.city == null) ? (other.city != null) : !this.city.equals(other.city)) {
             return false;
         }
-        if ((this.location == null) ? (other.location != null) : !this.location.equals(other.location)) {
-            return false;
-        }
-        return true;
+        return (this.location == null) ? other.location == null : this.location.equals(other.location);
     }
     
     

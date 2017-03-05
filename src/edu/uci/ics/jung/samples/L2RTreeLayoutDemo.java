@@ -134,7 +134,7 @@ public class L2RTreeLayoutDemo extends JApplet {
         vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
         // add a listener for ToolTips
         vv.setVertexToolTipTransformer(new ToStringLabeller());
-        vv.getRenderContext().setArrowFillPaintTransformer(Functions.<Paint>constant(Color.lightGray));
+        vv.getRenderContext().setArrowFillPaintTransformer(Functions.constant(Color.lightGray));
         rings = new Rings();
         
         setLtoR(vv);

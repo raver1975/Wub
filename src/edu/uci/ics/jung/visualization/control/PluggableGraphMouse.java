@@ -68,22 +68,19 @@ public class PluggableGraphMouse implements VisualizationViewer.GraphMouse {
     
     private void checkMouseListeners() {
         if(mouseListeners == null) {
-            mouseListeners = (MouseListener[])
-            mousePluginList.toArray(new MouseListener[mousePluginList.size()]);
+            mouseListeners = mousePluginList.toArray(new MouseListener[mousePluginList.size()]);
         }
     }
     
     private void checkMouseMotionListeners() {
         if(mouseMotionListeners == null){
-            mouseMotionListeners = (MouseMotionListener[])
-            mouseMotionPluginList.toArray(new MouseMotionListener[mouseMotionPluginList.size()]);
+            mouseMotionListeners = mouseMotionPluginList.toArray(new MouseMotionListener[mouseMotionPluginList.size()]);
         } 
     }
     
     private void checkMouseWheelListeners() {
         if(mouseWheelListeners == null) {
-            mouseWheelListeners = (MouseWheelListener[])
-            mouseWheelPluginList.toArray(new MouseWheelListener[mouseWheelPluginList.size()]);
+            mouseWheelListeners = mouseWheelPluginList.toArray(new MouseWheelListener[mouseWheelPluginList.size()]);
         }
     }
 

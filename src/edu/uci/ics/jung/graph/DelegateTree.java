@@ -43,7 +43,7 @@ public class DelegateTree<V,E> extends GraphDecorator<V,E> implements Tree<V,E>
      * Creates an instance.
      */
     public DelegateTree() {
-    	this(DirectedSparseMultigraph.<V,E>getFactory());
+    	this(DirectedSparseMultigraph.getFactory());
     }
 
 	/**
@@ -348,7 +348,7 @@ public class DelegateTree<V,E> extends GraphDecorator<V,E> implements Tree<V,E>
 	}
 
 	public Collection<Tree<V, E>> getTrees() {
-		return Collections.<Tree<V,E>>singleton(this);
+		return Collections.singleton(this);
 	}
 
   public Collection<E> getChildEdges(V vertex) {

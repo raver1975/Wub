@@ -35,7 +35,7 @@ public interface PersistentLayout<V, E> extends Layout<V,E> {
      * a serializable class to save locations
      */
     @SuppressWarnings("serial")
-	static class Point implements Serializable {
+    class Point implements Serializable {
         public double x;
         public double y;
         public Point(double x, double y) {

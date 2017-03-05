@@ -126,11 +126,8 @@ public class KKLayout<V,E> extends AbstractLayout<V,E> implements IterativeConte
 	 * @return true if the current iteration has passed the maximum count.
 	 */
 	public boolean done() {
-		if (currentIteration > maxIterations) {
-			return true;
-		}
-		return false;
-	}
+        return currentIteration > maxIterations;
+    }
 
 	@SuppressWarnings("unchecked")
     public void initialize() {
@@ -160,7 +157,7 @@ public class KKLayout<V,E> extends AbstractLayout<V,E> implements IterativeConte
     			} catch(ConcurrentModificationException cme) {}
     		}
 
-    		diameter = DistanceStatistics.<V,E>diameter(graph, distance, true);
+    		diameter = DistanceStatistics.diameter(graph, distance, true);
 
     		double L0 = Math.min(height, width);
     		L = (L0 / diameter) * length_factor;  // length_factor used to be hardcoded to 0.9

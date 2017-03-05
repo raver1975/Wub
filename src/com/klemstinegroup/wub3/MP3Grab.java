@@ -1,7 +1,8 @@
 package com.klemstinegroup.wub3;
 
 import com.echonest.api.v4.TrackAnalysis;
-import com.klemstinegroup.wub.AudioObject;
+import com.klemstinegroup.wub3.system.AudioObject;
+import com.klemstinegroup.wub3.system.SpotifyUtils;
 import com.wrapper.spotify.models.Track;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -51,7 +52,7 @@ public class MP3Grab {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        spotifyId=SpotifyUtils.getRandomID();
+                        spotifyId= SpotifyUtils.getRandomID();
                     }
                 }).start();
                 s = readNextLine.get(15000, TimeUnit.MILLISECONDS);
@@ -104,7 +105,7 @@ public class MP3Grab {
             try {
                 JSONObject data = (JSONObject) js2.get(i);
                 long duration = (Long) data.get("duration");
-                if (Math.abs((int) duration - (double) ta.getDuration()) < 2d) {
+                if (Math.abs((int) duration - ta.getDuration()) < 2d) {
                     System.out.println("*****" + duration + "\t" + data.toString());
 
                     String downloadUrl = (String) data.get("download");

@@ -120,7 +120,7 @@ public class GraphMLReader<G extends Hypergraph<V,E>, V, E> extends DefaultHandl
 
         current_states = new LinkedList<TagState>();
 
-        tag_state = HashBiMap.<String, TagState>create();
+        tag_state = HashBiMap.create();
         tag_state.put("node", TagState.VERTEX);
         tag_state.put("edge", TagState.EDGE);
         tag_state.put("hyperedge", TagState.HYPEREDGE);
@@ -231,11 +231,11 @@ public class GraphMLReader<G extends Hypergraph<V,E>, V, E> extends DefaultHandl
      */
     protected void initializeData()
     {
-        this.vertex_ids = HashBiMap.<V, String>create();
+        this.vertex_ids = HashBiMap.create();
         this.vertex_desc = new HashMap<V, String>();
         this.vertex_metadata = new HashMap<String, GraphMLMetadata<V>>();
 
-        this.edge_ids = HashBiMap.<E, String>create();
+        this.edge_ids = HashBiMap.create();
         this.edge_desc = new HashMap<E, String>();
         this.edge_metadata = new HashMap<String, GraphMLMetadata<E>>();
 

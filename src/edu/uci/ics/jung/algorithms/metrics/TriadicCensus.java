@@ -202,8 +202,6 @@ public class TriadicCensus {
 		if (i_u < i_w)
 			return true;
 		int i_v = id.indexOf(v);
-		if ((i_v < i_w) && (i_w < i_u) && (!g.isNeighbor(w,v)))
-			return true;
-		return false;
-	}
+        return (i_v < i_w) && (i_w < i_u) && (!g.isNeighbor(w, v));
+    }
 }

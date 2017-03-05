@@ -57,7 +57,7 @@ public class BasicVertexLabelRenderer<V,E> implements Renderer.VertexLabel<V,E> 
 
 	public Component prepareRenderer(RenderContext<V,E> rc, VertexLabelRenderer graphLabelRenderer, Object value, 
 			boolean isSelected, V vertex) {
-		return rc.getVertexLabelRenderer().<V>getVertexLabelRendererComponent(rc.getScreenDevice(), value, 
+		return rc.getVertexLabelRenderer().getVertexLabelRendererComponent(rc.getScreenDevice(), value,
 				rc.getVertexFontTransformer().apply(vertex), isSelected, vertex);
 	}
 
@@ -71,7 +71,7 @@ public class BasicVertexLabelRenderer<V,E> implements Renderer.VertexLabel<V,E> 
      */
     public void labelVertex(RenderContext<V,E> rc, Layout<V,E> layout, V v, String label) {
     	Graph<V,E> graph = layout.getGraph();
-        if (rc.getVertexIncludePredicate().apply(Context.<Graph<V,E>,V>getInstance(graph,v)) == false) {
+        if (rc.getVertexIncludePredicate().apply(Context.getInstance(graph,v)) == false) {
         	return;
         }
         Point2D pt = layout.apply(v);

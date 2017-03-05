@@ -26,7 +26,7 @@ public class EchoNestAPI {
     public enum TermType {
 
         ANY, STYLE, MOOD
-    };
+    }
 
     /**
      * Possible types of artist descriptions
@@ -172,7 +172,7 @@ public class EchoNestAPI {
             Object oname = artistMap.get("name");
             if (oname instanceof List) {
                 List lname = (List) oname;
-                oname = (String) lname.get(0);
+                oname = lname.get(0);
                 artistMap.put("name", oname);
             }
 

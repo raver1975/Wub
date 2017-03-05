@@ -77,7 +77,7 @@ public class AnimatingAddNodeDemo extends javax.swing.JApplet {
     public void init() {
 
         //create a graph
-    	Graph<Number,Number> ig = Graphs.<Number,Number>synchronizedDirectedGraph(new DirectedSparseMultigraph<Number,Number>());
+    	Graph<Number,Number> ig = Graphs.synchronizedDirectedGraph(new DirectedSparseMultigraph<Number,Number>());
 
         ObservableGraph<Number,Number> og = new ObservableGraph<Number,Number>(ig);
         og.addGraphEventListener(new GraphEventListener<Number,Number>() {

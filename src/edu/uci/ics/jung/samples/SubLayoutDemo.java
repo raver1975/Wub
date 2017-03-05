@@ -321,7 +321,7 @@ public class SubLayoutDemo extends JApplet {
     @SuppressWarnings({ "rawtypes", "unchecked" })
 	private Layout<String, Number> getLayoutFor(Class<CircleLayout> layoutClass, Graph<String, Number> graph) throws Exception {
     	Object[] args = new Object[]{graph};
-    	Constructor<CircleLayout> constructor = layoutClass.getConstructor(new Class[] {Graph.class});
+    	Constructor<CircleLayout> constructor = layoutClass.getConstructor(Graph.class);
     	return  constructor.newInstance(args);
     }
     

@@ -67,9 +67,9 @@ public class VisualizationImageServerDemo {
         				Color.white, Color.blue,
         				vv.getPickedVertexState(),
         				false));
-        vv.getRenderContext().setEdgeDrawPaintTransformer(Functions.<Paint>constant(Color.lightGray));
-        vv.getRenderContext().setArrowFillPaintTransformer(Functions.<Paint>constant(Color.lightGray));
-        vv.getRenderContext().setArrowDrawPaintTransformer(Functions.<Paint>constant(Color.lightGray));
+        vv.getRenderContext().setEdgeDrawPaintTransformer(Functions.constant(Color.lightGray));
+        vv.getRenderContext().setArrowFillPaintTransformer(Functions.constant(Color.lightGray));
+        vv.getRenderContext().setArrowDrawPaintTransformer(Functions.constant(Color.lightGray));
         
         vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
         vv.getRenderer().getVertexLabelRenderer().setPositioner(new InsidePositioner());

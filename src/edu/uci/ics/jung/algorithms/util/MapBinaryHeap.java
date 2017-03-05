@@ -307,7 +307,7 @@ public class MapBinaryHeap<T>
     @Override
     public Iterator<T> iterator()
     {
-        return Iterators.<T>unmodifiableIterator(heap.iterator());
+        return Iterators.unmodifiableIterator(heap.iterator());
     }
 
     /**
