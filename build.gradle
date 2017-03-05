@@ -52,6 +52,6 @@ dependencies {
 }
 
 task compileMP3Grab(type: OneJar) {
-    mainClass = 'com.klemstinegroup.wub3.MP3Grab'
+    mainClass = 'com.klemstinegroup.wub.MP3Grab'
     archiveName = 'Mp3Grab.jar'
 }
