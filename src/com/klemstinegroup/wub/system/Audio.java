@@ -20,7 +20,6 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.swing.*;
 
-import com.klemstinegroup.wub.Settings;
 import org.bytedeco.javacv.*;
 import org.bytedeco.javacv.Frame;
 import org.graphstream.graph.Node;

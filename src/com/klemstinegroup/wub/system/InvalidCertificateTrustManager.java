@@ -1,4 +1,4 @@
-package com.klemstinegroup.wub;
+package com.klemstinegroup.wub.system;
 
 import javax.net.ssl.X509TrustManager;
 import java.security.cert.CertificateException;

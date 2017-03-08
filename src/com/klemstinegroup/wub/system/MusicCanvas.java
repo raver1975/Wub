@@ -4,7 +4,6 @@ import com.echonest.api.v4.Segment;
 import com.echonest.api.v4.TimedEvent;
 import com.echonest.api.v4.TrackAnalysis;
 import com.klemstinegroup.wub.AudioObject;
-import com.klemstinegroup.wub.BeautifulKMGSRandReducefromAudioObject;
 
 import javax.swing.*;
 import java.awt.*;
