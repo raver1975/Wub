@@ -184,7 +184,7 @@ public class Audio {
                                             for (int xi = -1; xi < 2; xi++) {
                                                 for (int yi = -1; yi < 2; yi++) {
                                                     g.drawString("song #" + i.payload2.song, 10 - xi, 25 + yi + tf.getHeight() / 2);
-                                                    g.drawString("seq #" + i.payload2.segment, 460 - xi, 25 + yi + tf.getHeight() / 2);
+                                                    g.drawString("seq #" + i.payload2.segment, 440 - xi, 25 + yi + tf.getHeight() / 2);
                                                     g.drawString("len " + i.data.length, 820 - xi, 25 + yi + tf.getHeight() / 2);
 
                                                 }
@@ -192,7 +192,7 @@ public class Audio {
                                             }
                                             g.setColor(Color.RED);
                                             g.drawString("song #" + i.payload2.song, 10, 25 + tf.getHeight() / 2);
-                                            g.drawString("seq #" + i.payload2.segment, 460, 25 + tf.getHeight() / 2);
+                                            g.drawString("seq #" + i.payload2.segment, 440, 25 + tf.getHeight() / 2);
                                             g.drawString("len " + i.data.length, 820, 25 + tf.getHeight() / 2);
                                             int val = 0;
                                             if (hm.get(lastSeg + "") == null) {
