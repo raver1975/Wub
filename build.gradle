@@ -29,6 +29,27 @@ buildscript {
 configurations {
     all*.exclude group: 'org.bytedeco', module: 'javacpp-presets'
 }
+
+//switch(libnd4jOS) {
+//    case 'windows':
+//        libnd4jOS = 'windows-x86_64'
+//        break
+//    case 'linux':
+//        libnd4jOS = 'linux-x86_64'
+//        break
+//    case 'linux-ppc64':
+//        libnd4jOS = 'linux-ppc64'
+//        break
+//    case 'linux-ppc64le':
+//        libnd4jOS = 'linux-ppc64le'
+//        break
+//    case 'macosx':
+//        libnd4jOS = 'macosx-x86_64'
+//        break
+//    default:
+//        throw new Exception('Unknown OS defined for -Plibnd4jOS parameter. ND4J will be unable to find platform-specific binaries and thus unable to run.')
+//}
+
 dependencies {
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.3'
     compile group: 'org.apache.httpcomponents', name: 'httpcore', version: '4.4.6'
@@ -49,6 +70,16 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs/Weka')
     compile fileTree(include: ['*.jar'], dir: 'libs/Wub')
 
+    compile 'org.deeplearning4j:deeplearning4j-nlp:0.8.0'
+    compile 'org.deeplearning4j:deeplearning4j-ui:0.8.0'
+    compile 'org.deeplearning4j:dl4j-spark:0.8.0'
+//    compile 'org.nd4j:nd4j-x86:0.8.0'
+   // compile 'javax.ws.rs:javax.ws.rs-api:2.0.1'
+    compile 'org.nd4j:nd4j-native:0.8.0'
+    compile 'org.nd4j:nd4j-native:0.8.0:windows-x86_64'
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
+    compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
+  //  compile 'javax.ws.rs:javax.ws.rs-api:2.0.1'
 }
 
 task compileMP3Grab(type: OneJar) {
