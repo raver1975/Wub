@@ -65,7 +65,7 @@ public class GravesLSTMCharModellingExample {
 			.optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT).iterations(1)
 			.learningRate(0.1)
 			.rmsDecay(0.95)
-		//	.seed(12345)
+			.seed(12345)
 			.regularization(true)
 			.l2(0.001)
             .weightInit(WeightInit.XAVIER)
