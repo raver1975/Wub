@@ -5,6 +5,7 @@ import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.api.DataSetPreProcessor;
 import org.nd4j.linalg.factory.Nd4j;
+import scala.Char;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +39,6 @@ public class CharacterIterator implements DataSetIterator {
     private LinkedList<Integer> exampleStartOffsets = new LinkedList<>();
 
 	/**
-	 * @param textFilePath Path to text file to use for generating samples
 	 * @param textFileEncoding Encoding of the text file. Can try Charset.defaultCharset()
 	 * @param miniBatchSize Number of examples per mini-batch
 	 * @param exampleLength Number of characters in each input/output vector
@@ -46,9 +46,9 @@ public class CharacterIterator implements DataSetIterator {
 	 * @param rng Random number generator, for repeatability if required
 	 * @throws IOException If text file cannot  be loaded
 	 */
-	public CharacterIterator(String textFilePath, Charset textFileEncoding, int miniBatchSize, int exampleLength,
+	public CharacterIterator(String text, Charset textFileEncoding, int miniBatchSize, int exampleLength,
                              char[] validCharacters, Random rng) throws IOException {
-		if( !new File(textFilePath).exists()) throw new IOException("Could not access file (does not exist): " + textFilePath);
+		//if( !new File(textFilePath).exists()) throw new IOException("Could not access file (does not exist): " + textFilePath);
 		if( miniBatchSize <= 0 ) throw new IllegalArgumentException("Invalid miniBatchSize (must be >0)");
 		this.validCharacters = validCharacters;
 		this.exampleLength = exampleLength;
@@ -61,7 +61,8 @@ public class CharacterIterator implements DataSetIterator {
 
 		//Load file and convert contents to a char[]
 		boolean newLineValid = charToIdxMap.containsKey('\n');
-		List<String> lines = Files.readAllLines(new File(textFilePath).toPath(),textFileEncoding);
+		List<String> lines =Arrays.asList(text.split("/n"));
+		//Files.readAllLines(new File(textFilePath).toPath(),textFileEncoding);
 		int maxSize = lines.size();	//add lines.size() to account for newline characters at end of each line
 		for( String s : lines ) maxSize += s.length();
 		char[] characters = new char[maxSize];
@@ -89,6 +90,20 @@ public class CharacterIterator implements DataSetIterator {
 
         initializeOffsets();
     }
+
+    public static char[] getMinimalCharacterSet(String scan){
+		HashSet<Character> sc=new HashSet<>();
+		for (int i=0;i<scan.length();i++){
+			sc.add(scan.charAt(i));
+		}
+		char[] ret=new char[sc.size()];
+		Iterator<Character> itor=sc.iterator();
+		int pos=0;
+		while(itor.hasNext()){
+			ret[pos++]=itor.next();
+		}
+		return ret;
+	}
 
     /** A minimal character set, with a-z, A-Z, 0-9 and common punctuation etc */
 	public static char[] getMinimalCharacterSet(){
