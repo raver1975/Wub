@@ -1,4 +1,4 @@
-package com.klemstinegroup.wub;
+package com.klemstinegroup.wub.rnn;
 
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.BackpropType;
@@ -19,7 +19,7 @@ import org.nd4j.linalg.lossfunctions.LossFunctions;
 import java.util.Random;
 
 /**
- * This example is almost identical to the GravesLSTMCharModellingExample, except that it utilizes the ComputationGraph
+ * This example is almost identical to the RNN, except that it utilizes the ComputationGraph
  * architecture instead of MultiLayerNetwork architecture. See the javadoc in that example for details.
  * For more details on the ComputationGraph architecture, see http://deeplearning4j.org/compgraph
  *
@@ -44,12 +44,12 @@ public class CompGraphLSTMExample {
         int nCharactersToSample = 300;				//Length of each sample to generate
         String generationInitialization = null;		//Optional character initialization; a random character is used if null
         // Above is Used to 'prime' the LSTM with a character sequence to continue/complete.
-        // Initialization characters must all be in CharacterIterator.getMinimalCharacterSet() by default
+        // Initialization characters must all be in CharacterIteratorRNN.getMinimalCharacterSet() by default
         Random rng = new Random(12345);
 
         //Get a DataSetIterator that handles vectorization of text into something we can use to train
         // our GravesLSTM network.
-        CharacterIterator iter = GravesLSTMCharModellingExample.getShakespeareIterator(miniBatchSize, exampleLength);
+        CharacterIteratorRNN iter = RNN.getShakespeareIterator("",miniBatchSize, exampleLength);
         int nOut = iter.totalOutcomes();
 
         //Set up network configuration:
@@ -123,10 +123,10 @@ public class CompGraphLSTMExample {
      * @param initialization String, may be null. If null, select a random character as initialization for all samples
      * @param charactersToSample Number of characters to sample from network (excluding initialization)
      * @param net MultiLayerNetwork with one or more GravesLSTM/RNN layers and a softmax output layer
-     * @param iter CharacterIterator. Used for going from indexes back to characters
+     * @param iter CharacterIteratorRNN. Used for going from indexes back to characters
      */
-    private static String[] sampleCharactersFromNetwork( String initialization, ComputationGraph net,
-                                                         CharacterIterator iter, Random rng, int charactersToSample, int numSamples ){
+    private static String[] sampleCharactersFromNetwork(String initialization, ComputationGraph net,
+                                                        CharacterIteratorRNN iter, Random rng, int charactersToSample, int numSamples ){
         //Set up initialization. If no initialization: use a random character
         if( initialization == null ){
             initialization = String.valueOf(iter.getRandomCharacter());
@@ -158,7 +158,7 @@ public class CompGraphLSTMExample {
             for( int s=0; s<numSamples; s++ ){
                 double[] outputProbDistribution = new double[iter.totalOutcomes()];
                 for( int j=0; j<outputProbDistribution.length; j++ ) outputProbDistribution[j] = output.getDouble(s,j);
-                int sampledCharacterIdx = GravesLSTMCharModellingExample.sampleFromDistribution(outputProbDistribution,rng);
+                int sampledCharacterIdx = RNN.sampleFromDistribution(outputProbDistribution,rng);
 
                 nextInput.putScalar(new int[]{s,sampledCharacterIdx}, 1.0f);		//Prepare next time step input
                 sb[s].append(iter.convertIndexToCharacter(sampledCharacterIdx));	//Add sampled character to StringBuilder (human readable output)

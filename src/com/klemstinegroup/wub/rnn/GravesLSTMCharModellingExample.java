@@ -1,4 +1,4 @@
-package com.klemstinegroup.wub;
+package com.klemstinegroup.wub.rnn;
 
 import org.apache.commons.io.FileUtils;
 import org.deeplearning4j.nn.api.Layer;
@@ -44,7 +44,7 @@ public class GravesLSTMCharModellingExample {
 	public static void main( String[] args ) throws Exception {
 		int lstmLayerSize = 200;					//Number of units in each GravesLSTM layer
 		int miniBatchSize = 32;						//Size of mini batch to use when  training
-		int exampleLength = 10;					//Length of each training example sequence to use. This could certainly be increased
+		int exampleLength = 1000;					//Length of each training example sequence to use. This could certainly be increased
         int tbpttLength = 50;                       //Length for truncated backpropagation through time. i.e., do parameter updates ever 50 characters
 		int numEpochs = 1;							//Total number of training epochs
         int generateSamplesEveryNMinibatches = 10;  //How frequently to generate samples from the network? 1000 characters / 50 tbptt length: 20 parameter updates per minibatch
@@ -52,7 +52,7 @@ public class GravesLSTMCharModellingExample {
 		int nCharactersToSample = 300;				//Length of each sample to generate
 		String generationInitialization = null;		//Optional character initialization; a random character is used if null
 		// Above is Used to 'prime' the LSTM with a character sequence to continue/complete.
-		// Initialization characters must all be in CharacterIterator.getMinimalCharacterSet() by default
+		// Initialization characters must all be in CharacterIteratorRNN.getMinimalCharacterSet() by default
 		Random rng = new Random(12345);
 
 		//Get a DataSetIterator that handles vectorization of text into something we can use to train
@@ -129,25 +129,21 @@ public class GravesLSTMCharModellingExample {
 		//The Complete Works of William Shakespeare
 		//5.3MB file in UTF-8 Encoding, ~5.4 million characters
 		//https://www.gutenberg.org/ebooks/100
-		//String url = "https://s3.amazonaws.com/dl4j-distribution/pg100.txt";
-		//String tempDir = System.getProperty("java.io.tmpdir");
-		//String fileLocation = tempDir + "/Shakespeare.txt";	//Storage location from downloaded file
-		//File f = new File(fileLocation);
-		//if( !f.exists() ){
-	//		FileUtils.copyURLToFile(new URL(url), f);
-	//		System.out.println("File downloaded to " + f.getAbsolutePath());
-	//	} else {
-	//		System.out.println("Using existing text file at " + f.getAbsolutePath());
-	//	}
+		String url = "https://s3.amazonaws.com/dl4j-distribution/pg100.txt";
+		String tempDir = System.getProperty("java.io.tmpdir");
+		String fileLocation = tempDir + "/Shakespeare.txt";	//Storage location from downloaded file
+		File f = new File(fileLocation);
+		if( !f.exists() ){
+			FileUtils.copyURLToFile(new URL(url), f);
+			System.out.println("File downloaded to " + f.getAbsolutePath());
+		} else {
+			System.out.println("Using existing text file at " + f.getAbsolutePath());
+		}
 
-	//	if(!f.exists()) throw new IOException("File does not exist: " + fileLocation);	//Download problem?
-String fileLocation="";
-for (int i=0;i<1000;i++){
-	fileLocation+="abababababababababababababababababababababaaaaaaaabababababababababababababaa";
-}
-		char[] validCharacters = CharacterIterator.getMinimalCharacterSet(fileLocation);	//Which characters are allowed? Others will be removed
+		if(!f.exists()) throw new IOException("File does not exist: " + fileLocation);	//Download problem?
 
-			return new CharacterIterator(fileLocation, Charset.forName("UTF-8"),
+		char[] validCharacters = CharacterIteratorRNN.getMinimalCharacterSet();	//Which characters are allowed? Others will be removed
+		return new CharacterIterator(fileLocation, Charset.forName("UTF-8"),
 				miniBatchSize, sequenceLength, validCharacters, new Random(12345));
 	}
 
@@ -157,10 +153,10 @@ for (int i=0;i<1000;i++){
 	 * @param initialization String, may be null. If null, select a random character as initialization for all samples
 	 * @param charactersToSample Number of characters to sample from network (excluding initialization)
 	 * @param net MultiLayerNetwork with one or more GravesLSTM/RNN layers and a softmax output layer
-	 * @param iter CharacterIterator. Used for going from indexes back to characters
+	 * @param iter CharacterIteratorRNN. Used for going from indexes back to characters
 	 */
 	private static String[] sampleCharactersFromNetwork(String initialization, MultiLayerNetwork net,
-                                                        CharacterIterator iter, Random rng, int charactersToSample, int numSamples ){
+														CharacterIterator iter, Random rng, int charactersToSample, int numSamples ){
 		//Set up initialization. If no initialization: use a random character
 		if( initialization == null ){
 			initialization = String.valueOf(iter.getRandomCharacter());
