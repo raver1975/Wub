@@ -73,13 +73,15 @@ dependencies {
     compile 'org.deeplearning4j:deeplearning4j-nlp:0.8.0'
     compile 'org.deeplearning4j:deeplearning4j-ui:0.8.0'
     compile 'org.deeplearning4j:dl4j-spark:0.8.0'
-//    compile 'org.nd4j:nd4j-x86:0.8.0'
-   // compile 'javax.ws.rs:javax.ws.rs-api:2.0.1'
-    compile 'org.nd4j:nd4j-native:0.8.0'
+    compile 'org.nd4j:nd4j-native-platform:0.8.0'
+    //cpu
     compile 'org.nd4j:nd4j-native:0.8.0:windows-x86_64'
-    // https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
+    //gpu
+//    compile 'org.nd4j:nd4j-cuda-8.0:0.8.0'
+
+
     compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
-  //  compile 'javax.ws.rs:javax.ws.rs-api:2.0.1'
+    //  compile 'javax.ws.rs:javax.ws.rs-api:2.0.1'
 }
 
 task compileMP3Grab(type: OneJar) {

@@ -8,7 +8,7 @@ import rnn.autodiff.Graph;
 
 /*
  * As described in:
- * 	"Learning Phrase Representations using RNN Encoder-Decoder for Statistical Machine Translation"
+ * 	"Learning Phrase Representations using RNNDemo Encoder-Decoder for Statistical Machine Translation"
  * 	http://arxiv.org/abs/1406.1078
 */
 

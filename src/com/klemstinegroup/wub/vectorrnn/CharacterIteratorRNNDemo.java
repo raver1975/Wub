@@ -1,16 +1,13 @@
-package com.klemstinegroup.wub.rnn;
+package com.klemstinegroup.wub.vectorrnn;
 
-import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.api.DataSetPreProcessor;
+import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.factory.Nd4j;
-import scala.Char;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.util.*;
 
 /** A simple DataSetIterator for use in the RNNDemo.
@@ -23,13 +20,13 @@ import java.util.*;
  * Feature vectors and labels are both one-hot vectors of same length
  * @author Alex Black
  */
-public class CharacterIteratorRNN implements DataSetIterator {
+public class CharacterIteratorRNNDemo implements DataSetIterator {
     //Valid characters
-	private char[] validCharacters;
+	private Vector[] validCharacters;
     //Maps each character to an index ind the input/output
-	private Map<Character,Integer> charToIdxMap;
+	private Map<Vector,Integer> charToIdxMap;
     //All characters of the input file (after filtering to only those that are valid
-	private char[] fileCharacters;
+	private Vector[] fileCharacters;
     //Length of each example/minibatch (number of characters)
 	private int exampleLength;
     //Size of each minibatch (number of examples)
@@ -46,8 +43,8 @@ public class CharacterIteratorRNN implements DataSetIterator {
 	 * @param rng Random number generator, for repeatability if required
 	 * @throws IOException If text file cannot  be loaded
 	 */
-	public CharacterIteratorRNN(String text, Charset textFileEncoding, int miniBatchSize, int exampleLength,
-                                char[] validCharacters, Random rng) throws IOException {
+	public CharacterIteratorRNNDemo(String text, Charset textFileEncoding, int miniBatchSize, int exampleLength,
+                                    Vector[] validCharacters, Random rng) throws IOException {
 		//if( !new File(textFilePath).exists()) throw new IOException("Could not access file (does not exist): " + textFilePath);
 		if( miniBatchSize <= 0 ) throw new IllegalArgumentException("Invalid miniBatchSize (must be >0)");
 		this.validCharacters = validCharacters;
@@ -65,15 +62,18 @@ public class CharacterIteratorRNN implements DataSetIterator {
 		//Files.readAllLines(new File(textFilePath).toPath(),textFileEncoding);
 		int maxSize = lines.size();	//add lines.size() to account for newline characters at end of each line
 		for( String s : lines ) maxSize += s.length();
-		char[] characters = new char[maxSize];
+		Vector[] characters = new Vector[maxSize];
 		int currIdx = 0;
 		for( String s : lines ){
-			char[] thisLine = s.toCharArray();
-			for (char aThisLine : thisLine) {
+			Vector[] thisLine =new Vector[s.length()];
+			for (int i=0;i<s.length();i++){
+				thisLine[i]=new Vector(s.charAt(i));
+			}
+			for (Vector aThisLine : thisLine) {
 				if (!charToIdxMap.containsKey(aThisLine)) continue;
 				characters[currIdx++] = aThisLine;
 			}
-			if(newLineValid) characters[currIdx++] = '\n';
+			if(newLineValid) characters[currIdx++] = new Vector('\n');
 		}
 
 		if( currIdx == characters.length ){
@@ -91,13 +91,13 @@ public class CharacterIteratorRNN implements DataSetIterator {
         initializeOffsets();
     }
 
-    public static char[] getMinimalCharacterSet(String scan){
-		HashSet<Character> sc=new HashSet<>();
+    public static Vector[] getMinimalCharacterSet(String scan){
+		HashSet<Vector> sc=new HashSet<>();
 		for (int i=0;i<scan.length();i++){
-			sc.add(scan.charAt(i));
+			sc.add(new Vector(scan.charAt(i)));
 		}
-		char[] ret=new char[sc.size()];
-		Iterator<Character> itor=sc.iterator();
+		Vector[] ret=new Vector[sc.size()];
+		Iterator<Vector> itor=sc.iterator();
 		int pos=0;
 		while(itor.hasNext()){
 			ret[pos++]=itor.next();
@@ -106,41 +106,41 @@ public class CharacterIteratorRNN implements DataSetIterator {
 	}
 
     /** A minimal character set, with a-z, A-Z, 0-9 and common punctuation etc */
-	public static char[] getMinimalCharacterSet(){
-		List<Character> validChars = new LinkedList<>();
-		for(char c='a'; c<='z'; c++) validChars.add(c);
-		for(char c='A'; c<='Z'; c++) validChars.add(c);
-		for(char c='0'; c<='9'; c++) validChars.add(c);
-		char[] temp = {'!', '&', '(', ')', '?', '-', '\'', '"', ',', '.', ':', ';', ' ', '\n', '\t'};
-		for( char c : temp ) validChars.add(c);
-		char[] out = new char[validChars.size()];
+	public static Vector[] getMinimalCharacterSet(){
+		List<Vector> validChars = new LinkedList<>();
+		for(char c='a'; c<='z'; c++) validChars.add(new Vector(c));
+		for(char c='A'; c<='Z'; c++) validChars.add(new Vector(c));
+		for(char c='0'; c<='9'; c++) validChars.add(new Vector(c));
+//		char[] temp = {'!', '&', '(', ')', '?', '-', '\'', '"', ',', '.', ':', ';', ' ', '\n', '\t'};
+//		for( Vector c : temp ) validChars.add(new Vector(c));
+		Vector[] out = new Vector[validChars.size()];
 		int i=0;
-		for( Character c : validChars ) out[i++] = c;
+		for( Vector c : validChars ) out[i++] = c;
 		return out;
 	}
 
 	/** As per getMinimalCharacterSet(), but with a few extra characters */
-	public static char[] getDefaultCharacterSet(){
-		List<Character> validChars = new LinkedList<>();
-		for(char c : getMinimalCharacterSet() ) validChars.add(c);
-		char[] additionalChars = {'@', '#', '$', '%', '^', '*', '{', '}', '[', ']', '/', '+', '_',
-				'\\', '|', '<', '>'};
-		for( char c : additionalChars ) validChars.add(c);
-		char[] out = new char[validChars.size()];
+	public static Vector[] getDefaultCharacterSet(){
+		List<Vector> validChars = new LinkedList<>();
+		for(Vector c : getMinimalCharacterSet() ) validChars.add(c);
+//		char[] additionalChars = {'@', '#', '$', '%', '^', '*', '{', '}', '[', ']', '/', '+', '_',
+//				'\\', '|', '<', '>'};
+//		for( char c : additionalChars ) validChars.add(new c);
+		Vector[] out = new Vector[validChars.size()];
 		int i=0;
-		for( Character c : validChars ) out[i++] = c;
+		for( Vector c : validChars ) out[i++] = c;
 		return out;
 	}
 
-	public char convertIndexToCharacter( int idx ){
+	public Vector convertIndexToCharacter(int idx ){
 		return validCharacters[idx];
 	}
 
-	public int convertCharacterToIndex( char c ){
+	public int convertCharacterToIndex( Vector c ){
 		return charToIdxMap.get(c);
 	}
 
-	public char getRandomCharacter(){
+	public Vector getRandomCharacter(){
 		return validCharacters[(int) (rng.nextDouble()*validCharacters.length)];
 	}
 
@@ -248,3 +248,4 @@ public class CharacterIteratorRNN implements DataSetIterator {
 	}
 
 }
+

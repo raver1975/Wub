@@ -1,4 +1,4 @@
-package com.klemstinegroup.wub.rnn;
+package com.klemstinegroup.wub.vectorrnn;
 
 import org.deeplearning4j.nn.api.Layer;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
@@ -38,7 +38,7 @@ import java.util.Random;
  *         http://deeplearning4j.org/lstm
  *         http://deeplearning4j.org/recurrentnetwork
  */
-public class RNN {
+public class RNNDemo {
 
     public static void main(String[] args) throws Exception {
         String fileLocation = "aabbccdd";
@@ -64,7 +64,7 @@ public class RNN {
 
         //Get a DataSetIterator that handles vectorization of text into something we can use to train
         // our GravesLSTM network.
-        CharacterIteratorRNN iter = getShakespeareIterator(input, miniBatchSize, exampleLength);
+        CharacterIteratorRNNDemo iter = getShakespeareIterator(input, miniBatchSize, exampleLength);
         int nOut = iter.totalOutcomes();
 
         //Set up network configuration:
@@ -139,7 +139,7 @@ public class RNN {
      * @param miniBatchSize  Number of text segments in each training mini-batch
      * @param sequenceLength Number of characters in each text segment.
      */
-    public static CharacterIteratorRNN getShakespeareIterator(String input, int miniBatchSize, int sequenceLength) throws Exception {
+    public static CharacterIteratorRNNDemo getShakespeareIterator(String input, int miniBatchSize, int sequenceLength) throws Exception {
         //The Complete Works of William Shakespeare
         //5.3MB file in UTF-8 Encoding, ~5.4 million characters
         //https://www.gutenberg.org/ebooks/100
@@ -156,9 +156,9 @@ public class RNN {
 
         //	if(!f.exists()) throw new IOException("File does not exist: " + fileLocation);	//Download problem?
 
-        char[] validCharacters = CharacterIteratorRNN.getMinimalCharacterSet(input);    //Which characters are allowed? Others will be removed
+        Vector[] validCharacters = CharacterIteratorRNNDemo.getMinimalCharacterSet(input);    //Which characters are allowed? Others will be removed
 
-        return new CharacterIteratorRNN(input, Charset.forName("UTF-8"),
+        return new CharacterIteratorRNNDemo(input, Charset.forName("UTF-8"),
                 miniBatchSize, sequenceLength, validCharacters, new Random(12345));
     }
 
@@ -166,14 +166,13 @@ public class RNN {
      * Generate a sample from the network, given an (optional, possibly null) initialization. Initialization
      * can be used to 'prime' the RNNDemo with a sequence you want to extend/continue.<br>
      * Note that the initalization is used for all samples
-     *
-     * @param initialization     String, may be null. If null, select a random character as initialization for all samples
-     * @param charactersToSample Number of characters to sample from network (excluding initialization)
+     *  @param initialization     String, may be null. If null, select a random character as initialization for all samples
      * @param net                MultiLayerNetwork with one or more GravesLSTM/RNNDemo layers and a softmax output layer
      * @param iter               CharacterIteratorRNN. Used for going from indexes back to characters
+     * @param charactersToSample Number of characters to sample from network (excluding initialization)
      */
     private static String[] sampleCharactersFromNetwork(String initialization, MultiLayerNetwork net,
-                                                        CharacterIteratorRNN iter, Random rng, int charactersToSample, int numSamples) {
+                                                        CharacterIteratorRNNDemo iter, Random rng, int charactersToSample, int numSamples) {
         //Set up initialization. If no initialization: use a random character
         if (initialization == null) {
             initialization = String.valueOf(iter.getRandomCharacter());
@@ -181,7 +180,10 @@ public class RNN {
 
         //Create input for initialization
         INDArray initializationInput = Nd4j.zeros(numSamples, iter.inputColumns(), initialization.length());
-        char[] init = initialization.toCharArray();
+        Vector[] init =new Vector[initialization.length()];
+        for (int i=0;i<init.length;i++) {
+            init[i]=new Vector(initialization.charAt(i));
+        }
         for (int i = 0; i < init.length; i++) {
             int idx = iter.convertCharacterToIndex(init[i]);
             for (int j = 0; j < numSamples; j++) {

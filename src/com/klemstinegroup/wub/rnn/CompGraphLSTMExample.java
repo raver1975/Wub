@@ -19,7 +19,7 @@ import org.nd4j.linalg.lossfunctions.LossFunctions;
 import java.util.Random;
 
 /**
- * This example is almost identical to the RNN, except that it utilizes the ComputationGraph
+ * This example is almost identical to the RNNDemo, except that it utilizes the ComputationGraph
  * architecture instead of MultiLayerNetwork architecture. See the javadoc in that example for details.
  * For more details on the ComputationGraph architecture, see http://deeplearning4j.org/compgraph
  *
@@ -118,11 +118,11 @@ public class CompGraphLSTMExample {
     }
 
     /** Generate a sample from the network, given an (optional, possibly null) initialization. Initialization
-     * can be used to 'prime' the RNN with a sequence you want to extend/continue.<br>
+     * can be used to 'prime' the RNNDemo with a sequence you want to extend/continue.<br>
      * Note that the initalization is used for all samples
      * @param initialization String, may be null. If null, select a random character as initialization for all samples
      * @param charactersToSample Number of characters to sample from network (excluding initialization)
-     * @param net MultiLayerNetwork with one or more GravesLSTM/RNN layers and a softmax output layer
+     * @param net MultiLayerNetwork with one or more GravesLSTM/RNNDemo layers and a softmax output layer
      * @param iter CharacterIteratorRNN. Used for going from indexes back to characters
      */
     private static String[] sampleCharactersFromNetwork(String initialization, ComputationGraph net,

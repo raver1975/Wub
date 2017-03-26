@@ -27,7 +27,7 @@ import java.util.Random;
 /**GravesLSTM Character modelling example
  * @author Alex Black
 
-   Example: Train a LSTM RNN to generates text, one character at a time.
+   Example: Train a LSTM RNNDemo to generates text, one character at a time.
 	This example is somewhat inspired by Andrej Karpathy's blog post,
 	"The Unreasonable Effectiveness of Recurrent Neural Networks"
 	http://karpathy.github.io/2015/05/21/rnn-effectiveness/
@@ -148,11 +148,11 @@ public class GravesLSTMCharModellingExample {
 	}
 
 	/** Generate a sample from the network, given an (optional, possibly null) initialization. Initialization
-	 * can be used to 'prime' the RNN with a sequence you want to extend/continue.<br>
+	 * can be used to 'prime' the RNNDemo with a sequence you want to extend/continue.<br>
 	 * Note that the initalization is used for all samples
 	 * @param initialization String, may be null. If null, select a random character as initialization for all samples
 	 * @param charactersToSample Number of characters to sample from network (excluding initialization)
-	 * @param net MultiLayerNetwork with one or more GravesLSTM/RNN layers and a softmax output layer
+	 * @param net MultiLayerNetwork with one or more GravesLSTM/RNNDemo layers and a softmax output layer
 	 * @param iter CharacterIteratorRNN. Used for going from indexes back to characters
 	 */
 	private static String[] sampleCharactersFromNetwork(String initialization, MultiLayerNetwork net,

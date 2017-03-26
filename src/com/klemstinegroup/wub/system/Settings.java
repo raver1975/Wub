@@ -9,7 +9,7 @@ public class Settings {
     public static boolean makeVideo = false;
     public static String queryOverride = null;
     public static boolean addTrackInfo = false;
-    public static final float segmentsKept = 1f;
+    public static final float segmentsKept = .75f;
 
     public static float pitchFactor = 17f;
     public static float timbreFactor = 30f;
