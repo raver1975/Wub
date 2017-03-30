@@ -1,4 +1,4 @@
-package com.klemstinegroup.wub.rnn;
+package com.klemstinegroup.wub.ai.rnn;
 
 class Vector{
     char c;

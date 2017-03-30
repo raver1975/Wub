@@ -13,7 +13,7 @@ public class Segment extends TimedEvent {
     private double[] timbre;
 	
 	@SuppressWarnings("unchecked")
-	Segment(Map map) {
+    public Segment(Map map) {
 		super(map);
 		
 		MQuery mq = new MQuery(map);

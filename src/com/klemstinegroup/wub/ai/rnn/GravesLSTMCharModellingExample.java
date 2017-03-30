@@ -1,4 +1,4 @@
-package com.klemstinegroup.wub.rnn;
+package com.klemstinegroup.wub.ai.rnn;
 
 import org.apache.commons.io.FileUtils;
 import org.deeplearning4j.nn.api.Layer;

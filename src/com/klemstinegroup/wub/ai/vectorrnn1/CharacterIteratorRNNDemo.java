@@ -1,4 +1,4 @@
-package com.klemstinegroup.wub.vectorrnn1.vectorrnn;
+package com.klemstinegroup.wub.ai.vectorrnn1;
 
 import com.echonest.api.v4.Segment;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -172,8 +172,8 @@ public class CharacterIteratorRNNDemo implements DataSetIterator {
         // dimension 1 = size of each vector (i.e., number of characters)
         // dimension 2 = length of each time series/example
         //Why 'f' order here? See http://deeplearning4j.org/usingrnns.html#data section "Alternative: Implementing a custom DataSetIterator"
-		INDArray input = Nd4j.create(new int[]{currMinibatchSize,Vector.attLength,exampleLength}, 'f');
-		INDArray labels = Nd4j.create(new int[]{currMinibatchSize,Vector.attLength,exampleLength}, 'f');
+		INDArray input = Nd4j.create(new int[]{currMinibatchSize, Vector.attLength,exampleLength}, 'f');
+		INDArray labels = Nd4j.create(new int[]{currMinibatchSize, Vector.attLength,exampleLength}, 'f');
 
         for( int i=0; i<currMinibatchSize; i++ ){
             int startIdx = exampleStartOffsets.removeFirst();

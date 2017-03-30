@@ -1,4 +1,4 @@
-package com.klemstinegroup.wub.rnn;
+package com.klemstinegroup.wub.ai.rnn;
 
 import org.deeplearning4j.nn.api.Layer;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;

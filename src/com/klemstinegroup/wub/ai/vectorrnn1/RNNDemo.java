@@ -1,4 +1,4 @@
-package com.klemstinegroup.wub.vectorrnn1.vectorrnn;
+package com.klemstinegroup.wub.ai.vectorrnn1;
 
 import com.echonest.api.v4.Segment;
 import com.klemstinegroup.wub.system.Song;

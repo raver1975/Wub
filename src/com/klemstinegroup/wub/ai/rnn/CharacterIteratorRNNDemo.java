@@ -1,4 +1,4 @@
-package com.klemstinegroup.wub.rnn;
+package com.klemstinegroup.wub.ai.rnn;
 
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;

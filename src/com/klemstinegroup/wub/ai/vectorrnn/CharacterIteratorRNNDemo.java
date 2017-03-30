@@ -1,4 +1,4 @@
-package com.klemstinegroup.wub.vectorrnn;
+package com.klemstinegroup.wub.ai.vectorrnn;
 
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
@@ -44,7 +44,7 @@ public class CharacterIteratorRNNDemo implements DataSetIterator {
 	 * @throws IOException If text file cannot  be loaded
 	 */
 	public CharacterIteratorRNNDemo(String text, Charset textFileEncoding, int miniBatchSize, int exampleLength,
-                                    Vector[] validCharacters, Random rng) throws IOException {
+									Vector[] validCharacters, Random rng) throws IOException {
 		//if( !new File(textFilePath).exists()) throw new IOException("Could not access file (does not exist): " + textFilePath);
 		if( miniBatchSize <= 0 ) throw new IllegalArgumentException("Invalid miniBatchSize (must be >0)");
 		this.validCharacters = validCharacters;
