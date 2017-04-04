@@ -280,13 +280,13 @@ public class BeautifulKMGSRandReduce {
 
 //                    System.out.println(trans);
                     AudioInterval ai2 = tempSong[0].getAudioInterval(tempSong[0].analysis.getSegments().get(trans.segment),tempSong[0].number,trans.segment);
-                    ai2.payloadPlay = new SegmentSong(startNode[0].song, startNode[0].segment);
+                    ai2.payloadPrintout = new SegmentSong(startNode[0].song, startNode[0].segment);
 //                    ai2.payloadPrintout = new SegmentSong(trans.song, trans.segment);
 
 //                    AudioInterval ai = tempSong[0].getAudioInterval(tempSong[0].analysis.getSegments().get(startNode[0].segment));
-//                    ai.payloadPlay = new SegmentSong(trans.song, trans.segment);
+//                    ai.payloadPrintout = new SegmentSong(trans.song, trans.segment);
 
-//                   SegmentSong ais2=map.get(ai.payloadPlay);
+//                   SegmentSong ais2=map.get(ai.payloadPrintout);
 //                    AudioInterval ai2=  tempSong[0].getAudioInterval(tempSong[0].analysis.getSegments().get(ais2.segment));
 
                     if (trans != null) audio.play(ai2);

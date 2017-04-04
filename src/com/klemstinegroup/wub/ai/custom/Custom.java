@@ -16,31 +16,35 @@ import java.util.List;
 public class Custom {
 
     static final int attLength = 28;
-    public static Attribute[] attlist;
-
+    public  Attribute[] attlist;
+    int width = 1200;
+    int height = 400;
+    int numClusters=50;
     public Custom() {
-        int width = 1200;
-        int height = 800;
+
         int sonu = (int) (Math.random() * 1300);
         Song song = SongManager.getRandom(sonu);
         ImagePanel tf = new ImagePanel();
-        JTextArea jta = new JTextArea(4, 20);
+//        JTextArea jta = new JTextArea(4, 20);
         JFrame jframe = new JFrame("Wub");
+        jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.setSize(width, height);
         jframe.setResizable(false);
         tf.setFont(new Font("Arial", Font.BOLD, 300));
         jframe.add("Center", tf);
         jframe.setVisible(true);
-        Audio audio = new Audio(jframe, tf, 100);
+        Audio audio = new Audio(jframe, tf, numClusters);
         List<Segment> segments = song.analysis.getSegments();
         int i = 0;
-        HashMap<SegmentSong, SegmentSong> map1 = makeMap(100, song, false);
-        HashMap<SegmentSong, SegmentSong> mapr = makeMap(100, song, true);
+        HashMap<SegmentSong, SegmentSong> map1 = makeMap(numClusters, song, false);
+//        HashMap<SegmentSong, SegmentSong> mapr = makeMap(numClusters, song, true);
         HashMap<SegmentSong, Integer> count = new HashMap<>();
         for (Segment s : segments) {
-            audio.play(song.getAudioInterval(s, song.number, i));
             SegmentSong segOrig = new SegmentSong(song.number, i);
             SegmentSong segMapped = map1.get(segOrig);
+            Segment sem=segments.get(segMapped.segment);
+            audio.play(song.getAudioInterval(sem,segMapped));
+
 //            System.out.println(segOrig + " maps to " + segMapped);
             if (count.containsKey(segMapped)) count.put(segMapped, count.get(segMapped) + 1);
             else count.put(segMapped, 1);
@@ -53,7 +57,7 @@ public class Custom {
         }
     }
 
-    private static HashMap<SegmentSong, SegmentSong> makeMap(int numClusters, Song song1, boolean reverseMap) {
+    private  HashMap<SegmentSong, SegmentSong> makeMap(int numClusters, Song song1, boolean reverseMap) {
 
         //one time attribute setup
         FastVector attrs = new FastVector();
@@ -132,7 +136,7 @@ public class Custom {
         return map;
     }
 
-    protected static double distance(Instance i1, Instance i2) {
+    protected double distance(Instance i1, Instance i2) {
         double tot = 0;
         for (int i = 0; i < attLength; i++) {
             double ta = i1.value(attlist[i]) - i2.value(attlist[i]);

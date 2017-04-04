@@ -22,7 +22,7 @@ public class Song {
         return new AudioInterval(list, data);
     }
 
-    public AudioInterval getAudioInterval(TimedEvent timedEvent,int s,int snum) {
+    public AudioInterval getAudioInterval(TimedEvent timedEvent, int s, int snum) {
         return new AudioInterval(timedEvent, data,s,snum);
     }
 
@@ -56,4 +56,7 @@ public class Song {
         return al;
     }
 
+    public AudioInterval getAudioInterval(Segment sem, SegmentSong segMapped) {
+        return getAudioInterval(sem,segMapped.song,segMapped.segment);
+    }
 }

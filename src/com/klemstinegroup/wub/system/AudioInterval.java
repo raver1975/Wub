@@ -12,13 +12,13 @@ public class AudioInterval implements Serializable {
     //public int startBytes;
     //public int lengthBytes;
     public byte[] data;
-    public SegmentSong payloadPlay;
+//    public SegmentSong payloadPlay;
     public SegmentSong payloadPrintout;
 
     //public int endBytes;
 //	int newbytestart;
 
-    public AudioInterval(TimedEvent te, byte[] fullData, int s, int snum) {
+    public AudioInterval(TimedEvent te, byte[] fullData, int song1, int segmentNum1) {
         double start1 = te.getStart();
         double duration = te.getDuration();
         int startBytes = (int) (start1 * Audio.sampleRate * Audio.frameSize) - (int) (start1 * Audio.sampleRate * Audio.frameSize) % Audio.frameSize;
@@ -31,8 +31,8 @@ public class AudioInterval implements Serializable {
         System.arraycopy(fullData, startBytes, data, 0, lengthBytes);
         //System.out.println((startBytes+lengthBytes)+"\t"+fullData.length+"\t"+data.length+"\t"+lengthBytes);
         //this.te = te;
-payloadPlay =new SegmentSong(s,snum);
-payloadPrintout =new SegmentSong(s,snum);
+//payloadPlay =new SegmentSong(song1,segmentNum1);
+payloadPrintout =new SegmentSong(song1,segmentNum1);
     }
 
     public AudioInterval(List<TimedEvent> list, byte[] fullData) {

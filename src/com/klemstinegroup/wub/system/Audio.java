@@ -125,31 +125,31 @@ public class Audio {
                         cnt = 2500;
                         AudioInterval i = queue.poll();
                         currentlyPlaying = i;
-                        System.out.println("currently playing: " + i.payloadPlay + "\t" + i.payloadPrintout);
-                        if (i.payloadPlay != null) {
-//                            System.out.println("now playing " + i.payloadPlay);
+                        System.out.println("currently playing:" + i.payloadPrintout);
+                        if (i.payloadPrintout != null) {
+//                            System.out.println("now playing " + i.payloadPrintout);
 
                             if (tf != null) {
                                 new Thread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        if (!tem.contains(i.payloadPlay.segment))
-                                            tem.add(i.payloadPlay.segment);
-                                        int norm = tem.indexOf(i.payloadPlay.segment);
+                                        if (!tem.contains(i.payloadPrintout.segment))
+                                            tem.add(i.payloadPrintout.segment);
+                                        int norm = tem.indexOf(i.payloadPrintout.segment);
 //                                tf.append(norm + "\n");
                                         double normd = ((double) norm / (double) numClusters) * 100d;
 
 //                                tf.invalidate();
-                                        if (i.payloadPlay.song == -1) {
+                                        if (i.payloadPrintout.song == -1) {
                                             cachedSong = AudioParams.firstSong;
                                             cachedSongIndex = -1;
                                         } else {
-                                            if (cachedSong == null || cachedSongIndex != i.payloadPlay.song) {
-                                                cachedSong = SongManager.getRandom(i.payloadPlay.song);
-                                                cachedSongIndex = i.payloadPlay.song;
+                                            if (cachedSong == null || cachedSongIndex != i.payloadPrintout.song) {
+                                                cachedSong = SongManager.getRandom(i.payloadPrintout.song);
+                                                cachedSongIndex = i.payloadPrintout.song;
                                             }
                                         }
-                                        if (i.payloadPlay != null && i.payloadPlay.segment > -1) {
+                                        if (i.payloadPrintout != null && i.payloadPrintout.segment > -1) {
 
                                             if (Settings.makeVideo) {
                                                 BufferedImage grab = robot.createScreenCapture(jframe.getBounds());
@@ -172,8 +172,8 @@ public class Audio {
                                             }
 
                                             ArrayList<Segment> list = new ArrayList<>();
-                                            list.add(cachedSong.analysis.getSegments().get(i.payloadPlay.segment));
-                                            double duration = cachedSong.analysis.getSegments().get(i.payloadPlay.segment).duration;
+                                            list.add(cachedSong.analysis.getSegments().get(i.payloadPrintout.segment));
+                                            double duration = cachedSong.analysis.getSegments().get(i.payloadPrintout.segment).duration;
                                             tf.setBackground(ColorHelper.numberToColor(normd));
                                             BufferedImage bi = new SamplingGraph().createWaveForm(list, duration, i.data, audioFormat, tf.getWidth(), tf.getHeight());
                                             Graphics g = bi.getGraphics();
@@ -201,7 +201,7 @@ public class Audio {
                                                 val = hm.get(lastSeg + "") + 1;
                                             }
                                             hm.put(lastSeg + "", val);
-                                            lastSeg = i.payloadPlay.segment;
+                                            lastSeg = i.payloadPrintout.segment;
                                             Color color = ColorHelper.numberToColorPercentage((double) val / (double) AudioParams.maxValue);
                                             if (lastNode1 != null) {
                                                 lastNode1.addAttribute("ui.style", "fill-color: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ");");
@@ -212,14 +212,14 @@ public class Audio {
                                                 lastNode2.addAttribute("ui.style", "size: 15;");
                                             }
                                             if (AudioParams.graph != null) {
-                                                Node node1 = AudioParams.graph.getNode(i.payloadPlay.hashCode() + "");
+                                                Node node1 = AudioParams.graph.getNode(i.payloadPrintout.hashCode() + "");
                                                 if (node1 != null) {
                                                     node1.addAttribute("ui.style", "fill-color: rgb(255,0,0);");
                                                     node1.addAttribute("ui.style", "size:25;");
                                                 }
                                                 lastNode1 = node1;
 
-                                                if (i.payloadPrintout != i.payloadPlay) {
+                                                if (i.payloadPrintout != i.payloadPrintout) {
                                                     Node node2 = AudioParams.graph.getNode(i.payloadPrintout.hashCode() + "");
                                                     if (node2 != null) {
                                                         //node2.addAttribute("ui.style", "fill-color: rgb(255,0,0);");
