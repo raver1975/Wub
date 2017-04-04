@@ -44,7 +44,7 @@ public abstract class AbstractLensSupport<V,E> implements LensSupport {
     
     /**
      * create the base class, setting common members and creating
-     * a custom GraphMouse
+     * a Custom GraphMouse
      * @param vv the VisualizationViewer to work on
      * @param lensGraphMouse the GraphMouse instance to use for the lens
      */

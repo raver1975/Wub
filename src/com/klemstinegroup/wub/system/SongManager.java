@@ -63,7 +63,11 @@ public class SongManager {
 
     public static Song getRandom(int i) {
         if (i < 0) return getRandom();
-        if (i > -1 && i < list.length) return LoadFromFile.loadSong(list[i]);
+        if (i > -1 && i < list.length) {
+            Song ret= LoadFromFile.loadSong(list[i]);
+            ret.number=i;
+        return ret;
+        }
         else return null;
     }
 

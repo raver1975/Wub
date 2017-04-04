@@ -15,7 +15,7 @@ import edu.uci.ics.jung.visualization.RenderContext;
 /**
  * The default implementation of the Renderer used by the
  * VisualizationViewer. Default Vertex and Edge Renderers
- * are supplied, or the user may set custom values. The
+ * are supplied, or the user may set Custom values. The
  * Vertex and Edge renderers are used in the renderVertex
  * and renderEdge methods, which are called in the render
  * loop of the VisualizationViewer.

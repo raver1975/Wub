@@ -36,7 +36,7 @@ import edu.uci.ics.jung.visualization.transform.shape.Intersector;
 
 /**
  * GraphZoomScrollPane is a Container for the Graph's VisualizationViewer
- * and includes custom horizontal and vertical scrollbars.
+ * and includes Custom horizontal and vertical scrollbars.
  * GraphZoomScrollPane listens for changes in the scale and
  * translation of the VisualizationViewer, and will update the
  * scrollbar positions and sizes accordingly. Changes in the

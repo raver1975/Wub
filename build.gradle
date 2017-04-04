@@ -70,6 +70,10 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs/Weka')
     compile fileTree(include: ['*.jar'], dir: 'libs/Wub')
 
+    // https://mvnrepository.com/artifact/org.encog/encog-core
+    compile group: 'org.encog', name: 'encog-core', version: '3.3.0'
+
+
     compile 'org.deeplearning4j:deeplearning4j-nlp:0.8.0'
     compile 'org.deeplearning4j:deeplearning4j-ui:0.8.0'
     compile 'org.deeplearning4j:dl4j-spark:0.8.0'

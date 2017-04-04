@@ -52,7 +52,7 @@ public class SatelliteVisualizationViewer<V, E>
         super(master.getModel(), preferredSize);
         this.master = master;
         
-        // create a graph mouse with custom plugins to affect the master view
+        // create a graph mouse with Custom plugins to affect the master view
         ModalGraphMouse gm = new ModalSatelliteGraphMouse();
         setGraphMouse(gm);
         

@@ -125,31 +125,31 @@ public class Audio {
                         cnt = 2500;
                         AudioInterval i = queue.poll();
                         currentlyPlaying = i;
-                        System.out.println("currently playing: " + i.payload + "\t" + i.payload2);
-                        if (i.payload != null) {
-//                            System.out.println("now playing " + i.payload);
+                        System.out.println("currently playing: " + i.payloadPlay + "\t" + i.payloadPrintout);
+                        if (i.payloadPlay != null) {
+//                            System.out.println("now playing " + i.payloadPlay);
 
                             if (tf != null) {
                                 new Thread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        if (!tem.contains(i.payload.segment))
-                                            tem.add(i.payload.segment);
-                                        int norm = tem.indexOf(i.payload.segment);
+                                        if (!tem.contains(i.payloadPlay.segment))
+                                            tem.add(i.payloadPlay.segment);
+                                        int norm = tem.indexOf(i.payloadPlay.segment);
 //                                tf.append(norm + "\n");
                                         double normd = ((double) norm / (double) numClusters) * 100d;
 
 //                                tf.invalidate();
-                                        if (i.payload.song == -1) {
+                                        if (i.payloadPlay.song == -1) {
                                             cachedSong = AudioParams.firstSong;
                                             cachedSongIndex = -1;
                                         } else {
-                                            if (cachedSong == null || cachedSongIndex != i.payload.song) {
-                                                cachedSong = SongManager.getRandom(i.payload.song);
-                                                cachedSongIndex = i.payload.song;
+                                            if (cachedSong == null || cachedSongIndex != i.payloadPlay.song) {
+                                                cachedSong = SongManager.getRandom(i.payloadPlay.song);
+                                                cachedSongIndex = i.payloadPlay.song;
                                             }
                                         }
-                                        if (i.payload != null && i.payload.segment > -1) {
+                                        if (i.payloadPlay != null && i.payloadPlay.segment > -1) {
 
                                             if (Settings.makeVideo) {
                                                 BufferedImage grab = robot.createScreenCapture(jframe.getBounds());
@@ -172,8 +172,8 @@ public class Audio {
                                             }
 
                                             ArrayList<Segment> list = new ArrayList<>();
-                                            list.add(cachedSong.analysis.getSegments().get(i.payload.segment));
-                                            double duration = cachedSong.analysis.getSegments().get(i.payload.segment).duration;
+                                            list.add(cachedSong.analysis.getSegments().get(i.payloadPlay.segment));
+                                            double duration = cachedSong.analysis.getSegments().get(i.payloadPlay.segment).duration;
                                             tf.setBackground(ColorHelper.numberToColor(normd));
                                             BufferedImage bi = new SamplingGraph().createWaveForm(list, duration, i.data, audioFormat, tf.getWidth(), tf.getHeight());
                                             Graphics g = bi.getGraphics();
@@ -183,16 +183,16 @@ public class Audio {
 
                                             for (int xi = -1; xi < 2; xi++) {
                                                 for (int yi = -1; yi < 2; yi++) {
-                                                    g.drawString("song #" + i.payload2.song, 10 - xi, 25 + yi + tf.getHeight() / 2);
-                                                    g.drawString("seq #" + i.payload2.segment, 440 - xi, 25 + yi + tf.getHeight() / 2);
+                                                    g.drawString("song #" + i.payloadPrintout.song, 10 - xi, 25 + yi + tf.getHeight() / 2);
+                                                    g.drawString("seq #" + i.payloadPrintout.segment, 440 - xi, 25 + yi + tf.getHeight() / 2);
                                                     g.drawString("len " + i.data.length, 820 - xi, 25 + yi + tf.getHeight() / 2);
 
                                                 }
 
                                             }
                                             g.setColor(Color.RED);
-                                            g.drawString("song #" + i.payload2.song, 10, 25 + tf.getHeight() / 2);
-                                            g.drawString("seq #" + i.payload2.segment, 440, 25 + tf.getHeight() / 2);
+                                            g.drawString("song #" + i.payloadPrintout.song, 10, 25 + tf.getHeight() / 2);
+                                            g.drawString("seq #" + i.payloadPrintout.segment, 440, 25 + tf.getHeight() / 2);
                                             g.drawString("len " + i.data.length, 820, 25 + tf.getHeight() / 2);
                                             int val = 0;
                                             if (hm.get(lastSeg + "") == null) {
@@ -201,7 +201,7 @@ public class Audio {
                                                 val = hm.get(lastSeg + "") + 1;
                                             }
                                             hm.put(lastSeg + "", val);
-                                            lastSeg = i.payload.segment;
+                                            lastSeg = i.payloadPlay.segment;
                                             Color color = ColorHelper.numberToColorPercentage((double) val / (double) AudioParams.maxValue);
                                             if (lastNode1 != null) {
                                                 lastNode1.addAttribute("ui.style", "fill-color: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ");");
@@ -212,15 +212,15 @@ public class Audio {
                                                 lastNode2.addAttribute("ui.style", "size: 15;");
                                             }
                                             if (AudioParams.graph != null) {
-                                                Node node1 = AudioParams.graph.getNode(i.payload.hashCode() + "");
+                                                Node node1 = AudioParams.graph.getNode(i.payloadPlay.hashCode() + "");
                                                 if (node1 != null) {
                                                     node1.addAttribute("ui.style", "fill-color: rgb(255,0,0);");
                                                     node1.addAttribute("ui.style", "size:25;");
                                                 }
                                                 lastNode1 = node1;
 
-                                                if (i.payload2 != i.payload) {
-                                                    Node node2 = AudioParams.graph.getNode(i.payload2.hashCode() + "");
+                                                if (i.payloadPrintout != i.payloadPlay) {
+                                                    Node node2 = AudioParams.graph.getNode(i.payloadPrintout.hashCode() + "");
                                                     if (node2 != null) {
                                                         //node2.addAttribute("ui.style", "fill-color: rgb(255,0,0);");
                                                         node2.addAttribute("ui.style", "size:20;");

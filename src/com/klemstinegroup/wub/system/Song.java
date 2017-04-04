@@ -10,6 +10,7 @@ import com.echonest.api.v4.TrackAnalysis;
 public class Song {
     public byte[] data;
     public TrackAnalysis analysis;
+    public int number;
 
 
     public Song(byte[] data, TrackAnalysis ta) {
@@ -21,8 +22,8 @@ public class Song {
         return new AudioInterval(list, data);
     }
 
-    public AudioInterval getAudioInterval(TimedEvent timedEvent) {
-        return new AudioInterval(timedEvent, data);
+    public AudioInterval getAudioInterval(TimedEvent timedEvent,int s,int snum) {
+        return new AudioInterval(timedEvent, data,s,snum);
     }
 
     public ArrayList<Segment> getSegments(TimedEvent timedEvent) {

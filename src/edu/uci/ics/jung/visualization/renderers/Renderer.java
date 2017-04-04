@@ -17,7 +17,7 @@ import edu.uci.ics.jung.visualization.RenderContext;
 /**
  * The interface for drawing vertices, edges, and their labels.
  * Implementations of this class can set specific renderers for
- * each element, allowing custom control of each.
+ * each element, allowing Custom control of each.
  */
 public interface Renderer<V,E> {
 

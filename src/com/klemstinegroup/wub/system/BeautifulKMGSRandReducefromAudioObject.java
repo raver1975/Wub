@@ -1,8 +1,6 @@
 package com.klemstinegroup.wub.system;
 
 import com.echonest.api.v4.Segment;
-import com.klemstinegroup.wub.system.*;
-import com.klemstinegroup.wub.system.ImagePanel;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.MultiGraph;
@@ -221,14 +219,14 @@ public class BeautifulKMGSRandReducefromAudioObject {
 //                        lastSong[0] = trans.song;
 //
 //                    System.out.println(trans);
-                    AudioInterval ai2 = song.getAudioInterval(song.analysis.getSegments().get(trans.segment));
-                    ai2.payload = new SegmentSong(startNode[0].song, startNode[0].segment);
-                    ai2.payload2 = new SegmentSong(trans.song, trans.segment);
+                    AudioInterval ai2 = song.getAudioInterval(song.analysis.getSegments().get(trans.segment),song.number,trans.segment);
+                    ai2.payloadPlay = new SegmentSong(startNode[0].song, startNode[0].segment);
+                    ai2.payloadPrintout = new SegmentSong(trans.song, trans.segment);
 
 //                    AudioInterval ai = tempSong[0].getAudioInterval(tempSong[0].analysis.getSegments().get(startNode[0].segment));
-//                    ai.payload = new SegmentSong(trans.song, trans.segment);
+//                    ai.payloadPlay = new SegmentSong(trans.song, trans.segment);
 
-//                   SegmentSong ais2=map.get(ai.payload);
+//                   SegmentSong ais2=map.get(ai.payloadPlay);
 //                    AudioInterval ai2=  tempSong[0].getAudioInterval(tempSong[0].analysis.getSegments().get(ais2.segment));
 
                     if (trans != null) audio.play(ai2);

@@ -23,22 +23,17 @@ package com.klemstinegroup.wub.ai.encog;
  * http://www.heatonresearch.com/copyright
  */
 
+import java.awt.*;
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import com.echonest.api.v4.Segment;
-import com.klemstinegroup.wub.system.Settings;
-import com.klemstinegroup.wub.system.Song;
-import com.klemstinegroup.wub.system.SongManager;
+import com.klemstinegroup.wub.system.*;
 import org.encog.ConsoleStatusReportable;
 import org.encog.Encog;
-import org.encog.bot.BotUtil;
 import org.encog.mathutil.error.ErrorCalculation;
 import org.encog.mathutil.error.ErrorCalculationMode;
 import org.encog.ml.MLRegression;
@@ -54,32 +49,45 @@ import org.encog.ml.model.EncogModel;
 import org.encog.util.arrayutil.VectorWindow;
 import org.encog.util.csv.CSVFormat;
 import org.encog.util.csv.ReadCSV;
-import weka.core.Attribute;
-import weka.core.Instance;
 
-public class SunSpotTimeseries {
+import javax.swing.*;
+
+public class MultiColumnVectorNeuralNet {
     public static final int WINDOW_SIZE = 40;
     public static final int COLUMN_SIZE = 28;
-    public static final int NUM_OF_SONGS=1;
-    private static List<Segment> seggs=new ArrayList<>();
+    public static final int NUM_OF_SONGS = 1;
+    private static final int REPEAT_SONG_FOR_TRAINING = 10;
+    private static final int FOLDS = 5;
+    public static int STOP_AFTER = 10000;
+    private static List<AudioInterval> seggs = new ArrayList<>();
+    private static List<Segment> seggs2 = new ArrayList<>();
+    public static double[] weight = new double[]{10.0, 1.0, 1.0, 1.0, .10, .10, .10, .10, .10, .10, .10, .10, .10, .10, .10, .10, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 
-    SunSpotTimeseries(){
+
+
+    MultiColumnVectorNeuralNet() {
         StringBuilder csvinput = new StringBuilder();
         for (int ii = 0; ii < NUM_OF_SONGS; ii++) {
-            System.out.println("adding song: "+ii);
-            Song song = SongManager.getRandom(ii);
+            System.out.println("adding song: " + ii);
+            int sonu = (int) (Math.random() * 1300);
+            Song song = SongManager.getRandom(sonu);
             List<Segment> seggs1 = song.analysis.getSegments();
-            seggs.addAll(seggs1);
+            for (Segment s : seggs1) {
+                AudioInterval ai = song.getAudioInterval(s,song.number,seggs1.indexOf(s));
+                seggs.add(ai);
+                seggs2.add(s);
+            }
 
-
-            for (Segment s : seggs) {
-                double[] d = segmentToDoubleArray(s);
-                for (int i = 0; i < 28; i++) {
-                    String line =d[i] + (i==27?"":",");
-                    csvinput.append(line);
-                }
+            for (int iii = 0; iii < REPEAT_SONG_FOR_TRAINING; iii++) {
+                for (Segment s : seggs2) {
+                    double[] d = segmentToDoubleArray(s);
+                    for (int i = 0; i < COLUMN_SIZE; i++) {
+                        String line = d[i] + (i == (COLUMN_SIZE - 1) ? "" : ",");
+                        csvinput.append(line);
+                    }
 //                csvinput = csvinput.substring(0, csvinput.length() - 1);
-                csvinput.append("\n");
+                    csvinput.append("\n");
+                }
             }
 //            for (int i = 0; i < 1; i++) {
 //                csvinput += csvinput;
@@ -133,7 +141,7 @@ public class SunSpotTimeseries {
             // MLMethodFactor.TYPE_NEAT: NEAT Neural Network
             // MLMethodFactor.TYPE_PNN: Probabilistic Neural Network
             EncogModel model = new EncogModel(data);
-            model.selectMethod(data, MLMethodFactory.TYPE_FEEDFORWARD);
+            model.selectMethod(data, MLMethodFactory.TYPE_NEAT);
 
 
             // Send any output to the console.
@@ -160,9 +168,8 @@ public class SunSpotTimeseries {
 
             // Use a 5-fold cross-validated train. Return the best method found.
             // (never shuffle time series)
-            MLRegression bestMethod = (MLRegression) model.crossvalidate(5,
+            MLRegression bestMethod = (MLRegression) model.crossvalidate(FOLDS,
                     false);
-
             // Display the training and validation errors.
             System.out.println("Training error: "
                     + model.calculateError(bestMethod,
@@ -194,9 +201,17 @@ public class SunSpotTimeseries {
             MLData input = helper.allocateInputVector(WINDOW_SIZE + 1);
 
             // Only display the first 100
-            int stopAfter = 10000;
 
-            while (csv.next() && stopAfter > 0) {
+            JFrame jframe = new JFrame("Wub");
+            jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            ImagePanel tf = new ImagePanel();
+            tf.setFont(new Font("Arial", Font.BOLD, 300));
+            jframe.add("Center", tf);
+            jframe.setSize(640, 320);
+            jframe.setVisible(true);
+            Audio audio = new Audio(jframe, tf, seggs.size());
+            Segment predSeg = null;
+            while (csv.next() && STOP_AFTER > 0) {
                 StringBuilder result = new StringBuilder();
 
                 for (int i = 0; i < COLUMN_SIZE; i++) {
@@ -204,6 +219,7 @@ public class SunSpotTimeseries {
                 }
 
                 helper.normalizeInputVector(line, slice, false);
+
 
                 // enough data to build a full window?
                 if (window.isReady()) {
@@ -217,7 +233,7 @@ public class SunSpotTimeseries {
                         predictedArray[i] = Double.parseDouble(predicted);
                         result.append(correct + " = " + predicted + "\t");
                     }
-                    Segment predSeg = DoubleArrayToSegment(predictedArray);
+                    predSeg = DoubleArrayToSegment(predictedArray);
 //					result.append(Arrays.toString(line));
 //					result.append(" -> predicted: ");
 //					result.append(predicted1);
@@ -231,7 +247,8 @@ public class SunSpotTimeseries {
 //					result.append(")");
 
 //                    System.out.println(result.toString());
-                    System.out.println(predSeg);
+//                    System.out.println(predSeg);
+                    audio.play(seggs.get(seggs2.indexOf(predSeg)));
                 }
 
 
@@ -239,9 +256,9 @@ public class SunSpotTimeseries {
                 // the after checking to see if the window is ready so that the
                 // window is always one behind the current row. This is because
                 // we are trying to predict next row.
-                window.add(slice);
-
-                stopAfter--;
+                if (predSeg != null) window.add(segmentToDoubleArray(predSeg));
+                else window.add(slice);
+                STOP_AFTER--;
             }
 
             // Delete data file and shut down.
@@ -255,13 +272,14 @@ public class SunSpotTimeseries {
 
 
     public static void main(String[] args) {
-        SunSpotTimeseries prg = new SunSpotTimeseries();
+        MultiColumnVectorNeuralNet prg = new MultiColumnVectorNeuralNet();
     }
+
 
     protected static double distance(double[] in1, double[] in2) {
         int dist = 0;
         for (int i = 0; i < in1.length; i++) {
-            dist += (in1[i] - in2[i]) * (in1[i] - in2[i]);
+            dist += weight[i] * (in1[i] - in2[i]) * (in1[i] - in2[i]);
         }
         return Math.sqrt(dist);
     }
@@ -300,7 +318,7 @@ public class SunSpotTimeseries {
 
         Segment found = null;
         double best = Double.MAX_VALUE;
-        for (Segment s : seggs) {
+        for (Segment s : seggs2) {
             double bdiss = distance(attlist, segmentToDoubleArray(s));
             if (bdiss < best) {
                 found = s;
@@ -312,7 +330,7 @@ public class SunSpotTimeseries {
     }
 
     protected static double[] segmentToDoubleArray(Segment s) {
-        double[] attlist = new double[28];
+        double[] attlist = new double[COLUMN_SIZE];
         int cnt = 0;
         attlist[cnt++] = s.getDuration();
         attlist[cnt++] = s.getLoudnessMax();

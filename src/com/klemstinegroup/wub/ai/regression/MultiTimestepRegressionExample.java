@@ -45,6 +45,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -75,16 +76,16 @@ public class MultiTimestepRegressionExample {
     public static void main(String[] args) throws Exception {
 
         //Set number of examples for training, testing, and time steps
-        int trainSize = 100;
-        int testSize = 20;
-        int numberOfTimesteps = 20;
+        int trainSize = 1000;
+        int testSize = 200;
+        int numberOfTimesteps = 200;
 
         //Prepare multi time step data, see method comments for more info
         List<String> rawStrings = prepareTrainAndTest(trainSize, testSize, numberOfTimesteps);
 
         //Make sure miniBatchSize is divisable by trainSize and testSize,
         //as rnnTimeStep will not accept different sized examples
-        int miniBatchSize = 10;
+        int miniBatchSize = 100;
 
         // ----- Load the training data -----
         SequenceRecordReader trainFeatures = new CSVSequenceRecordReader();
@@ -150,7 +151,11 @@ public class MultiTimestepRegressionExample {
                 INDArray features = t.getFeatureMatrix();
                 INDArray lables = t.getLabels();
                 INDArray predicted = net.output(features, true);
-                System.out.println(t+"\t" + predicted.getDouble(100));
+                for(int i=0; i < numOfVariables; i++ ) {
+                    double[] predictionReturns = new double[0];
+                    predictionReturns[i] = predicted.getDouble( i);
+                    System.out.println(Arrays.toString(predictionReturns));
+                }
 
 //                evaluation.evalTimeSeries(lables, predicted);
             }
