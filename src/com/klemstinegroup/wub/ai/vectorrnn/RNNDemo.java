@@ -40,23 +40,23 @@ import java.util.Random;
  */
 public class RNNDemo {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args)  {
         String fileLocation = "aabbccdd";
-        String fileLocation1="";
-        for (int i=0;i<1000;i++)fileLocation1+=fileLocation;
+        String fileLocation1 = "";
+        for (int i = 0; i < 1000; i++) fileLocation1 += fileLocation;
         process(fileLocation1);
 
     }
 
-    public static void process(String input) throws Exception {
+    public static String[] process(String input) {
         int lstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
         int miniBatchSize = 32;                        //Size of mini batch to use when  training
         int exampleLength = 300;                    //Length of each training example sequence to use. This could certainly be increased
         int tbpttLength = 50;                       //Length for truncated backpropagation through time. i.e., do parameter updates ever 50 characters
-        int numEpochs = 100;                            //Total number of training epochs
+        int numEpochs = 1000;                            //Total number of training epochs
         int generateSamplesEveryNMinibatches = 1;  //How frequently to generate samples from the network? 1000 characters / 50 tbptt length: 20 parameter updates per minibatch
         int nSamplesToGenerate = 1;                    //Number of samples to generate after each training epoch
-        int nCharactersToSample = 30;                //Length of each sample to generate
+        int nCharactersToSample = 100;                //Length of each sample to generate
         String generationInitialization = null;        //Optional character initialization; a random character is used if null
         // Above is Used to 'prime' the LSTM with a character sequence to continue/complete.
         // Initialization characters must all be in CharacterIteratorRNN.getMinimalCharacterSet() by default
@@ -64,7 +64,12 @@ public class RNNDemo {
 
         //Get a DataSetIterator that handles vectorization of text into something we can use to train
         // our GravesLSTM network.
-        CharacterIteratorRNNDemo iter = getShakespeareIterator(input, miniBatchSize, exampleLength);
+        CharacterIteratorRNNDemo iter = null;
+        try {
+            iter = getShakespeareIterator(input, miniBatchSize, exampleLength);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         int nOut = iter.totalOutcomes();
 
         //Set up network configuration:
@@ -113,23 +118,20 @@ public class RNNDemo {
                     System.out.println("Completed " + miniBatchNumber + " minibatches of size " + miniBatchSize + "x" + exampleLength + " characters");
                     System.out.println("Sampling characters from network given initialization \"" + (generationInitialization == null ? "" : generationInitialization) + "\"");
                     String[] samples = sampleCharactersFromNetwork(generationInitialization, net, iter, rng, nCharactersToSample, nSamplesToGenerate);
-                    for (int j = 0; j < samples.length; j++) {
-                        //System.out.println("----- Sample " + j + " -----");
-                        System.out.println(samples[j]);
-                        System.out.println();
-                    }
                 }
             }
 
             iter.reset();    //Reset iterator for another epoch
         }
         String[] samples = sampleCharactersFromNetwork(generationInitialization, net, iter, rng, nCharactersToSample, nSamplesToGenerate);
-        for (int j = 0; j < samples.length; j++) {
-            System.out.println("----- Sample " + j + " -----");
-            System.out.println(samples[j]);
-            System.out.println();
-        }
+//        for (int j = 0; j < samples.length; j++) {
+//            System.out.println("----- Sample " + j + " -----");
+//            System.out.println(samples[j]);
+//            System.out.println();
+//
+//        }
         System.out.println("\n\nExample complete");
+        return samples;
     }
 
     /**
@@ -166,7 +168,8 @@ public class RNNDemo {
      * Generate a sample from the network, given an (optional, possibly null) initialization. Initialization
      * can be used to 'prime' the RNNDemo with a sequence you want to extend/continue.<br>
      * Note that the initalization is used for all samples
-     *  @param initialization     String, may be null. If null, select a random character as initialization for all samples
+     *
+     * @param initialization     String, may be null. If null, select a random character as initialization for all samples
      * @param net                MultiLayerNetwork with one or more GravesLSTM/RNNDemo layers and a softmax output layer
      * @param iter               CharacterIteratorRNN. Used for going from indexes back to characters
      * @param charactersToSample Number of characters to sample from network (excluding initialization)
@@ -180,9 +183,9 @@ public class RNNDemo {
 
         //Create input for initialization
         INDArray initializationInput = Nd4j.zeros(numSamples, iter.inputColumns(), initialization.length());
-        Vector[] init =new Vector[initialization.length()];
-        for (int i=0;i<init.length;i++) {
-            init[i]=new Vector(initialization.charAt(i));
+        Vector[] init = new Vector[initialization.length()];
+        for (int i = 0; i < init.length; i++) {
+            init[i] = new Vector(initialization.charAt(i));
         }
         for (int i = 0; i < init.length; i++) {
             int idx = iter.convertCharacterToIndex(init[i]);

@@ -1,6 +1,7 @@
 package com.klemstinegroup.wub.ai.custom;
 
 import com.echonest.api.v4.Segment;
+import com.klemstinegroup.wub.ai.vectorrnn.RNNDemo;
 import com.klemstinegroup.wub.system.*;
 import weka.clusterers.SimpleKMeans;
 import weka.core.*;
@@ -19,7 +20,7 @@ public class Custom {
     public  Attribute[] attlist;
     int width = 1200;
     int height = 400;
-    int numClusters=50;
+    int numClusters=14;
     public Custom() {
 
         int sonu = (int) (Math.random() * 1300);
@@ -35,26 +36,57 @@ public class Custom {
         jframe.setVisible(true);
         Audio audio = new Audio(jframe, tf, numClusters);
         List<Segment> segments = song.analysis.getSegments();
-        int i = 0;
-        HashMap<SegmentSong, SegmentSong> map1 = makeMap(numClusters, song, false);
-//        HashMap<SegmentSong, SegmentSong> mapr = makeMap(numClusters, song, true);
-        HashMap<SegmentSong, Integer> count = new HashMap<>();
-        for (Segment s : segments) {
-            SegmentSong segOrig = new SegmentSong(song.number, i);
-            SegmentSong segMapped = map1.get(segOrig);
-            Segment sem=segments.get(segMapped.segment);
-            audio.play(song.getAudioInterval(sem,segMapped));
+        HashMap<SegmentSong, SegmentSong> smallercluster = makeMap(numClusters, song, false);
 
-//            System.out.println(segOrig + " maps to " + segMapped);
-            if (count.containsKey(segMapped)) count.put(segMapped, count.get(segMapped) + 1);
-            else count.put(segMapped, 1);
+        ArrayList<SegmentSong> reducedSong=new ArrayList<>();
+        HashMap<SegmentSong,Character> language=new HashMap<>();
+
+
+        char newChar='A';
+        int i=0;
+        for (Segment s:segments){
+            SegmentSong segOrig = new SegmentSong(song.number, i);
+            SegmentSong segMapped = smallercluster.get(segOrig);
+            reducedSong.add(segMapped);
+            if (!language.containsKey(segMapped)){
+                language.put(segMapped,newChar);
+                newChar++;
+            }
             i++;
         }
-        i = 0;
-        for (Segment s : segments) {
-            System.out.println(i + "\t" + count.get(map1.get(new SegmentSong(song.number, i))));
-            i++;
+        System.out.println((newChar-65)+" characters in language");
+        String forRnn="";
+        for (SegmentSong s:reducedSong){
+            forRnn+=language.get(s);
         }
+        String out="";
+        for (int kk=0;kk<10;kk++)out+=forRnn;
+//        System.out.println(forRnn);
+        try {
+            String[] samples=RNNDemo.process(out);
+            System.out.println(Arrays.toString(samples));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+//        HashMap<SegmentSong, SegmentSong> mapr = makeMap(numClusters, song, true);
+//        HashMap<SegmentSong, Integer> count = new HashMap<>();
+//        for (Segment s : segments) {
+//            SegmentSong segOrig = new SegmentSong(song.number, i);
+//            SegmentSong segMapped = map1.get(segOrig);
+//            Segment sem=segments.get(segMapped.segment);
+//            audio.play(song.getAudioInterval(sem,segMapped));
+//
+////            System.out.println(segOrig + " maps to " + segMapped);
+//            if (count.containsKey(segMapped)) count.put(segMapped, count.get(segMapped) + 1);
+//            else count.put(segMapped, 1);
+//            i++;
+//        }
+//        i = 0;
+//        for (Segment s : segments) {
+//            System.out.println(i + "\t" + count.get(map1.get(new SegmentSong(song.number, i))));
+//            i++;
+//        }
     }
 
     private  HashMap<SegmentSong, SegmentSong> makeMap(int numClusters, Song song1, boolean reverseMap) {
