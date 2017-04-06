@@ -39,21 +39,21 @@ public class CharacterIteratorRNNDemo implements DataSetIterator {
 	 * @param textFileEncoding Encoding of the text file. Can try Charset.defaultCharset()
 	 * @param miniBatchSize Number of examples per mini-batch
 	 * @param exampleLength Number of characters in each input/output vector
-	 * @param validCharacters Character array of valid characters. Characters not present in this array will be removed
 	 * @param rng Random number generator, for repeatability if required
 	 * @throws IOException If text file cannot  be loaded
 	 */
 	public CharacterIteratorRNNDemo(String text, Charset textFileEncoding, int miniBatchSize, int exampleLength,
-									Vector[] validCharacters, Random rng) throws IOException {
+									Random rng) throws IOException {
 		//if( !new File(textFilePath).exists()) throw new IOException("Could not access file (does not exist): " + textFilePath);
 		if( miniBatchSize <= 0 ) throw new IllegalArgumentException("Invalid miniBatchSize (must be >0)");
-		this.validCharacters = validCharacters;
+//		this.validCharacters = validCharacters;
 		this.exampleLength = exampleLength;
 		this.miniBatchSize = miniBatchSize;
 		this.rng = rng;
 
 		//Store valid characters is a map for later use in vectorization
 		charToIdxMap = new HashMap<>();
+		validCharacters = getMinimalCharacterSet(text);
 		for( int i=0; i<validCharacters.length; i++ ) charToIdxMap.put(validCharacters[i], i);
 
 		//Load file and convert contents to a char[]
@@ -105,32 +105,32 @@ public class CharacterIteratorRNNDemo implements DataSetIterator {
 		return ret;
 	}
 
-    /** A minimal character set, with a-z, A-Z, 0-9 and common punctuation etc */
-	public static Vector[] getMinimalCharacterSet(){
-		List<Vector> validChars = new LinkedList<>();
-		for(char c='a'; c<='z'; c++) validChars.add(new Vector(c));
-		for(char c='A'; c<='Z'; c++) validChars.add(new Vector(c));
-		for(char c='0'; c<='9'; c++) validChars.add(new Vector(c));
-//		char[] temp = {'!', '&', '(', ')', '?', '-', '\'', '"', ',', '.', ':', ';', ' ', '\n', '\t'};
-//		for( Vector c : temp ) validChars.add(new Vector(c));
-		Vector[] out = new Vector[validChars.size()];
-		int i=0;
-		for( Vector c : validChars ) out[i++] = c;
-		return out;
-	}
+//    /** A minimal character set, with a-z, A-Z, 0-9 and common punctuation etc */
+//	public static Vector[] getMinimalCharacterSet(){
+//		List<Vector> validChars = new LinkedList<>();
+//		for(char c='a'; c<='z'; c++) validChars.add(new Vector(c));
+//		for(char c='A'; c<='Z'; c++) validChars.add(new Vector(c));
+//		for(char c='0'; c<='9'; c++) validChars.add(new Vector(c));
+////		char[] temp = {'!', '&', '(', ')', '?', '-', '\'', '"', ',', '.', ':', ';', ' ', '\n', '\t'};
+////		for( Vector c : temp ) validChars.add(new Vector(c));
+//		Vector[] out = new Vector[validChars.size()];
+//		int i=0;
+//		for( Vector c : validChars ) out[i++] = c;
+//		return out;
+//	}
 
-	/** As per getMinimalCharacterSet(), but with a few extra characters */
-	public static Vector[] getDefaultCharacterSet(){
-		List<Vector> validChars = new LinkedList<>();
-		for(Vector c : getMinimalCharacterSet() ) validChars.add(c);
-//		char[] additionalChars = {'@', '#', '$', '%', '^', '*', '{', '}', '[', ']', '/', '+', '_',
-//				'\\', '|', '<', '>'};
-//		for( char c : additionalChars ) validChars.add(new c);
-		Vector[] out = new Vector[validChars.size()];
-		int i=0;
-		for( Vector c : validChars ) out[i++] = c;
-		return out;
-	}
+//	/** As per getMinimalCharacterSet(), but with a few extra characters */
+//	public static Vector[] getDefaultCharacterSet(){
+//		List<Vector> validChars = new LinkedList<>();
+//		for(Vector c : getMinimalCharacterSet() ) validChars.add(c);
+////		char[] additionalChars = {'@', '#', '$', '%', '^', '*', '{', '}', '[', ']', '/', '+', '_',
+////				'\\', '|', '<', '>'};
+////		for( char c : additionalChars ) validChars.add(new c);
+//		Vector[] out = new Vector[validChars.size()];
+//		int i=0;
+//		for( Vector c : validChars ) out[i++] = c;
+//		return out;
+//	}
 
 	public Vector convertIndexToCharacter(int idx ){
 		return validCharacters[idx];

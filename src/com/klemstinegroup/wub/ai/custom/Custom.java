@@ -20,7 +20,7 @@ public class Custom {
     public  Attribute[] attlist;
     int width = 1200;
     int height = 400;
-    int numClusters=14;
+    int numClusters=26;
     public Custom() {
 
         int sonu = (int) (Math.random() * 1300);
@@ -36,6 +36,8 @@ public class Custom {
         jframe.setVisible(true);
         Audio audio = new Audio(jframe, tf, numClusters);
         List<Segment> segments = song.analysis.getSegments();
+
+
         HashMap<SegmentSong, SegmentSong> smallercluster = makeMap(numClusters, song, false);
 
         ArrayList<SegmentSong> reducedSong=new ArrayList<>();
@@ -62,12 +64,19 @@ public class Custom {
         String out="";
         for (int kk=0;kk<10;kk++)out+=forRnn;
 //        System.out.println(forRnn);
-        try {
-            String[] samples=RNNDemo.process(out);
-            System.out.println(Arrays.toString(samples));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String finalOut = out;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String[] samples=RNNDemo.process(finalOut);
+                    System.out.println(Arrays.toString(samples));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
 
 //        HashMap<SegmentSong, SegmentSong> mapr = makeMap(numClusters, song, true);
 //        HashMap<SegmentSong, Integer> count = new HashMap<>();
@@ -89,7 +98,12 @@ public class Custom {
 //        }
     }
 
-    private  HashMap<SegmentSong, SegmentSong> makeMap(int numClusters, Song song1, boolean reverseMap) {
+    private HashMap<SegmentSong,SegmentSong> makeMap(int numClusters,Song song,boolean reverseMap){
+        List<Segment> segs=song.analysis.getSegments();
+        return makeMap(numClusters,song.number,segs,reverseMap);
+    }
+
+    private  HashMap<SegmentSong, SegmentSong> makeMap(int numClusters, int songNumber,List<Segment> segments, boolean reverseMap) {
 
         //one time attribute setup
         FastVector attrs = new FastVector();
@@ -115,9 +129,9 @@ public class Custom {
         SegmentSong[] lastSeen = new SegmentSong[numClusters];
 
         int cnt = 0;
-        for (Segment s : song1.analysis.getSegments()) {
+        for (Segment s : segments) {
             Instance inst = getInstance(attlist, s);
-            coll.add(new SegmentSong(song1.number, cnt++));
+            coll.add(new SegmentSong(songNumber, cnt++));
             inst.setDataset(dataset);
             dataset.add(inst);
         }

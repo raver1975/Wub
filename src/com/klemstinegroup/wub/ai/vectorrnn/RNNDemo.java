@@ -18,6 +18,7 @@ import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.lossfunctions.LossFunctions.LossFunction;
 
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -55,7 +56,7 @@ public class RNNDemo {
         int tbpttLength = 50;                       //Length for truncated backpropagation through time. i.e., do parameter updates ever 50 characters
         int numEpochs = 1000;                            //Total number of training epochs
         int generateSamplesEveryNMinibatches = 1;  //How frequently to generate samples from the network? 1000 characters / 50 tbptt length: 20 parameter updates per minibatch
-        int nSamplesToGenerate = 1;                    //Number of samples to generate after each training epoch
+        int nSamplesToGenerate = 5;                    //Number of samples to generate after each training epoch
         int nCharactersToSample = 100;                //Length of each sample to generate
         String generationInitialization = null;        //Optional character initialization; a random character is used if null
         // Above is Used to 'prime' the LSTM with a character sequence to continue/complete.
@@ -118,18 +119,19 @@ public class RNNDemo {
                     System.out.println("Completed " + miniBatchNumber + " minibatches of size " + miniBatchSize + "x" + exampleLength + " characters");
                     System.out.println("Sampling characters from network given initialization \"" + (generationInitialization == null ? "" : generationInitialization) + "\"");
                     String[] samples = sampleCharactersFromNetwork(generationInitialization, net, iter, rng, nCharactersToSample, nSamplesToGenerate);
+                    System.out.println(Arrays.toString(samples));
                 }
             }
 
             iter.reset();    //Reset iterator for another epoch
         }
         String[] samples = sampleCharactersFromNetwork(generationInitialization, net, iter, rng, nCharactersToSample, nSamplesToGenerate);
-//        for (int j = 0; j < samples.length; j++) {
-//            System.out.println("----- Sample " + j + " -----");
-//            System.out.println(samples[j]);
-//            System.out.println();
-//
-//        }
+        for (int j = 0; j < samples.length; j++) {
+            System.out.println("----- Sample " + j + " -----");
+            System.out.println(samples[j]);
+            System.out.println();
+
+        }
         System.out.println("\n\nExample complete");
         return samples;
     }
@@ -158,10 +160,10 @@ public class RNNDemo {
 
         //	if(!f.exists()) throw new IOException("File does not exist: " + fileLocation);	//Download problem?
 
-        Vector[] validCharacters = CharacterIteratorRNNDemo.getMinimalCharacterSet(input);    //Which characters are allowed? Others will be removed
+//        Vector[] validCharacters = CharacterIteratorRNNDemo.getMinimalCharacterSet(input);    //Which characters are allowed? Others will be removed
 
         return new CharacterIteratorRNNDemo(input, Charset.forName("UTF-8"),
-                miniBatchSize, sequenceLength, validCharacters, new Random(12345));
+                miniBatchSize, sequenceLength, new Random(12345));
     }
 
     /**
