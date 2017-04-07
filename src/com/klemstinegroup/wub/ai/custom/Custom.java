@@ -69,7 +69,7 @@ public class Custom {
             @Override
             public void run() {
                 try {
-                    String[] samples=RNNDemo.process(finalOut);
+                    String[] samples=RNNDemo.process(song,language,audio,finalOut);
                     System.out.println(Arrays.toString(samples));
                 } catch (Exception e) {
                     e.printStackTrace();
