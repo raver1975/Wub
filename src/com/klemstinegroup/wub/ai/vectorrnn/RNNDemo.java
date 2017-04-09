@@ -58,12 +58,12 @@ public class RNNDemo {
             languageRev.put(entry.getValue(), entry.getKey());
         int lstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
         int miniBatchSize = 32;                        //Size of mini batch to use when  training
-        int exampleLength = 300;                    //Length of each training example sequence to use. This could certainly be increased
+        int exampleLength = 30;                    //Length of each training example sequence to use. This could certainly be increased
         int tbpttLength = 50;                       //Length for truncated backpropagation through time. i.e., do parameter updates ever 50 characters
         int numEpochs = 1000;                            //Total number of training epochs
         int generateSamplesEveryNMinibatches = 1;  //How frequently to generate samples from the network? 1000 characters / 50 tbptt length: 20 parameter updates per minibatch
         int nSamplesToGenerate = 1;                    //Number of samples to generate after each training epoch
-        int nCharactersToSample = 20;                //Length of each sample to generate
+        int nCharactersToSample = 6;                //Length of each sample to generate
         String generationInitialization = null;        //Optional character initialization; a random character is used if null
         // Above is Used to 'prime' the LSTM with a character sequence to continue/complete.
         // Initialization characters must all be in CharacterIteratorRNN.getMinimalCharacterSet() by default

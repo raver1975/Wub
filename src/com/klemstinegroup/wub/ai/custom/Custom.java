@@ -20,7 +20,7 @@ public class Custom {
     public  Attribute[] attlist;
     int width = 1200;
     int height = 400;
-    int numClusters=26;
+    int numClusters=50;
     public Custom() {
 
         int sonu = (int) (Math.random() * 1300);
@@ -62,7 +62,7 @@ public class Custom {
             forRnn+=language.get(s);
         }
         String out="";
-        for (int kk=0;kk<10;kk++)out+=forRnn;
+        for (int kk=0;kk<100;kk++)out+=forRnn;
 //        System.out.println(forRnn);
         String finalOut = out;
         new Thread(new Runnable() {
