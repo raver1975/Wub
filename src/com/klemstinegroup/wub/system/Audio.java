@@ -125,7 +125,7 @@ public class Audio {
                         cnt = 2500;
                         AudioInterval i = queue.poll();
                         currentlyPlaying = i;
-                        System.out.println("currently playing:" + i.payloadPrintout);
+                        System.out.println("size:"+queue.size()+"\tcurrently playing:" + i.payloadPrintout);
                         if (i.payloadPrintout != null) {
 //                            System.out.println("now playing " + i.payloadPrintout);
 

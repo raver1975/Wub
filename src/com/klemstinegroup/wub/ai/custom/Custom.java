@@ -20,7 +20,7 @@ public class Custom {
     public  Attribute[] attlist;
     int width = 1200;
     int height = 400;
-    int numClusters=50;
+    int numClusters=26;
     public Custom() {
 
         int sonu = (int) (Math.random() * 1300);
@@ -38,7 +38,7 @@ public class Custom {
         List<Segment> segments = song.analysis.getSegments();
 
 
-        HashMap<SegmentSong, SegmentSong> smallercluster = makeMap(numClusters, song, false);
+        HashMap<SegmentSong, SegmentSong> smallercluster = makeMap(numClusters, song);
 
         ArrayList<SegmentSong> reducedSong=new ArrayList<>();
         HashMap<SegmentSong,Character> language=new HashMap<>();
@@ -51,7 +51,7 @@ public class Custom {
             SegmentSong segMapped = smallercluster.get(segOrig);
             reducedSong.add(segMapped);
             if (!language.containsKey(segMapped)){
-                language.put(segMapped,newChar);
+                language.put(segOrig,newChar);
                 newChar++;
             }
             i++;
@@ -62,7 +62,7 @@ public class Custom {
             forRnn+=language.get(s);
         }
         String out="";
-        for (int kk=0;kk<100;kk++)out+=forRnn;
+        for (int kk=0;kk<1;kk++)out+=forRnn;
 //        System.out.println(forRnn);
         String finalOut = out;
         new Thread(new Runnable() {
@@ -98,12 +98,12 @@ public class Custom {
 //        }
     }
 
-    private HashMap<SegmentSong,SegmentSong> makeMap(int numClusters,Song song,boolean reverseMap){
+    private HashMap<SegmentSong,SegmentSong> makeMap(int numClusters,Song song){
         List<Segment> segs=song.analysis.getSegments();
-        return makeMap(numClusters,song.number,segs,reverseMap);
+        return makeMap(numClusters,song.number,segs);
     }
 
-    private  HashMap<SegmentSong, SegmentSong> makeMap(int numClusters, int songNumber,List<Segment> segments, boolean reverseMap) {
+    private  HashMap<SegmentSong, SegmentSong> makeMap(int numClusters, int songNumber,List<Segment> segments) {
 
         //one time attribute setup
         FastVector attrs = new FastVector();
@@ -171,8 +171,7 @@ public class Custom {
             try {
                 int cluster = kmeans.clusterInstance(dataset.instance(io));
                 SegmentSong tempSegmentSong = lastSeen[cluster];
-                if (reverseMap) map.put(tempSegmentSong, coll.get(io));
-                else map.put(coll.get(io), tempSegmentSong);
+                 map.put(coll.get(io), tempSegmentSong);
 
             } catch (Exception e) {
                 e.printStackTrace();

@@ -44,6 +44,9 @@ import java.util.*;
  */
 public class RNNDemo {
 
+    private static String generationInitialization;
+
+
     public static void main(String[] args) {
         String fileLocation = "aabbccdd";
         String fileLocation1 = "";
@@ -56,15 +59,15 @@ public class RNNDemo {
         HashMap<Character, SegmentSong> languageRev = new HashMap<>();
         for (Map.Entry<SegmentSong, Character> entry : language.entrySet())
             languageRev.put(entry.getValue(), entry.getKey());
-        int lstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
-        int miniBatchSize = 32;                        //Size of mini batch to use when  training
-        int exampleLength = 30;                    //Length of each training example sequence to use. This could certainly be increased
-        int tbpttLength = 50;                       //Length for truncated backpropagation through time. i.e., do parameter updates ever 50 characters
+        int lstmLayerSize = 600;                    //Number of units in each GravesLSTM layer
+        int miniBatchSize = 300;                        //Size of mini batch to use when  training
+        int exampleLength = 10;                    //Length of each training example sequence to use. This could certainly be increased
+        int tbpttLength = 40;                       //Length for truncated backpropagation through time. i.e., do parameter updates ever 50 characters
         int numEpochs = 1000;                            //Total number of training epochs
         int generateSamplesEveryNMinibatches = 1;  //How frequently to generate samples from the network? 1000 characters / 50 tbptt length: 20 parameter updates per minibatch
         int nSamplesToGenerate = 1;                    //Number of samples to generate after each training epoch
-        int nCharactersToSample = 6;                //Length of each sample to generate
-        String generationInitialization = null;        //Optional character initialization; a random character is used if null
+        int nCharactersToSample =40;                //Length of each sample to generate
+//        String generationInitialization = null;        //Optional character initialization; a random character is used if null
         // Above is Used to 'prime' the LSTM with a character sequence to continue/complete.
         // Initialization characters must all be in CharacterIteratorRNN.getMinimalCharacterSet() by default
         Random rng = new Random();
@@ -125,18 +128,21 @@ public class RNNDemo {
                     System.out.println("Completed " + miniBatchNumber + " minibatches of size " + miniBatchSize + "x" + exampleLength + " characters");
                     System.out.println("Sampling characters from network given initialization \"" + (generationInitialization == null ? "" : generationInitialization) + "\"");
                     String[] samples = sampleCharactersFromNetwork(generationInitialization, net, iter, rng, nCharactersToSample, nSamplesToGenerate);
-
+                    if (generationInitialization!=null&&samples != null && samples[0] != null && samples[0].startsWith(generationInitialization))
+                        samples[0] = samples[0].substring(samples[0].length() / 2);
 
                     List<Segment> segments = song.analysis.getSegments();
 
 //            audio.play(song.getAudioInterval(sem,segMapped));
-                    for (int j = 0; j < samples[0].length(); j++) {
-                        SegmentSong ss = languageRev.get(samples[0].charAt(j));
-                        Segment sem = segments.get(ss.segment);
-                        audio.play(song.getAudioInterval(sem, ss));
+                    if (audio.queue.size() < nCharactersToSample) {
+                        generationInitialization = samples[0];
+                        for (int j = 0; j < samples[0].length(); j++) {
+                            SegmentSong ss = languageRev.get(samples[0].charAt(j));
+                            Segment sem = segments.get(ss.segment);
+                            audio.play(song.getAudioInterval(sem, ss));
+                        }
+                        System.out.println(Arrays.toString(samples));
                     }
-
-                    System.out.println(Arrays.toString(samples));
                 }
             }
 
