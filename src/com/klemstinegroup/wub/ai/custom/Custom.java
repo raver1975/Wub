@@ -51,7 +51,7 @@ public class Custom {
             SegmentSong segMapped = smallercluster.get(segOrig);
             reducedSong.add(segMapped);
             if (!language.containsKey(segMapped)){
-                language.put(segOrig,newChar);
+                language.put(segMapped,newChar);
                 newChar++;
             }
             i++;
