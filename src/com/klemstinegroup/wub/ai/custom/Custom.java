@@ -20,11 +20,12 @@ public class Custom {
     public  Attribute[] attlist;
     int width = 1200;
     int height = 400;
-    int numClusters=300;
+    int numClusters=500;
     public Custom() {
 
-        int sonu = (int) (Math.random() * 1300);
-        Song song = SongManager.getRandom(sonu);
+//        int sonu = (int) (Math.random() * 1300);
+       // sonu=757; bassnectar basshead
+        Song song = SongManager.getRandom();
         ImagePanel tf = new ImagePanel();
 //        JTextArea jta = new JTextArea(4, 20);
         JFrame jframe = new JFrame("Wub");

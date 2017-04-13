@@ -60,7 +60,7 @@ public class RNNDemo {
         for (Map.Entry<SegmentSong, Character> entry : language.entrySet())
             languageRev.put(entry.getValue(), entry.getKey());
         int lstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
-        int mstmLayerSize = 100;                    //Number of units in each GravesLSTM layer
+        int mstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
 //        int nstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
         int miniBatchSize = 300;                        //Size of mini batch to use when  training
         int exampleLength = 200;                    //Length of each training example sequence to use. This could certainly be increased
@@ -70,6 +70,9 @@ public class RNNDemo {
         int nSamplesToGenerate = 1;                    //Number of samples to generate after each training epoch
         int nCharactersToSample =60;                //Length of each sample to generate
 //        String generationInitialization = null;        //Optional character initialization; a random character is used if null
+
+        int sizeOfSongSeed=nCharactersToSample/2;
+        int sizeOfCurrentlyPlayingSeed=10;
         // Above is Used to 'prime' the LSTM with a character sequence to continue/complete.
         // Initialization characters must all be in CharacterIteratorRNN.getMinimalCharacterSet() by default
         Random rng = new Random();
@@ -128,11 +131,11 @@ public class RNNDemo {
                 DataSet ds = iter.next();
                 net.fit(ds);
                 if (++miniBatchNumber % generateSamplesEveryNMinibatches == 0) {
-                    int pos=(int)(Math.random()*input.length())-20;
+                    int pos=(int)(Math.random()*input.length())-sizeOfSongSeed;
                     if (pos<0)pos=0;
-                    int pod2=Math.max(0,generationInitialization.length()-20);
+                    int pod2=Math.max(0,generationInitialization.length()-sizeOfCurrentlyPlayingSeed);
                     String xx=generationInitialization.substring(pod2);
-                    generationInitialization=input.substring(pos,pos+20)+xx;
+                    generationInitialization=input.substring(pos,pos+sizeOfSongSeed)+xx;
                     System.out.println("--------------------");
                     System.out.println("Completed " + miniBatchNumber + " minibatches of size " + miniBatchSize + "x" + exampleLength + " characters");
                     System.out.println("Sampling characters from network given initialization \"" + (generationInitialization == null ? "" : generationInitialization) + "\"");
@@ -144,7 +147,7 @@ public class RNNDemo {
 
 //            audio.play(song.getAudioInterval(sem,segMapped));
                     if (audio.queue.size() < nCharactersToSample) {
-                        generationInitialization = generationInitialization+samples[0];
+                        generationInitialization = samples[0];
                         for (int j = 0; j < generationInitialization.length(); j++) {
                             SegmentSong ss = languageRev.get(generationInitialization.charAt(j));
                             Segment sem = segments.get(ss.segment);
