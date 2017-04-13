@@ -44,7 +44,7 @@ import java.util.*;
  */
 public class RNNDemo {
 
-    private static String generationInitialization;
+    private static String generationInitialization="";
 
 
     public static void main(String[] args) {
@@ -62,10 +62,10 @@ public class RNNDemo {
         int lstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
         int mstmLayerSize = 100;                    //Number of units in each GravesLSTM layer
 //        int nstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
-        int miniBatchSize = 30;                        //Size of mini batch to use when  training
+        int miniBatchSize = 300;                        //Size of mini batch to use when  training
         int exampleLength = 200;                    //Length of each training example sequence to use. This could certainly be increased
         int tbpttLength = 100;                       //Length for truncated backpropagation through time. i.e., do parameter updates ever 50 characters
-        int numEpochs = 1000;                            //Total number of training epochs
+        int numEpochs = 100000;                            //Total number of training epochs
         int generateSamplesEveryNMinibatches = 1;  //How frequently to generate samples from the network? 1000 characters / 50 tbptt length: 20 parameter updates per minibatch
         int nSamplesToGenerate = 1;                    //Number of samples to generate after each training epoch
         int nCharactersToSample =60;                //Length of each sample to generate
@@ -128,20 +128,25 @@ public class RNNDemo {
                 DataSet ds = iter.next();
                 net.fit(ds);
                 if (++miniBatchNumber % generateSamplesEveryNMinibatches == 0) {
+                    int pos=(int)(Math.random()*input.length())-20;
+                    if (pos<0)pos=0;
+                    int pod2=Math.max(0,generationInitialization.length()-20);
+                    String xx=generationInitialization.substring(pod2);
+                    generationInitialization=input.substring(pos,pos+20)+xx;
                     System.out.println("--------------------");
                     System.out.println("Completed " + miniBatchNumber + " minibatches of size " + miniBatchSize + "x" + exampleLength + " characters");
                     System.out.println("Sampling characters from network given initialization \"" + (generationInitialization == null ? "" : generationInitialization) + "\"");
                     String[] samples = sampleCharactersFromNetwork(generationInitialization, net, iter, rng, nCharactersToSample, nSamplesToGenerate);
                     if (generationInitialization!=null&&samples != null && samples[0] != null && samples[0].startsWith(generationInitialization))
-                        samples[0] = samples[0].substring(samples[0].length() / 2);
+                        samples[0] = samples[0].substring(generationInitialization.length());
 
                     List<Segment> segments = song.analysis.getSegments();
 
 //            audio.play(song.getAudioInterval(sem,segMapped));
                     if (audio.queue.size() < nCharactersToSample) {
-                        generationInitialization = samples[0];
-                        for (int j = 0; j < samples[0].length(); j++) {
-                            SegmentSong ss = languageRev.get(samples[0].charAt(j));
+                        generationInitialization = generationInitialization+samples[0];
+                        for (int j = 0; j < generationInitialization.length(); j++) {
+                            SegmentSong ss = languageRev.get(generationInitialization.charAt(j));
                             Segment sem = segments.get(ss.segment);
                             audio.play(song.getAudioInterval(sem, ss));
                         }
@@ -274,6 +279,8 @@ public class RNNDemo {
             //lower than 1 due to rounding error, so try again.
         }
         //Should be extremely unlikely to happen if distribution is a valid probability distribution
-        throw new IllegalArgumentException("Distribution is invalid? d=" + d + ", sum=" + sum);
+//        throw new IllegalArgumentException("Distribution is invalid? d=" + d + ", sum=" + sum);
+    return (int)(Math.random()*distribution.length);
     }
+
 }
