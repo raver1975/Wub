@@ -195,8 +195,6 @@ public class RNNDemo {
                                         pos++;
                                     }
                                     toProcess = toProcess.substring(best.length());
-                                    pos--;
-
                                 }
                                 for (SegmentSong s : listSegmentSongs) {
                                     if (s.segment<segments.size()) audio.play(song.getAudioInterval(segments.get(s.segment), s));
