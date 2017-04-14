@@ -19,7 +19,7 @@ import edu.uci.ics.jung.visualization.transform.MutableTransformer;
 
 /**
  * Mouse events in the SatelliteView that match the modifiers
- * will cause the Main view to rotate
+ * will cause the Levenshtein view to rotate
  * @see RotatingGraphMousePlugin
  * @author Tom Nelson 
  *

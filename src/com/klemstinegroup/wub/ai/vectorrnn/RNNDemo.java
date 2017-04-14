@@ -1,6 +1,7 @@
 package com.klemstinegroup.wub.ai.vectorrnn;
 
 import com.echonest.api.v4.Segment;
+import com.klemstinegroup.wub.ai.custom.Levenshtein;
 import com.klemstinegroup.wub.system.Audio;
 import com.klemstinegroup.wub.system.SegmentSong;
 import com.klemstinegroup.wub.system.Song;
@@ -44,7 +45,7 @@ import java.util.*;
  */
 public class RNNDemo {
 
-    private static String generationInitialization="";
+    private static String generationInitialization = "";
 
 
 //    public static void main(String[] args) {
@@ -56,7 +57,7 @@ public class RNNDemo {
 //    }
 
     public static String[] process(Song song, HashMap<SegmentSong, Character> language, Audio audio, String input) {
-        generationInitialization=input.substring(input.length()/2-20,input.length()/2+20);
+        generationInitialization = input.substring(input.length() / 2 - 20, input.length() / 2 + 20);
         HashMap<Character, SegmentSong> languageRev = new HashMap<>();
         for (Map.Entry<SegmentSong, Character> entry : language.entrySet())
             languageRev.put(entry.getValue(), entry.getKey());
@@ -69,7 +70,7 @@ public class RNNDemo {
         int numEpochs = 100000;                            //Total number of training epochs
         int generateSamplesEveryNMinibatches = 1;  //How frequently to generate samples from the network? 1000 characters / 50 tbptt length: 20 parameter updates per minibatch
         int nSamplesToGenerate = 1;                    //Number of samples to generate after each training epoch
-        int nCharactersToSample =60;                //Length of each sample to generate
+        int nCharactersToSample = 60;                //Length of each sample to generate
 //        String generationInitialization = null;        //Optional character initialization; a random character is used if null
 
         // Above is Used to 'prime' the LSTM with a character sequence to continue/complete.
@@ -139,7 +140,7 @@ public class RNNDemo {
                     System.out.println("Completed " + miniBatchNumber + " minibatches of size " + miniBatchSize + "x" + exampleLength + " characters");
                     System.out.println("Sampling characters from network given initialization \"" + (generationInitialization == null ? "" : generationInitialization) + "\"");
                     String[] samples = sampleCharactersFromNetwork(generationInitialization, net, iter, rng, nCharactersToSample, nSamplesToGenerate);
-                    if (generationInitialization!=null&&samples != null && samples[0] != null && samples[0].startsWith(generationInitialization))
+                    if (generationInitialization != null && samples != null && samples[0] != null && samples[0].startsWith(generationInitialization))
                         samples[0] = samples[0].substring(generationInitialization.length());
 
                     List<Segment> segments = song.analysis.getSegments();
@@ -147,12 +148,55 @@ public class RNNDemo {
 //            audio.play(song.getAudioInterval(sem,segMapped));
                     if (audio.queue.size() < nCharactersToSample) {
                         generationInitialization = samples[0];
+                        SegmentSong[] listSegmentSongs = new SegmentSong[generationInitialization.length()];
                         for (int j = 0; j < generationInitialization.length(); j++) {
                             SegmentSong ss = languageRev.get(generationInitialization.charAt(j));
                             Segment sem = segments.get(ss.segment);
-                            audio.play(song.getAudioInterval(sem, ss));
+                            listSegmentSongs[j] = ss;
+//
+//                            audio.play(song.getAudioInterval(sem, ss));
                         }
-                        System.out.println(Arrays.toString(samples));
+                        //input
+                        System.out.println("input=" + input);
+                        System.out.println("gener=" + generationInitialization);
+
+                        //matching algorithm
+
+                        int pos = 0;
+                        String toProcess = generationInitialization;
+                        while (pos < generationInitialization.length()-1) {
+                            int lowest = Integer.MAX_VALUE;
+                            String best = "";
+                            int bestpos = -1;
+                            for (int size = 1; size < Math.min(10, toProcess.length()); size++) {
+                                String g = toProcess.substring(0, size);
+                                for (int jj = 0; jj < input.length() - size; jj++) {
+                                    String h = input.substring(jj, jj + size);
+//                                    System.out.println(g+"="+h);
+                                    int score = ((10-size)*2)+Levenshtein.getLevenshteinDistance(g, h);
+                                    if (score < lowest) {
+                                        lowest = score;
+                                        best = h;
+                                        bestpos = jj;
+//                                        System.out.println("score:" + score + "\tbest:" + bestpos + "\t" + best);
+                                    }
+                                }
+
+                            }
+                            for (int hh = bestpos; hh < bestpos + best.length(); hh++) {
+                                listSegmentSongs[pos] = new SegmentSong(song.number, hh);
+                                pos++;
+                            }
+                            toProcess = toProcess.substring(best.length());
+
+                        }
+                        for (SegmentSong s : listSegmentSongs) {
+                            audio.play(song.getAudioInterval(segments.get(s.segment), s));
+
+                        }
+
+
+                        System.out.println("-------------------------------------------------------");
                     }
                 }
             }
@@ -282,7 +326,7 @@ public class RNNDemo {
         }
         //Should be extremely unlikely to happen if distribution is a valid probability distribution
 //        throw new IllegalArgumentException("Distribution is invalid? d=" + d + ", sum=" + sum);
-    return (int)(Math.random()*distribution.length);
+        return (int) (Math.random() * distribution.length);
     }
 
 }

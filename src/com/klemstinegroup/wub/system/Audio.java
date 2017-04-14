@@ -318,6 +318,6 @@ public class Audio {
                 e.printStackTrace();
             }
         }
-        System.exit(0);
+//        System.exit(0);
     }
 }
