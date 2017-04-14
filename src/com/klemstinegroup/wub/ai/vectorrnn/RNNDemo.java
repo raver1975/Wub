@@ -47,15 +47,16 @@ public class RNNDemo {
     private static String generationInitialization="";
 
 
-    public static void main(String[] args) {
-        String fileLocation = "aabbccdd";
-        String fileLocation1 = "";
-        for (int i = 0; i < 100; i++) fileLocation1 += fileLocation;
-//        process(language, audio, fileLocation1);
-
-    }
+//    public static void main(String[] args) {
+//        String fileLocation = "aabbccdd";
+//        String fileLocation1 = "";
+//        for (int i = 0; i < 100; i++) fileLocation1 += fileLocation;
+////        process(language, audio, fileLocation1);
+//
+//    }
 
     public static String[] process(Song song, HashMap<SegmentSong, Character> language, Audio audio, String input) {
+        generationInitialization=input.substring(input.length()/2-20,input.length()/2+20);
         HashMap<Character, SegmentSong> languageRev = new HashMap<>();
         for (Map.Entry<SegmentSong, Character> entry : language.entrySet())
             languageRev.put(entry.getValue(), entry.getKey());
@@ -63,7 +64,7 @@ public class RNNDemo {
         int mstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
 //        int nstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
         int miniBatchSize = 300;                        //Size of mini batch to use when  training
-        int exampleLength = 200;                    //Length of each training example sequence to use. This could certainly be increased
+        int exampleLength = 600;                    //Length of each training example sequence to use. This could certainly be increased
         int tbpttLength = 100;                       //Length for truncated backpropagation through time. i.e., do parameter updates ever 50 characters
         int numEpochs = 100000;                            //Total number of training epochs
         int generateSamplesEveryNMinibatches = 1;  //How frequently to generate samples from the network? 1000 characters / 50 tbptt length: 20 parameter updates per minibatch
@@ -71,8 +72,6 @@ public class RNNDemo {
         int nCharactersToSample =60;                //Length of each sample to generate
 //        String generationInitialization = null;        //Optional character initialization; a random character is used if null
 
-        int sizeOfSongSeed=nCharactersToSample/2;
-        int sizeOfCurrentlyPlayingSeed=10;
         // Above is Used to 'prime' the LSTM with a character sequence to continue/complete.
         // Initialization characters must all be in CharacterIteratorRNN.getMinimalCharacterSet() by default
         Random rng = new Random();
@@ -131,11 +130,11 @@ public class RNNDemo {
                 DataSet ds = iter.next();
                 net.fit(ds);
                 if (++miniBatchNumber % generateSamplesEveryNMinibatches == 0) {
-                    int pos=(int)(Math.random()*input.length())-sizeOfSongSeed;
-                    if (pos<0)pos=0;
-                    int pod2=Math.max(0,generationInitialization.length()-sizeOfCurrentlyPlayingSeed);
-                    String xx=generationInitialization.substring(pod2);
-                    generationInitialization=input.substring(pos,pos+sizeOfSongSeed)+xx;
+//                    int pos=(int)(Math.random()*input.length())-sizeOfSongSeed;
+//                    if (pos<0)pos=0;
+//                    int pod2=Math.max(0,generationInitialization.length()-sizeOfCurrentlyPlayingSeed);
+//                    String xx=generationInitialization.substring(pod2);
+//                    generationInitialization=input.substring(pos,pos+sizeOfSongSeed)+xx;
                     System.out.println("--------------------");
                     System.out.println("Completed " + miniBatchNumber + " minibatches of size " + miniBatchSize + "x" + exampleLength + " characters");
                     System.out.println("Sampling characters from network given initialization \"" + (generationInitialization == null ? "" : generationInitialization) + "\"");

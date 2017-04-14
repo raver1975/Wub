@@ -20,10 +20,10 @@ public class Custom {
     public  Attribute[] attlist;
     int width = 1200;
     int height = 400;
-    int numClusters=500;
+    int numClusters=200;
     public Custom() {
 
-//        int sonu = (int) (Math.random() * 1300);
+        //int sonu = (int) (Math.random() * 1300);
        // sonu=757; bassnectar basshead
         Song song = SongManager.getRandom();
         ImagePanel tf = new ImagePanel();

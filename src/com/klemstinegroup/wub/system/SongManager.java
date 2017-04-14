@@ -101,7 +101,8 @@ public class SongManager {
         inst.setValue(attlist[cnt++], s.getPitches()[3] * pitchFactor);
         inst.setValue(attlist[cnt++], s.getPitches()[4] * pitchFactor);
         inst.setValue(attlist[cnt++], s.getPitches()[5] * pitchFactor);
-        inst.setValue(attlist[cnt++], s.getPitches()[6] * pitchFactor);
+        inst.setValue(attlist[cnt++],
+                s.getPitches()[6] * pitchFactor);
         inst.setValue(attlist[cnt++], s.getPitches()[7] * pitchFactor);
         inst.setValue(attlist[cnt++], s.getPitches()[8] * pitchFactor);
         inst.setValue(attlist[cnt++], s.getPitches()[9] * pitchFactor);
@@ -123,6 +124,9 @@ public class SongManager {
     public static Song getRandom() {
         int sel = (int) (list.length * Math.random());
         System.out.println("playing song = " + sel);
-        return LoadFromFile.loadSong(list[sel]);
+        Song song=LoadFromFile.loadSong(list[sel]);
+        song.number=sel;
+
+        return song;
     }
 }
