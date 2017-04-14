@@ -46,6 +46,7 @@ import java.util.*;
 public class RNNDemo {
 
     private static String generationInitialization = "";
+    private static boolean bbtest;
 
 
 //    public static void main(String[] args) {
@@ -70,7 +71,7 @@ public class RNNDemo {
         int numEpochs = 100000;                            //Total number of training epochs
         int generateSamplesEveryNMinibatches = 1;  //How frequently to generate samples from the network? 1000 characters / 50 tbptt length: 20 parameter updates per minibatch
         int nSamplesToGenerate = 1;                    //Number of samples to generate after each training epoch
-        int nCharactersToSample = 60;                //Length of each sample to generate
+        int nCharactersToSample = 100;                //Length of each sample to generate
 //        String generationInitialization = null;        //Optional character initialization; a random character is used if null
 
         // Above is Used to 'prime' the LSTM with a character sequence to continue/complete.
@@ -125,84 +126,100 @@ public class RNNDemo {
         System.out.println("Total number of network parameters: " + totalNumParams);
 
         //Do training, and then generate and print samples from network
-        int miniBatchNumber = 0;
-        for (int i = 0; i < numEpochs; i++) {
-            while (iter.hasNext()) {
-                DataSet ds = iter.next();
-                net.fit(ds);
-                if (++miniBatchNumber % generateSamplesEveryNMinibatches == 0) {
+
+        CharacterIteratorRNNDemo finalIter = iter;
+        new Thread(new Runnable(){
+            @Override
+            public void run() {
+                int miniBatchNumber = 0;
+                for (int i = 0; i < numEpochs; i++) {
+                    while (finalIter.hasNext()) {
+                        DataSet ds = finalIter.next();
+                        net.fit(ds);
+                        if (++miniBatchNumber % generateSamplesEveryNMinibatches == 0) {
 //                    int pos=(int)(Math.random()*input.length())-sizeOfSongSeed;
 //                    if (pos<0)pos=0;
 //                    int pod2=Math.max(0,generationInitialization.length()-sizeOfCurrentlyPlayingSeed);
 //                    String xx=generationInitialization.substring(pod2);
 //                    generationInitialization=input.substring(pos,pos+sizeOfSongSeed)+xx;
-                    System.out.println("--------------------");
-                    System.out.println("Completed " + miniBatchNumber + " minibatches of size " + miniBatchSize + "x" + exampleLength + " characters");
-                    System.out.println("Sampling characters from network given initialization \"" + (generationInitialization == null ? "" : generationInitialization) + "\"");
-                    String[] samples = sampleCharactersFromNetwork(generationInitialization, net, iter, rng, nCharactersToSample, nSamplesToGenerate);
-                    if (generationInitialization != null && samples != null && samples[0] != null && samples[0].startsWith(generationInitialization))
-                        samples[0] = samples[0].substring(generationInitialization.length());
+                            System.out.println("--------------------");
+                            System.out.println("Completed " + miniBatchNumber + " minibatches of size " + miniBatchSize + "x" + exampleLength + " characters");
+                            System.out.println("Sampling characters from network given initialization \"" + (generationInitialization == null ? "" : generationInitialization) + "\"");
+                            String[] samples = sampleCharactersFromNetwork(generationInitialization, net, finalIter, rng, nCharactersToSample, nSamplesToGenerate);
+                            if (generationInitialization != null && samples != null && samples[0] != null && samples[0].startsWith(generationInitialization))
+                                samples[0] = samples[0].substring(generationInitialization.length());
 
-                    List<Segment> segments = song.analysis.getSegments();
+                            List<Segment> segments = song.analysis.getSegments();
 
 //            audio.play(song.getAudioInterval(sem,segMapped));
-                    if (audio.queue.size() < nCharactersToSample) {
-                        generationInitialization = samples[0];
-                        SegmentSong[] listSegmentSongs = new SegmentSong[generationInitialization.length()];
-                        for (int j = 0; j < generationInitialization.length(); j++) {
-                            SegmentSong ss = languageRev.get(generationInitialization.charAt(j));
-                            Segment sem = segments.get(ss.segment);
-                            listSegmentSongs[j] = ss;
+                            if (audio.queue.size() < nCharactersToSample*3) {
+                                generationInitialization = samples[0];
+                                SegmentSong[] listSegmentSongs = new SegmentSong[generationInitialization.length()];
+                                for (int j = 0; j < generationInitialization.length(); j++) {
+                                    SegmentSong ss = languageRev.get(generationInitialization.charAt(j));
+                                    Segment sem = segments.get(ss.segment);
+                                    listSegmentSongs[j] = ss;
 //
 //                            audio.play(song.getAudioInterval(sem, ss));
-                        }
-                        //input
-                        System.out.println("input=" + input);
-                        System.out.println("gener=" + generationInitialization);
+                                }
+                                //input
+                                System.out.println("input=" + input);
+                                System.out.println("gener=" + generationInitialization);
 
-                        //matching algorithm
+                                //matching algorithm
 
-                        int pos = 0;
-                        String toProcess = generationInitialization;
-                        while (pos < generationInitialization.length()-1) {
-                            int lowest = Integer.MAX_VALUE;
-                            String best = "";
-                            int bestpos = -1;
-                            for (int size = 1; size < Math.min(10, toProcess.length()); size++) {
-                                String g = toProcess.substring(0, size);
-                                for (int jj = 0; jj < input.length() - size; jj++) {
-                                    String h = input.substring(jj, jj + size);
+                                int pos = 0;
+                                String toProcess = generationInitialization;
+                                while (pos < generationInitialization.length()-1) {
+                                    int lowest = Integer.MAX_VALUE;
+                                    String best = "";
+                                    int bestpos = -1;
+                                    int sizeOfMatches=10;
+                                    for (int size = 1; size < Math.min(sizeOfMatches, toProcess.length()); size++) {
+                                        String g = toProcess.substring(0, size);
+                                        for (int jj = 0; jj < input.length() - size; jj++) {
+                                            String h = input.substring(jj, jj + size);
 //                                    System.out.println(g+"="+h);
-                                    int score = ((10-size)*2)+Levenshtein.getLevenshteinDistance(g, h);
-                                    if (score < lowest) {
-                                        lowest = score;
-                                        best = h;
-                                        bestpos = jj;
+                                            int score = (int)(((sizeOfMatches-size)*1d)+Levenshtein.getLevenshteinDistance(g, h));
+                                            if (score < lowest) {
+                                                lowest = score;
+                                                best = h;
+                                                bestpos = jj;
 //                                        System.out.println("score:" + score + "\tbest:" + bestpos + "\t" + best);
+                                            }
+                                        }
+
                                     }
+                                    for (int hh = bestpos; hh < bestpos + best.length(); hh++) {
+                                        listSegmentSongs[pos] = new SegmentSong(song.number, hh);
+                                        pos++;
+                                    }
+                                    toProcess = toProcess.substring(best.length());
+                                    pos--;
+
+                                }
+                                for (SegmentSong s : listSegmentSongs) {
+                                    if (s.segment<segments.size()) audio.play(song.getAudioInterval(segments.get(s.segment), s));
+
                                 }
 
+
+                                System.out.println("-------------------------------------------------------");
                             }
-                            for (int hh = bestpos; hh < bestpos + best.length(); hh++) {
-                                listSegmentSongs[pos] = new SegmentSong(song.number, hh);
-                                pos++;
-                            }
-                            toProcess = toProcess.substring(best.length());
-
                         }
-                        for (SegmentSong s : listSegmentSongs) {
-                           if (s.segment<segments.size()) audio.play(song.getAudioInterval(segments.get(s.segment), s));
-
-                        }
-
-
-                        System.out.println("-------------------------------------------------------");
                     }
+
+                    finalIter.reset();    //Reset iterator for another epoch
                 }
             }
+        }).start();
 
-            iter.reset();    //Reset iterator for another epoch
+        while(!bbtest) try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+
         String[] samples = sampleCharactersFromNetwork(generationInitialization, net, iter, rng, nCharactersToSample, nSamplesToGenerate);
         for (int j = 0; j < samples.length; j++) {
             System.out.println("----- Sample " + j + " -----");

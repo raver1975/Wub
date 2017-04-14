@@ -198,7 +198,9 @@ public class Audio {
                                             if (hm.get(lastSeg + "") == null) {
                                                 hm.put(lastSeg + "", 0);
                                             } else {
-                                                val = hm.get(lastSeg + "") + 1;
+                                                Integer bbbb = hm.get(lastSeg + "");
+                                                if (bbbb!=null)val = bbbb+ 1;
+                                                else val=1;
                                             }
                                             hm.put(lastSeg + "", val);
                                             lastSeg = i.payloadPrintout.segment;
