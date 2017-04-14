@@ -60,12 +60,12 @@ public class RNNDemo {
         HashMap<Character, SegmentSong> languageRev = new HashMap<>();
         for (Map.Entry<SegmentSong, Character> entry : language.entrySet())
             languageRev.put(entry.getValue(), entry.getKey());
-        int lstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
+        int lstmLayerSize = 100;                    //Number of units in each GravesLSTM layer
         int mstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
 //        int nstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
         int miniBatchSize = 300;                        //Size of mini batch to use when  training
-        int exampleLength = 600;                    //Length of each training example sequence to use. This could certainly be increased
-        int tbpttLength = 100;                       //Length for truncated backpropagation through time. i.e., do parameter updates ever 50 characters
+        int exampleLength = 500;                    //Length of each training example sequence to use. This could certainly be increased
+        int tbpttLength = 200;                       //Length for truncated backpropagation through time. i.e., do parameter updates ever 50 characters
         int numEpochs = 100000;                            //Total number of training epochs
         int generateSamplesEveryNMinibatches = 1;  //How frequently to generate samples from the network? 1000 characters / 50 tbptt length: 20 parameter updates per minibatch
         int nSamplesToGenerate = 1;                    //Number of samples to generate after each training epoch
