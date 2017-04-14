@@ -60,7 +60,7 @@ public class RNNDemo {
     public static String[] process(Song song, HashMap<SegmentSong, Character> language, Audio audio, String input) {
         generationInitialization = input.substring(input.length() / 2 - 20, input.length() / 2 + 20);
         HashMap<Character, SegmentSong> languageRev = new HashMap<>();
-        for (Map.Entry<Segmen1tSong, Character> entry : language.entrySet())
+        for (Map.Entry<SegmentSong, Character> entry : language.entrySet())
             languageRev.put(entry.getValue(), entry.getKey());
         int lstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
         int mstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
