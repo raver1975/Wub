@@ -62,12 +62,12 @@ public class RNNDemo {
         HashMap<Character, SegmentSong> languageRev = new HashMap<>();
         for (Map.Entry<SegmentSong, Character> entry : language.entrySet())
             languageRev.put(entry.getValue(), entry.getKey());
-        int lstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
+        int lstmLayerSize = 300;                    //Number of units in each GravesLSTM layer
         int mstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
 //        int nstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
         int miniBatchSize = 300;                        //Size of mini batch to use when  training
-        int exampleLength = 500;                    //Length of each training example sequence to use. This could certainly be increased
-        int tbpttLength = 40;                       //Length for truncated backpropagation through time. i.e., do parameter updates ever 50 characters
+        int exampleLength = 800;                    //Length of each training example sequence to use. This could certainly be increased
+        int tbpttLength =200;                       //Length for truncated backpropagation through time. i.e., do parameter updates ever 50 characters
         int numEpochs = 100000;                            //Total number of training epochs
         int generateSamplesEveryNMinibatches = 1;  //How frequently to generate samples from the network? 1000 characters / 50 tbptt length: 20 parameter updates per minibatch
         int nSamplesToGenerate = 1;                    //Number of samples to generate after each training epoch
@@ -157,12 +157,13 @@ public class RNNDemo {
                                 SegmentSong[] listSegmentSongs = new SegmentSong[generationInitialization.length()];
                                 for (int j = 0; j < generationInitialization.length(); j++) {
                                     SegmentSong ss = languageRev.get(generationInitialization.charAt(j));
-                                    Segment sem = segments.get(ss.segment);
+//                                    Segment sem = segments.get(ss.segment);
                                     listSegmentSongs[j] = ss;
 //
 //                            audio.play(song.getAudioInterval(sem, ss));
                                 }
-                                //input
+                                //smoothing below just restores the song
+                                /*//input
                                 System.out.println("input=" + input);
                                 System.out.println("gener=" + generationInitialization);
 
@@ -174,7 +175,7 @@ public class RNNDemo {
                                     int lowest = Integer.MAX_VALUE;
                                     String best = "";
                                     int bestpos = -1;
-                                    int sizeOfMatches=10;
+                                    int sizeOfMatches=15;
                                     for (int size = 1; size < Math.min(sizeOfMatches, toProcess.length()); size++) {
                                         String g = toProcess.substring(0, size);
                                         for (int jj = 0; jj < input.length() - size; jj++) {
@@ -197,10 +198,9 @@ public class RNNDemo {
                                     }
                                         toProcess = toProcess.substring(best.length());
                                         pos += best.length() ;
-                                }
+                                }*/
                                 for (SegmentSong s : listSegmentSongs) {
                                     if (s.segment<segments.size()) audio.play(song.getAudioInterval(segments.get(s.segment), s));
-
                                 }
 
 

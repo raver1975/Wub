@@ -20,7 +20,7 @@ public class Custom {
     public  Attribute[] attlist;
     int width = 1200;
     int height = 400;
-    int numClusters=25;
+    int numClusters=200;
     public Custom() {
 
         int sonu = (int) (Math.random() * 1300);
@@ -47,7 +47,13 @@ public class Custom {
 
         char newChar='A';
         int i=0;
+        double lleng=segments.size();
         for (Segment s:segments){
+            if (i<lleng/8d||i>(7d*lleng)/8d){
+                i++;
+                continue;
+            }
+
             SegmentSong segOrig = new SegmentSong(song.number, i);
             SegmentSong segMapped = smallercluster.get(segOrig);
             reducedSong.add(segMapped);
