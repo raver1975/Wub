@@ -67,11 +67,11 @@ public class RNNDemo {
 //        int nstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
         int miniBatchSize = 300;                        //Size of mini batch to use when  training
         int exampleLength = 500;                    //Length of each training example sequence to use. This could certainly be increased
-        int tbpttLength = 200;                       //Length for truncated backpropagation through time. i.e., do parameter updates ever 50 characters
+        int tbpttLength = 40;                       //Length for truncated backpropagation through time. i.e., do parameter updates ever 50 characters
         int numEpochs = 100000;                            //Total number of training epochs
         int generateSamplesEveryNMinibatches = 1;  //How frequently to generate samples from the network? 1000 characters / 50 tbptt length: 20 parameter updates per minibatch
         int nSamplesToGenerate = 1;                    //Number of samples to generate after each training epoch
-        int nCharactersToSample = 100;                //Length of each sample to generate
+        int nCharactersToSample = 60;                //Length of each sample to generate
 //        String generationInitialization = null;        //Optional character initialization; a random character is used if null
 
         // Above is Used to 'prime' the LSTM with a character sequence to continue/complete.
@@ -180,7 +180,7 @@ public class RNNDemo {
                                         for (int jj = 0; jj < input.length() - size; jj++) {
                                             String h = input.substring(jj, jj + size);
 //                                    System.out.println(g+"="+h);
-                                            int score = (int)(((sizeOfMatches-size)*1d)+Levenshtein.getLevenshteinDistance(g, h));
+                                            int score = (int)(((sizeOfMatches-size)*.5d)+Levenshtein.getLevenshteinDistance(g, h));
                                             if (score < lowest) {
                                                 lowest = score;
                                                 best = h;
@@ -190,11 +190,13 @@ public class RNNDemo {
                                         }
 
                                     }
+                                    int pos2=pos;
                                     for (int hh = bestpos; hh < bestpos + best.length(); hh++) {
-                                        listSegmentSongs[pos] = new SegmentSong(song.number, hh);
-                                        pos++;
+                                        listSegmentSongs[pos2] = new SegmentSong(song.number, hh);
+                                        pos2++;
                                     }
-                                    toProcess = toProcess.substring(best.length());
+                                        toProcess = toProcess.substring(best.length());
+                                        pos += best.length() ;
                                 }
                                 for (SegmentSong s : listSegmentSongs) {
                                     if (s.segment<segments.size()) audio.play(song.getAudioInterval(segments.get(s.segment), s));

@@ -20,7 +20,7 @@ public class Custom {
     public  Attribute[] attlist;
     int width = 1200;
     int height = 400;
-    int numClusters=150;
+    int numClusters=25;
     public Custom() {
 
         int sonu = (int) (Math.random() * 1300);
