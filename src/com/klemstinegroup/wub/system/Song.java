@@ -59,4 +59,8 @@ public class Song {
     public AudioInterval getAudioInterval(Segment sem, SegmentSong segMapped) {
         return getAudioInterval(sem,segMapped.song,segMapped.segment);
     }
+    @Override
+    public String toString(){
+        return this.analysis.toString();
+    }
 }

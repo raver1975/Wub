@@ -118,7 +118,7 @@ public class Audio {
 
         new Thread(new Runnable() {
             public void run() {
-                int cnt = 2500;
+                int cnt = 25000000;
                 top:
                 while (cnt-- > 0) {
                     if (!queue.isEmpty()) {
@@ -320,6 +320,6 @@ public class Audio {
                 e.printStackTrace();
             }
         }
-//        System.exit(0);
+        System.exit(0);
     }
 }

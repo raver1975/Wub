@@ -66,6 +66,7 @@ public class SongManager {
         if (i > -1 && i < list.length) {
             Song ret= LoadFromFile.loadSong(list[i]);
             ret.number=i;
+            System.out.println(ret);
         return ret;
         }
         else return null;
@@ -123,10 +124,6 @@ public class SongManager {
 
     public static Song getRandom() {
         int sel = (int) (list.length * Math.random());
-        System.out.println("playing song = " + sel);
-        Song song=LoadFromFile.loadSong(list[sel]);
-        song.number=sel;
-
-        return song;
+        return getRandom(sel);
     }
 }

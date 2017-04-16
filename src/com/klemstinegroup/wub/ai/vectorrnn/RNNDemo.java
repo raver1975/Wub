@@ -62,12 +62,12 @@ public class RNNDemo {
         HashMap<Character, SegmentSong> languageRev = new HashMap<>();
         for (Map.Entry<SegmentSong, Character> entry : language.entrySet())
             languageRev.put(entry.getValue(), entry.getKey());
-        int lstmLayerSize = 300;                    //Number of units in each GravesLSTM layer
+        int lstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
         int mstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
 //        int nstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
-        int miniBatchSize = 300;                        //Size of mini batch to use when  training
-        int exampleLength = 800;                    //Length of each training example sequence to use. This could certainly be increased
-        int tbpttLength =200;                       //Length for truncated backpropagation through time. i.e., do parameter updates ever 50 characters
+        int miniBatchSize = 3000;                        //Size of mini batch to use when  training
+        int exampleLength = 400;                    //Length of each training example sequence to use. This could certainly be increased
+        int tbpttLength = 20;                       //Length for truncated backpropagation through time. i.e., do parameter updates ever 50 characters
         int numEpochs = 100000;                            //Total number of training epochs
         int generateSamplesEveryNMinibatches = 1;  //How frequently to generate samples from the network? 1000 characters / 50 tbptt length: 20 parameter updates per minibatch
         int nSamplesToGenerate = 1;                    //Number of samples to generate after each training epoch
@@ -128,7 +128,7 @@ public class RNNDemo {
         //Do training, and then generate and print samples from network
 
         CharacterIteratorRNNDemo finalIter = iter;
-        new Thread(new Runnable(){
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 int miniBatchNumber = 0;
@@ -143,6 +143,7 @@ public class RNNDemo {
 //                    String xx=generationInitialization.substring(pod2);
 //                    generationInitialization=input.substring(pos,pos+sizeOfSongSeed)+xx;
                             System.out.println("--------------------");
+
                             System.out.println("Completed " + miniBatchNumber + " minibatches of size " + miniBatchSize + "x" + exampleLength + " characters");
                             System.out.println("Sampling characters from network given initialization \"" + (generationInitialization == null ? "" : generationInitialization) + "\"");
                             String[] samples = sampleCharactersFromNetwork(generationInitialization, net, finalIter, rng, nCharactersToSample, nSamplesToGenerate);
@@ -152,7 +153,7 @@ public class RNNDemo {
                             List<Segment> segments = song.analysis.getSegments();
 
 //            audio.play(song.getAudioInterval(sem,segMapped));
-                            if (audio.queue.size() < nCharactersToSample*3) {
+                            if (net.score()< 100d && audio.queue.size() < nCharactersToSample * 3){
                                 generationInitialization = samples[0];
                                 SegmentSong[] listSegmentSongs = new SegmentSong[generationInitialization.length()];
                                 for (int j = 0; j < generationInitialization.length(); j++) {
@@ -200,7 +201,8 @@ public class RNNDemo {
                                         pos += best.length() ;
                                 }*/
                                 for (SegmentSong s : listSegmentSongs) {
-                                    if (s.segment<segments.size()) audio.play(song.getAudioInterval(segments.get(s.segment), s));
+                                    if (s.segment < segments.size())
+                                        audio.play(song.getAudioInterval(segments.get(s.segment), s));
                                 }
 
 
@@ -214,7 +216,7 @@ public class RNNDemo {
             }
         }).start();
 
-        while(!bbtest) try {
+        while (!bbtest) try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
