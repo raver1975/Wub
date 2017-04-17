@@ -49,6 +49,7 @@ public class RNNDemo {
     private static boolean bbtest;
 
 
+
 //    public static void main(String[] args) {
 //        String fileLocation = "aabbccdd";
 //        String fileLocation1 = "";
@@ -62,6 +63,8 @@ public class RNNDemo {
         HashMap<Character, SegmentSong> languageRev = new HashMap<>();
         for (Map.Entry<SegmentSong, Character> entry : language.entrySet())
             languageRev.put(entry.getValue(), entry.getKey());
+        boolean smoothing=false;
+        double startPlayingScore=10d;
         int lstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
         int mstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
 //        int nstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
@@ -153,7 +156,8 @@ public class RNNDemo {
                             List<Segment> segments = song.analysis.getSegments();
 
 //            audio.play(song.getAudioInterval(sem,segMapped));
-                            if (net.score()< 100d && audio.queue.size() < nCharactersToSample * 3){
+
+                            if (net.score()< startPlayingScore && audio.queue.size() < nCharactersToSample * 3){
                                 generationInitialization = samples[0];
                                 SegmentSong[] listSegmentSongs = new SegmentSong[generationInitialization.length()];
                                 for (int j = 0; j < generationInitialization.length(); j++) {
@@ -163,43 +167,45 @@ public class RNNDemo {
 //
 //                            audio.play(song.getAudioInterval(sem, ss));
                                 }
-                                //smoothing below just restores the song
-                                /*//input
-                                System.out.println("input=" + input);
-                                System.out.println("gener=" + generationInitialization);
+                                if (smoothing) {
+                                    //smoothing below just restores the song
+                                    //input
+                                    System.out.println("input=" + input);
+                                    System.out.println("gener=" + generationInitialization);
 
-                                //matching algorithm
+                                    //matching algorithm
 
-                                int pos = 0;
-                                String toProcess = generationInitialization;
-                                while (pos < generationInitialization.length()-1) {
-                                    int lowest = Integer.MAX_VALUE;
-                                    String best = "";
-                                    int bestpos = -1;
-                                    int sizeOfMatches=15;
-                                    for (int size = 1; size < Math.min(sizeOfMatches, toProcess.length()); size++) {
-                                        String g = toProcess.substring(0, size);
-                                        for (int jj = 0; jj < input.length() - size; jj++) {
-                                            String h = input.substring(jj, jj + size);
+                                    int pos = 0;
+                                    String toProcess = generationInitialization;
+                                    while (pos < generationInitialization.length() - 1) {
+                                        int lowest = Integer.MAX_VALUE;
+                                        String best = "";
+                                        int bestpos = -1;
+                                        int sizeOfMatches = 15;
+                                        for (int size = 1; size < Math.min(sizeOfMatches, toProcess.length()); size++) {
+                                            String g = toProcess.substring(0, size);
+                                            for (int jj = 0; jj < input.length() - size; jj++) {
+                                                String h = input.substring(jj, jj + size);
 //                                    System.out.println(g+"="+h);
-                                            int score = (int)(((sizeOfMatches-size)*.5d)+Levenshtein.getLevenshteinDistance(g, h));
-                                            if (score < lowest) {
-                                                lowest = score;
-                                                best = h;
-                                                bestpos = jj;
+                                                int score = (int) (((sizeOfMatches - size) * .5d) + Levenshtein.getLevenshteinDistance(g, h));
+                                                if (score < lowest) {
+                                                    lowest = score;
+                                                    best = h;
+                                                    bestpos = jj;
 //                                        System.out.println("score:" + score + "\tbest:" + bestpos + "\t" + best);
+                                                }
                                             }
-                                        }
 
-                                    }
-                                    int pos2=pos;
-                                    for (int hh = bestpos; hh < bestpos + best.length(); hh++) {
-                                        listSegmentSongs[pos2] = new SegmentSong(song.number, hh);
-                                        pos2++;
-                                    }
+                                        }
+                                        int pos2 = pos;
+                                        for (int hh = bestpos; hh < bestpos + best.length(); hh++) {
+                                            listSegmentSongs[pos2] = new SegmentSong(song.number, hh);
+                                            pos2++;
+                                        }
                                         toProcess = toProcess.substring(best.length());
-                                        pos += best.length() ;
-                                }*/
+                                        pos += best.length();
+                                    }
+                                }
                                 for (SegmentSong s : listSegmentSongs) {
                                     if (s.segment < segments.size())
                                         audio.play(song.getAudioInterval(segments.get(s.segment), s));
