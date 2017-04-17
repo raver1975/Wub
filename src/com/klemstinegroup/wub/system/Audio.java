@@ -23,6 +23,7 @@ import javax.swing.*;
 import org.bytedeco.javacv.*;
 import org.bytedeco.javacv.Frame;
 import org.graphstream.graph.Node;
+import org.json.simple.JSONObject;
 
 import static org.bytedeco.javacpp.avutil.AV_PIX_FMT_ARGB;
 
@@ -54,6 +55,7 @@ public class Audio {
     Node lastNode2 = null;
     private int start;
     private int lastSeg;
+    private Queue<Segment> lastPlayedQueue = new LinkedList<>();
 
     public Audio() {
         this(null, null, 1);
@@ -125,7 +127,7 @@ public class Audio {
                         cnt = 2500;
                         AudioInterval i = queue.poll();
                         currentlyPlaying = i;
-                        System.out.println("size:"+queue.size()+"\tcurrently playing:" + i.payloadPrintout);
+                        System.out.println("size:" + queue.size() + "\tcurrently playing:" + i.payloadPrintout);
                         if (i.payloadPrintout != null) {
 //                            System.out.println("now playing " + i.payloadPrintout);
 
@@ -172,35 +174,95 @@ public class Audio {
                                             }
 
                                             ArrayList<Segment> list = new ArrayList<>();
-                                            list.add(cachedSong.analysis.getSegments().get(i.payloadPrintout.segment));
+                                            if (i.payloadPrintout.segment < cachedSong.analysis.getSegments().size()) {
+                                                Segment bbbb = cachedSong.analysis.getSegments().get(i.payloadPrintout.segment);
+                                                list.add(bbbb);
+                                            }
                                             double duration = cachedSong.analysis.getSegments().get(i.payloadPrintout.segment).duration;
                                             tf.setBackground(ColorHelper.numberToColor(normd));
                                             BufferedImage bi = new SamplingGraph().createWaveForm(list, duration, i.data, audioFormat, tf.getWidth(), tf.getHeight());
                                             Graphics g = bi.getGraphics();
 
-                                            g.setFont(new Font("Arial", Font.BOLD, 70));
+                                            g.setFont(new Font("Arial", Font.BOLD, 20));
                                             g.setColor(Color.YELLOW);
 
-                                            for (int xi = -1; xi < 2; xi++) {
-                                                for (int yi = -1; yi < 2; yi++) {
-                                                    g.drawString("song #" + i.payloadPrintout.song, 10 - xi, 25 + yi + tf.getHeight() / 2);
-                                                    g.drawString("seq #" + i.payloadPrintout.segment, 440 - xi, 25 + yi + tf.getHeight() / 2);
-                                                    g.drawString("len " + i.data.length, 820 - xi, 25 + yi + tf.getHeight() / 2);
 
+                                            JSONObject js = (JSONObject) cachedSong.analysis.getMap().get("meta");
+                                            String title = null;
+                                            String artist = null;
+                                            String album = null;
+                                            String genre = null;
+                                            Long seconds = null;
+
+                                            try {
+                                                title = (String) js.get("title");
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                            try {
+                                                artist = (String) js.get("artist");
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                            try {
+                                                album = (String) js.get("album");
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                            try {
+                                                genre = (String) js.get("genre");
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                            try {
+                                                seconds = (Long) js.get("seconds");
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+
+                                            String sonTit = "Title: " + artist;
+                                            String sonArt = "Artist: " + title;
+                                            String sonSeq = "seq #" + i.payloadPrintout.segment + "";
+
+
+                                            for (int xi = -1; xi < 2; xi++) {
+
+                                                for (int yi = -1; yi < 2; yi++) {
+                                                    g.drawString(sonArt, 10 - xi, 25 + yi);
+                                                    g.drawString(sonTit, 10 - xi, 45 + yi);
+                                                    g.drawString(sonSeq, 10 - xi, 65 + yi);
                                                 }
 
                                             }
                                             g.setColor(Color.RED);
-                                            g.drawString("song #" + i.payloadPrintout.song, 10, 25 + tf.getHeight() / 2);
-                                            g.drawString("seq #" + i.payloadPrintout.segment, 440, 25 + tf.getHeight() / 2);
-                                            g.drawString("len " + i.data.length, 820, 25 + tf.getHeight() / 2);
+                                            g.drawString(sonArt, 10, 25);
+                                            g.drawString(sonTit, 10, 45);
+                                            g.drawString(sonSeq, 10, 65);
+
+                                            g.setColor(Color.black);
+                                            Segment seg = cachedSong.analysis.getSegments().get(i.payloadPrintout.segment);
+                                            lastPlayedQueue.add(seg);
+                                            LinkedList<Segment> lastPlayedQueue1 = new LinkedList(lastPlayedQueue);
+                                            Iterator<Segment> quit = lastPlayedQueue1.iterator();
+                                            int cnt = 0;
+                                            while (quit.hasNext()) {
+                                                Segment seg1 = quit.next();
+                                                g.setColor(ColorHelper.numberToColor((cnt * 100) / lastPlayedQueue.size()));
+                                                //System.out.println(seg1+"\t"+seg1.getDuration());
+                                                g.fillRect((int) (bi.getWidth() * (seg1.getStart() / (double) seconds)), bi.getHeight() / 2 - (bi.getHeight()/2)*cnt/15, (int) (bi.getWidth() * seg1.getDuration() / (double) seconds), (bi.getHeight())*cnt/15);
+                                                cnt++;
+                                            }
+                                            while (lastPlayedQueue1.size() > 15) {
+                                                lastPlayedQueue1.removeFirst();
+                                            }
+                                            lastPlayedQueue = new LinkedList<>(lastPlayedQueue1);
                                             int val = 0;
                                             if (hm.get(lastSeg + "") == null) {
                                                 hm.put(lastSeg + "", 0);
                                             } else {
                                                 Integer bbbb = hm.get(lastSeg + "");
-                                                if (bbbb!=null)val = bbbb+ 1;
-                                                else val=1;
+                                                if (bbbb != null) val = bbbb + 1;
+                                                else val = 1;
                                             }
                                             hm.put(lastSeg + "", val);
                                             lastSeg = i.payloadPrintout.segment;

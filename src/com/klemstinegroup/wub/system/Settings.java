@@ -13,7 +13,7 @@ public class Settings {
 
     public static float pitchFactor = 17f;
     public static float timbreFactor = 30f;
-    public static float loudFactor = 70f;
+    public static float loudFactor = 20f;
     public static float durationFactor = 90f;
 //    static float pitchFactor = 17f;
 //    static float timbreFactor = 17f;

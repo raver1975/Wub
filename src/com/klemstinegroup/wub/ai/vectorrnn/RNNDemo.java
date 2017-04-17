@@ -64,13 +64,13 @@ public class RNNDemo {
         for (Map.Entry<SegmentSong, Character> entry : language.entrySet())
             languageRev.put(entry.getValue(), entry.getKey());
         boolean smoothing=false;
-        double startPlayingScore=10d;
-        int lstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
-        int mstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
+        double startPlayingScore=50d;
+        int lstmLayerSize = 250;                    //Number of units in each GravesLSTM layer
+        int mstmLayerSize = 250;                    //Number of units in each GravesLSTM layer
 //        int nstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
         int miniBatchSize = 3000;                        //Size of mini batch to use when  training
-        int exampleLength = 400;                    //Length of each training example sequence to use. This could certainly be increased
-        int tbpttLength = 60;                       //Length for truncated backpropagation through time. i.e., do parameter updates ever 50 characters
+        int exampleLength = 600;                    //Length of each training example sequence to use. This could certainly be increased
+        int tbpttLength = 120;                       //Length for truncated backpropagation through time. i.e., do parameter updates ever 50 characters
         int numEpochs = 100000;                            //Total number of training epochs
         int generateSamplesEveryNMinibatches = 1;  //How frequently to generate samples from the network? 1000 characters / 50 tbptt length: 20 parameter updates per minibatch
         int nSamplesToGenerate = 1;                    //Number of samples to generate after each training epoch
