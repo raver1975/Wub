@@ -224,22 +224,6 @@ public class Audio {
                                             String sonArt = "Artist: " + title;
                                             String sonSeq = "seq #" + i.payloadPrintout.segment + "";
 
-
-                                            for (int xi = -1; xi < 2; xi++) {
-
-                                                for (int yi = -1; yi < 2; yi++) {
-                                                    g.drawString(sonArt, 10 - xi, 25 + yi);
-                                                    g.drawString(sonTit, 10 - xi, 45 + yi);
-                                                    g.drawString(sonSeq, 10 - xi, 65 + yi);
-                                                }
-
-                                            }
-                                            g.setColor(Color.RED);
-                                            g.drawString(sonArt, 10, 25);
-                                            g.drawString(sonTit, 10, 45);
-                                            g.drawString(sonSeq, 10, 65);
-
-                                            g.setColor(Color.black);
                                             Segment seg = cachedSong.analysis.getSegments().get(i.payloadPrintout.segment);
                                             lastPlayedQueue.add(seg);
                                             LinkedList<Segment> lastPlayedQueue1 = new LinkedList(lastPlayedQueue);
@@ -257,6 +241,23 @@ public class Audio {
                                                 lastPlayedQueue1.removeFirst();
                                             }
                                             lastPlayedQueue = new LinkedList<>(lastPlayedQueue1);
+                                            
+                                            for (int xi = -1; xi < 2; xi++) {
+
+                                                for (int yi = -1; yi < 2; yi++) {
+                                                    g.drawString(sonArt, 10 - xi, 25 + yi);
+                                                    g.drawString(sonTit, 10 - xi, 45 + yi);
+                                                    g.drawString(sonSeq, 10 - xi, 65 + yi);
+                                                }
+
+                                            }
+                                            g.setColor(Color.RED);
+                                            g.drawString(sonArt, 10, 25);
+                                            g.drawString(sonTit, 10, 45);
+                                            g.drawString(sonSeq, 10, 65);
+
+                                            g.setColor(Color.black);
+
                                             int val = 0;
                                             if (hm.get(lastSeg + "") == null) {
                                                 hm.put(lastSeg + "", 0);
