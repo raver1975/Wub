@@ -249,7 +249,7 @@ public class Audio {
                                                 Segment seg1 = quit.next();
                                                 g.setColor(ColorHelper.numberToColor((cnt * 100) / lastPlayedQueue.size()));
                                                 //System.out.println(seg1+"\t"+seg1.getDuration());
-                                                g.fillRect((int) (bi.getWidth() * (seg1.getStart() / (double) seconds)), bi.getHeight() / 2 - (bi.getHeight()/2)*cnt/15, (int) (bi.getWidth() * seg1.getDuration() / (double) seconds), (bi.getHeight())*cnt/15);
+                                                g.fillRect((int) (bi.getWidth() * (seg1.getStart() / (double) seconds))-cnt*1, bi.getHeight() / 2 - (bi.getHeight()/2)*cnt/15, (int) (bi.getWidth() * seg1.getDuration() / (double) seconds)*cnt*2, (bi.getHeight())*cnt/15);
                                                 cnt++;
                                             }
                                             while (lastPlayedQueue1.size() > 15) {

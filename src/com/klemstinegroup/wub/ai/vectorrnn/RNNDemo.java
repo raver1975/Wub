@@ -64,7 +64,7 @@ public class RNNDemo {
         for (Map.Entry<SegmentSong, Character> entry : language.entrySet())
             languageRev.put(entry.getValue(), entry.getKey());
         boolean smoothing=false;
-        double startPlayingScore=50d;
+        double startPlayingScore=20d;
         int lstmLayerSize = 250;                    //Number of units in each GravesLSTM layer
         int mstmLayerSize = 250;                    //Number of units in each GravesLSTM layer
 //        int nstmLayerSize = 200;                    //Number of units in each GravesLSTM layer

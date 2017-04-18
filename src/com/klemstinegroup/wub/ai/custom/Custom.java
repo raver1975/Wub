@@ -24,7 +24,7 @@ public class Custom {
     public Custom() {
 
         int sonu = (int) (Math.random() * 1300);
-        sonu=1080; //bassnectar basshead
+//        sonu=1080; //bassnectar basshead
         Song song = SongManager.getRandom(sonu);
         ImagePanel tf = new ImagePanel();
 //        JTextArea jta = new JTextArea(4, 20);
