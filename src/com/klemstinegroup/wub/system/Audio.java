@@ -184,7 +184,6 @@ public class Audio {
                                             Graphics g = bi.getGraphics();
 
                                             g.setFont(new Font("Arial", Font.BOLD, 20));
-                                            g.setColor(Color.YELLOW);
 
 
                                             JSONObject js = (JSONObject) cachedSong.analysis.getMap().get("meta");
@@ -229,19 +228,21 @@ public class Audio {
                                             LinkedList<Segment> lastPlayedQueue1 = new LinkedList(lastPlayedQueue);
                                             Iterator<Segment> quit = lastPlayedQueue1.iterator();
                                             int cnt = 0;
+                                            int qsize = 15;
                                             while (quit.hasNext()) {
                                                 Segment seg1 = quit.next();
                                                 g.setColor(ColorHelper.numberToColor((cnt * 100) / lastPlayedQueue.size()));
                                                 //System.out.println(seg1+"\t"+seg1.getDuration());
                                                 if (seg1 != null)
-                                                    g.fillRect((int) (bi.getWidth() * (seg1.getStart() / (double) seconds)) - cnt * 1, bi.getHeight() / 2 - (bi.getHeight() / 2) * cnt / 15, (int) (bi.getWidth() * seg1.getDuration() / (double) seconds) * cnt * 2, (bi.getHeight()) * cnt / 15);
+                                                    g.fillRect((int) (bi.getWidth() * (seg1.getStart() / (double) seconds)) - cnt * 1, bi.getHeight() / 2 - (bi.getHeight() / 2) * cnt / qsize, (int) (bi.getWidth() * seg1.getDuration() / (double) seconds) * cnt * 2, (bi.getHeight()) * cnt / qsize);
                                                 cnt++;
                                             }
-                                            while (lastPlayedQueue1.size() > 15) {
+                                            while (lastPlayedQueue1.size() > qsize) {
                                                 lastPlayedQueue1.removeFirst();
                                             }
                                             lastPlayedQueue = new LinkedList<>(lastPlayedQueue1);
-                                            
+                                            g.setColor(Color.YELLOW);
+
                                             for (int xi = -1; xi < 2; xi++) {
 
                                                 for (int yi = -1; yi < 2; yi++) {
