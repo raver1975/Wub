@@ -53,6 +53,7 @@ public class AudioObject implements Serializable {
 		JFileChooser chooser = new JFileChooser(CentralCommand.lastDirectory);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Audio", "mp3", "wav", "wub", "play");
 		chooser.setFileFilter(filter);
+		chooser.setSelectedFile(new File("spotify:track:6z0zyXMTA0ans4OoTAO2Bm"));
 		int returnVal = chooser.showOpenDialog(new JFrame());
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			// System.out.println("You chose to open this file: " +

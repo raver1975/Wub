@@ -178,7 +178,9 @@ public class Audio {
                                                 Segment bbbb = cachedSong.analysis.getSegments().get(i.payloadPrintout.segment);
                                                 list.add(bbbb);
                                             }
-                                            double duration = cachedSong.analysis.getSegments().get(i.payloadPrintout.segment).duration;
+                                            double duration = 1;
+                                            if (i.payloadPrintout.segment<cachedSong.analysis.getSegments().size())duration=cachedSong.analysis.getSegments().get(i.payloadPrintout.segment).duration;
+
                                             tf.setBackground(ColorHelper.numberToColor(normd));
                                             BufferedImage bi = new SamplingGraph().createWaveForm(list, duration, i.data, audioFormat, tf.getWidth(), tf.getHeight());
                                             Graphics g = bi.getGraphics();
@@ -191,7 +193,10 @@ public class Audio {
                                             String artist = null;
                                             String album = null;
                                             String genre = null;
-                                            Long seconds = null;
+                                           double seconds =1;
+                                           for (Segment s:cachedSong.analysis.getSegments()){
+                                               seconds=Math.max(seconds,s.getStart()+s.getDuration());
+                                           }
 
                                             try {
                                                 title = (String) js.get("title");
@@ -213,15 +218,15 @@ public class Audio {
                                             } catch (Exception e) {
                                                 e.printStackTrace();
                                             }
-                                            try {
-                                                seconds = (Long) js.get("seconds");
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
+//                                            try {
+//                                                seconds = (Long) js.get("seconds");
+//                                            } catch (Exception e) {
+//                                                e.printStackTrace();
+//                                            }
 
-                                            String sonTit = "Title: " + artist;
-                                            String sonArt = "Artist: " + title;
-                                            String sonSeq = "seq #" + i.payloadPrintout.segment + "";
+//                                            String sonTit = "Title: " + artist;
+//                                            String sonArt = "Artist: " + title;
+                                            String sonSeq = "#"+i.payloadPrintout.segment;
 
                                             Segment seg = cachedSong.analysis.getSegments().get(i.payloadPrintout.segment);
                                             lastPlayedQueue.add(seg);
@@ -233,31 +238,34 @@ public class Audio {
                                                 Segment seg1 = quit.next();
                                                 g.setColor(ColorHelper.numberToColor((cnt * 100) / lastPlayedQueue.size()));
                                                 //System.out.println(seg1+"\t"+seg1.getDuration());
-                                                if (g!=null&&seg1 != null && bi!=null) {
-                                                    System.out.println(g+"\t"+seg1+"\t"+bi);
-                                                    g.fillRect((int) (bi.getWidth() * seg1.getStart() / (double) seconds) - cnt * 1, bi.getHeight() / 2 - (bi.getHeight() / 2) * cnt / qsize, (int) (bi.getWidth() * seg1.getDuration() / (double) seconds) * cnt * 2, (bi.getHeight()) * cnt / qsize);
+                                                    int x=(int) ((bi.getWidth() * seg1.getStart()) / seconds) - cnt;
+                                                    int y=bi.getHeight() / 2 - (bi.getHeight() / 2) * cnt / qsize;
+                                                    int w=(int) ((bi.getWidth() * seg1.getDuration()) / seconds) * cnt * 2;
+                                                    int h=(bi.getHeight()) * cnt / qsize;
+                                                    g.fillRect(x, y,w,h );
                                                     cnt++;
-                                                }
                                             }
                                             while (lastPlayedQueue1.size() > qsize) {
                                                 lastPlayedQueue1.removeFirst();
                                             }
                                             lastPlayedQueue = new LinkedList<>(lastPlayedQueue1);
                                             g.setColor(Color.YELLOW);
+                                            String sonArt="";
+                                            if ((artist!=null&&!artist.isEmpty())&&(title!=null&&!title.isEmpty()))sonArt+=" - ";
+                                            if (title!=null&&!title.isEmpty())sonArt+=artist;
+                                            if (artist!=null&&!artist.isEmpty())sonArt=artist+sonArt;
 
                                             for (int xi = -1; xi < 2; xi++) {
 
                                                 for (int yi = -1; yi < 2; yi++) {
                                                     g.drawString(sonArt, 10 - xi, 25 + yi);
-                                                    g.drawString(sonTit, 10 - xi, 45 + yi);
-                                                    g.drawString(sonSeq, 10 - xi, 65 + yi);
+                                                    g.drawString(sonSeq, 10 - xi, 45 + yi);
                                                 }
 
                                             }
                                             g.setColor(Color.RED);
                                             g.drawString(sonArt, 10, 25);
-                                            g.drawString(sonTit, 10, 45);
-                                            g.drawString(sonSeq, 10, 65);
+                                            g.drawString(sonSeq, 10, 45);
 
                                             g.setColor(Color.black);
 
