@@ -80,8 +80,9 @@ public class SamplingGraph {
 		Graphics2D g2 = bufferedImage.createGraphics();
 
 		//transparent
-//		g2.setBackground(new Color(0, 0, 0, 0));
-		g2.setBackground(new Color(50, 50, 150, 255));
+		g2.setBackground(new Color(0, 0, 0, 0));
+		//glossy
+//		g2.setBackground(new Color(50, 50, 150, 255));
 		g2.clearRect(0, 0, w, h);
 		g2.setColor(Color.black);
 

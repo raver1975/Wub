@@ -178,11 +178,19 @@ public class Audio {
                                                 Segment bbbb = cachedSong.analysis.getSegments().get(i.payloadPrintout.segment);
                                                 list.add(bbbb);
                                             }
-                                            double duration = 1;
-                                            if (i.payloadPrintout.segment < cachedSong.analysis.getSegments().size())
-                                                duration = cachedSong.analysis.getSegments().get(i.payloadPrintout.segment).duration;
+//
 
-                                            tf.setBackground(ColorHelper.numberToColor(normd));
+                                            double seconds = 1;
+                                            for (Segment s : cachedSong.analysis.getSegments()) {
+                                                seconds = Math.max(seconds, s.getStart() + s.getDuration());
+                                            }
+                                            double duration = 1;
+                                            if (i.payloadPrintout.segment < cachedSong.analysis.getSegments().size()) {
+                                                duration = cachedSong.analysis.getSegments().get(i.payloadPrintout.segment).duration;
+                                                normd = cachedSong.analysis.getSegments().get(i.payloadPrintout.segment).start * 100d / seconds;
+                                                tf.setBackground(ColorHelper.numberToColor(normd));
+                                            }
+
                                             BufferedImage bi = new SamplingGraph().createWaveForm(list, duration, i.data, audioFormat, tf.getWidth(), tf.getHeight());
                                             Graphics g = bi.getGraphics();
 
@@ -194,10 +202,7 @@ public class Audio {
                                             String artist = null;
                                             String album = null;
                                             String genre = null;
-                                            double seconds = 1;
-                                            for (Segment s : cachedSong.analysis.getSegments()) {
-                                                seconds = Math.max(seconds, s.getStart() + s.getDuration());
-                                            }
+
 
                                             try {
                                                 title = (String) js.get("title");
