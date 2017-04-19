@@ -179,7 +179,8 @@ public class Audio {
                                                 list.add(bbbb);
                                             }
                                             double duration = 1;
-                                            if (i.payloadPrintout.segment<cachedSong.analysis.getSegments().size())duration=cachedSong.analysis.getSegments().get(i.payloadPrintout.segment).duration;
+                                            if (i.payloadPrintout.segment < cachedSong.analysis.getSegments().size())
+                                                duration = cachedSong.analysis.getSegments().get(i.payloadPrintout.segment).duration;
 
                                             tf.setBackground(ColorHelper.numberToColor(normd));
                                             BufferedImage bi = new SamplingGraph().createWaveForm(list, duration, i.data, audioFormat, tf.getWidth(), tf.getHeight());
@@ -193,10 +194,10 @@ public class Audio {
                                             String artist = null;
                                             String album = null;
                                             String genre = null;
-                                           double seconds =1;
-                                           for (Segment s:cachedSong.analysis.getSegments()){
-                                               seconds=Math.max(seconds,s.getStart()+s.getDuration());
-                                           }
+                                            double seconds = 1;
+                                            for (Segment s : cachedSong.analysis.getSegments()) {
+                                                seconds = Math.max(seconds, s.getStart() + s.getDuration());
+                                            }
 
                                             try {
                                                 title = (String) js.get("title");
@@ -226,7 +227,7 @@ public class Audio {
 
 //                                            String sonTit = "Title: " + artist;
 //                                            String sonArt = "Artist: " + title;
-                                            String sonSeq = "#"+i.payloadPrintout.segment;
+                                            String sonSeq = "#" + i.payloadPrintout.segment;
 
                                             Segment seg = cachedSong.analysis.getSegments().get(i.payloadPrintout.segment);
                                             lastPlayedQueue.add(seg);
@@ -238,22 +239,23 @@ public class Audio {
                                                 Segment seg1 = quit.next();
                                                 g.setColor(ColorHelper.numberToColor((cnt * 100) / lastPlayedQueue.size()));
                                                 //System.out.println(seg1+"\t"+seg1.getDuration());
-                                                    int x=(int) ((bi.getWidth() * seg1.getStart()) / seconds) - cnt;
-                                                    int y=bi.getHeight() / 2 - (bi.getHeight() / 2) * cnt / qsize;
-                                                    int w=(int) ((bi.getWidth() * seg1.getDuration()) / seconds) * cnt * 2;
-                                                    int h=(bi.getHeight()) * cnt / qsize;
-                                                    g.fillRect(x, y,w,h );
-                                                    cnt++;
+                                                int x = (int) ((bi.getWidth() * seg1.getStart()) / seconds) - cnt;
+                                                int y = bi.getHeight() / 2 - (bi.getHeight() / 2) * cnt / qsize;
+                                                int w = (int) ((bi.getWidth() * seg1.getDuration() * cnt * 2) / seconds);
+                                                int h = (bi.getHeight()) * cnt / qsize;
+                                                g.fillRect(x, y, w, h);
+                                                cnt++;
                                             }
                                             while (lastPlayedQueue1.size() > qsize) {
                                                 lastPlayedQueue1.removeFirst();
                                             }
                                             lastPlayedQueue = new LinkedList<>(lastPlayedQueue1);
                                             g.setColor(Color.YELLOW);
-                                            String sonArt="";
-                                            if ((artist!=null&&!artist.isEmpty())&&(title!=null&&!title.isEmpty()))sonArt+=" - ";
-                                            if (title!=null&&!title.isEmpty())sonArt+=artist;
-                                            if (artist!=null&&!artist.isEmpty())sonArt=artist+sonArt;
+                                            String sonArt = "";
+                                            if ((artist != null && !artist.isEmpty()) && (title != null && !title.isEmpty()))
+                                                sonArt += " - ";
+                                            if (title != null && !title.isEmpty()) sonArt += artist;
+                                            if (artist != null && !artist.isEmpty()) sonArt = artist + sonArt;
 
                                             for (int xi = -1; xi < 2; xi++) {
 
