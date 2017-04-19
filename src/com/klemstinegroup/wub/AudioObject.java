@@ -61,18 +61,34 @@ public class AudioObject implements Serializable {
 				CentralCommand.loadPlay(chooser.getSelectedFile());
 				return null;
 			}
-			return factory(chooser.getSelectedFile(),null);
+			return factory(chooser.getSelectedFile().getName(),null);
 		}
 		return null;
 	}
 
 	public static AudioObject factory(String file) {
-		return factory(new File(file),null);
+
+		if (file.startsWith("spotify:track:")){
+			try {
+				return new MP3Grab().grab(file);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return factory(file,null);
 	}
 
-	public static AudioObject factory(File file, TrackAnalysis ta) {
+	public static AudioObject factory(String fileName, TrackAnalysis ta) {
+		if (fileName.startsWith("spotify:track:")){
+			try {
+				return new MP3Grab().grab(fileName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+		File file=new File(fileName);
 		File newFile = file;
-		String fileName = file.getName();
 		String extension = "";
 		String filePrefix = "";
 		int i = fileName.lastIndexOf('.');

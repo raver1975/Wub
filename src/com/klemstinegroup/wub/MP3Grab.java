@@ -19,12 +19,12 @@ import java.util.concurrent.*;
 public class MP3Grab {
 
     private static String queryOverride = null;
-    public static String spotifyId = "spotify:track:5ghIJDpPoe3CfHMGu71E6T";
+//    public static String spotifyId = "spotify:track:5ghIJDpPoe3CfHMGu71E6T";
 //    public static String spotifyId = "spotify:track:6z0zyXMTA0ans4OoTAO2Bm";
 
-    static {
-        spotifyId = spotifyId.replace("spotify:track:", "");
-    }
+//    static {
+//        spotifyId = spotifyId.replace("spotify:track:", "");
+//    }
 
     private boolean firstSongIsLoadedYet;
 
@@ -33,6 +33,7 @@ public class MP3Grab {
     }
 
     public static void main(String[] args) {
+        final String[] spotifyId = new String[1];
         if (args.length == 0) {
             System.out.println("Please enter a spotify track url or wub file:");
             Scanner scanner = new Scanner(System.in);
@@ -48,7 +49,7 @@ public class MP3Grab {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        spotifyId= SpotifyUtils.getRandomID();
+                        spotifyId[0] = SpotifyUtils.getRandomID();
                     }
                 }).start();
                 s = readNextLine.get(15000, TimeUnit.MILLISECONDS);
@@ -63,33 +64,34 @@ public class MP3Grab {
             }
 
 
-            if (s!=null &&new File(s).exists()){
+            if (s != null && new File(s).exists()) {
                 AudioObject au = AudioObject.factory(s);
                 return;
             }
 
-            if (s != null && s.length() > 0) spotifyId = s;
+            if (s != null && s.length() > 0) spotifyId[0] = s;
         }
         if (args.length == 1) {
-            spotifyId = args[0];
+            spotifyId[0] = args[0];
         }
-        spotifyId = spotifyId.replace("spotify:track:", "");
-        System.out.println(spotifyId);
+
+        System.out.println(spotifyId[0]);
         try {
-            new MP3Grab().grab();
+            new MP3Grab().grab(spotifyId[0]);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void grab() throws Exception {
+    public AudioObject grab(String spotifyId) throws Exception {
+        spotifyId = spotifyId.replace("spotify:track:", "");
         Track track = SpotifyUtils.getTrack(spotifyId);
         System.out.println("got track info");
         JSONObject js1 = null;
         if (queryOverride != null && !queryOverride.isEmpty()) {
-            js1=SpotifyUtils.getDownloadList(queryOverride);
+            js1 = SpotifyUtils.getDownloadList(queryOverride);
         } else {
-            js1=SpotifyUtils.getDownloadList(track.getArtists().get(0).getName() + " " + track.getName());
+            js1 = SpotifyUtils.getDownloadList(track.getArtists().get(0).getName() + " " + track.getName());
         }
         JSONArray js2 = (JSONArray) js1.get("data");
         System.out.println(js2.toString());
@@ -140,7 +142,8 @@ public class MP3Grab {
                     if (!firstSongIsLoadedYet) {
                         firstSongIsLoadedYet = true;
                         System.out.println(outputFile);
-                        AudioObject au = AudioObject.factory(new File(outputFile), ta);
+                        AudioObject au = AudioObject.factory(outputFile, ta);
+                        return au;
                     }
                 } else {
                     System.out.println(duration + "\t" + data.toString());
@@ -149,7 +152,7 @@ public class MP3Grab {
                 e.printStackTrace();
             }
         }
-
+        return null;
     }
 
 

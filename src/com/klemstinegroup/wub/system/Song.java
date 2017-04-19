@@ -10,7 +10,7 @@ import com.echonest.api.v4.TrackAnalysis;
 public class Song {
     public byte[] data;
     public TrackAnalysis analysis;
-    public int number;
+    public int number=-1;
 
 
     public Song(byte[] data, TrackAnalysis ta) {

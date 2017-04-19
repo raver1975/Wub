@@ -124,7 +124,7 @@ public class Audio {
                 top:
                 while (cnt-- > 0) {
                     if (!queue.isEmpty()) {
-                        cnt = 2500;
+                        cnt = 25000000;
                         AudioInterval i = queue.poll();
                         currentlyPlaying = i;
                         System.out.println("size:" + queue.size() + "\tcurrently playing:" + i.payloadPrintout);
@@ -233,9 +233,11 @@ public class Audio {
                                                 Segment seg1 = quit.next();
                                                 g.setColor(ColorHelper.numberToColor((cnt * 100) / lastPlayedQueue.size()));
                                                 //System.out.println(seg1+"\t"+seg1.getDuration());
-                                                if (seg1 != null)
+                                                if (g!=null&&seg1 != null && bi!=null) {
+                                                    System.out.println(g+"\t"+seg1+"\t"+bi);
                                                     g.fillRect((int) (bi.getWidth() * seg1.getStart() / (double) seconds) - cnt * 1, bi.getHeight() / 2 - (bi.getHeight() / 2) * cnt / qsize, (int) (bi.getWidth() * seg1.getDuration() / (double) seconds) * cnt * 2, (bi.getHeight()) * cnt / qsize);
-                                                cnt++;
+                                                    cnt++;
+                                                }
                                             }
                                             while (lastPlayedQueue1.size() > qsize) {
                                                 lastPlayedQueue1.removeFirst();

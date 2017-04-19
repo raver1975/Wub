@@ -21,11 +21,12 @@ public class Custom {
     int width = 1200;
     int height = 400;
     int numClusters=200;
-    public Custom() {
 
-        int sonu = (int) (Math.random() * 1300);
-//        sonu=1080; //bassnectar basshead
-        Song song = SongManager.getRandom(sonu);
+    public Custom() {
+        this(SongManager.getRandom((int) (Math.random() * 1300)));
+
+    }
+    public Custom(Song song){
         ImagePanel tf = new ImagePanel();
 //        JTextArea jta = new JTextArea(4, 20);
         JFrame jframe = new JFrame("Wub");
@@ -36,6 +37,7 @@ public class Custom {
         jframe.add("Center", tf);
         jframe.setVisible(true);
         Audio audio = new Audio(jframe, tf, numClusters);
+        AudioParams.firstSong=song;
         List<Segment> segments = song.analysis.getSegments();
 
 
@@ -236,5 +238,9 @@ public class Custom {
 
     public static void main(String[] args) {
         new Custom();
+    }
+
+    public static void performMagic(Song song) {
+        new Custom(song);
     }
 }
