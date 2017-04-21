@@ -3,6 +3,7 @@ package com.klemstinegroup.wub.ai.vectorrnn;
 import com.echonest.api.v4.Segment;
 import com.klemstinegroup.wub.ai.custom.Levenshtein;
 import com.klemstinegroup.wub.system.Audio;
+import com.klemstinegroup.wub.system.ObjectManager;
 import com.klemstinegroup.wub.system.SegmentSong;
 import com.klemstinegroup.wub.system.Song;
 import org.deeplearning4j.nn.api.Layer;
@@ -16,12 +17,15 @@ import org.deeplearning4j.nn.conf.layers.RnnOutputLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
+import org.deeplearning4j.util.ModelSerializer;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.lossfunctions.LossFunctions.LossFunction;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.*;
 
@@ -47,7 +51,7 @@ public class RNNDemo {
 
     private static String generationInitialization = "";
     private static boolean bbtest;
-
+    static File locationToSave = new File("MyMultiLayerNetwork.zip");      //Where to save the network. Note: the file is in .zip format - can be opened externally
 
 
 //    public static void main(String[] args) {
@@ -63,8 +67,9 @@ public class RNNDemo {
         HashMap<Character, SegmentSong> languageRev = new HashMap<>();
         for (Map.Entry<SegmentSong, Character> entry : language.entrySet())
             languageRev.put(entry.getValue(), entry.getKey());
-        boolean smoothing=false;
-        double startPlayingScore=40d;
+        boolean smoothing = false;
+        final double[] bestScore = {Double.MAX_VALUE};
+        double startPlayingScore = 40d;
         int lstmLayerSize = 250;                    //Number of units in each GravesLSTM layer
         int mstmLayerSize = 250;                    //Number of units in each GravesLSTM layer
 //        int nstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
@@ -132,13 +137,25 @@ public class RNNDemo {
 
         CharacterIteratorRNNDemo finalIter = iter;
         new Thread(new Runnable() {
+
+            boolean fitting = true;
+
             @Override
             public void run() {
                 int miniBatchNumber = 0;
                 for (int i = 0; i < numEpochs; i++) {
                     while (finalIter.hasNext()) {
                         DataSet ds = finalIter.next();
-                        net.fit(ds);
+                        if (fitting) net.fit(ds);
+                        if (net.score() < bestScore[0]) {
+                            bestScore[0] = net.score();
+                            System.out.println("!!!!!!!!!!!!!!!!!!!   saving!");
+
+                            if (net.score() < 1d) fitting = false;
+                            saveNet(net);
+                            saveSamples(language);
+                        }
+
                         if (++miniBatchNumber % generateSamplesEveryNMinibatches == 0) {
 //                    int pos=(int)(Math.random()*input.length())-sizeOfSongSeed;
 //                    if (pos<0)pos=0;
@@ -157,7 +174,7 @@ public class RNNDemo {
 
 //            audio.play(song.getAudioInterval(sem,segMapped));
 
-                            if (net.score()< startPlayingScore && audio.queue.size() < nCharactersToSample * 3){
+                            if (net.score() < startPlayingScore && audio.queue.size() < nCharactersToSample * 3) {
                                 generationInitialization = samples[0];
                                 SegmentSong[] listSegmentSongs = new SegmentSong[generationInitialization.length()];
                                 for (int j = 0; j < generationInitialization.length(); j++) {
@@ -237,6 +254,37 @@ public class RNNDemo {
         }
         System.out.println("\n\nExample complete");
         return samples;
+    }
+
+    private static MultiLayerNetwork loadNet() {
+        //Load the model
+        MultiLayerNetwork restored = null;
+        try {
+            restored = ModelSerializer.restoreMultiLayerNetwork(locationToSave);
+        } catch (IOException e) {
+
+
+        }
+        return restored;
+    }
+
+    private static void saveNet(MultiLayerNetwork net) {
+        //Save the model
+        boolean saveUpdater = true;                                             //Updater: i.e., the state for Momentum, RMSProp, Adagrad etc. Save this if you want to train your network more in the future
+        try {
+            ModelSerializer.writeModel(net, locationToSave, saveUpdater);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private static HashMap<SegmentSong, Character> loadSamples() {
+        return (HashMap<SegmentSong, Character>) ObjectManager.read("samples.ser");
+    }
+
+    private static void saveSamples(HashMap<SegmentSong, Character> samples) {
+        ObjectManager.write(samples, "samples.ser");
     }
 
     /**
