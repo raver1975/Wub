@@ -18,13 +18,18 @@ public class Song {
         this.analysis = ta;
     }
 
-    public AudioInterval getAudioInterval(List<TimedEvent> list) {
-        return new AudioInterval(list, data);
+    public AudioInterval getAudioIntervalForSegment(int segnum){
+        AudioInterval ai=new AudioInterval(analysis.getSegments().get(segnum),data);
+        return ai;
     }
 
-    public AudioInterval getAudioInterval(TimedEvent timedEvent, int s, int snum) {
-        return new AudioInterval(timedEvent, data,s,snum);
-    }
+//    public AudioInterval getAudioInterval(List<TimedEvent> list) {
+//        return new AudioInterval(list, data);
+//    }
+
+//    public AudioInterval getAudioInterval(Segment timedEvent, int s, int snum) {
+//        return new AudioInterval(timedEvent, data);
+//    }
 
     public ArrayList<Segment> getSegments(TimedEvent timedEvent) {
         ArrayList<Segment> al = new ArrayList<>();
@@ -56,9 +61,9 @@ public class Song {
         return al;
     }
 
-    public AudioInterval getAudioInterval(Segment sem, SegmentSong segMapped) {
-        return getAudioInterval(sem,segMapped.song,segMapped.segment);
-    }
+//    public AudioInterval getAudioInterval(Segment sem, SegmentSong segMapped) {
+//        return getAudioInterval(sem,segMapped.song,segMapped.segment);
+//    }
     @Override
     public String toString(){
         return this.analysis.toString();

@@ -27,13 +27,13 @@ public class Custom {
 
     }
     public Custom(Song song){
-        ImagePanel tf = new ImagePanel();
+        Canvas tf = new Canvas();
+        tf.setBackground(new Color(0,0,0));
 //        JTextArea jta = new JTextArea(4, 20);
         JFrame jframe = new JFrame("Wub");
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.setSize(width, height);
         jframe.setResizable(false);
-        tf.setFont(new Font("Arial", Font.BOLD, 300));
         jframe.add("Center", tf);
         jframe.setVisible(true);
         Audio audio = new Audio(jframe, tf, numClusters);
@@ -41,10 +41,10 @@ public class Custom {
         List<Segment> segments = song.analysis.getSegments();
 
 
-        HashMap<SegmentSong, SegmentSong> smallercluster = makeMap(numClusters, song);
+        HashMap<AudioInterval, AudioInterval> smallercluster = makeMap(numClusters, song);
 
-        ArrayList<SegmentSong> reducedSong=new ArrayList<>();
-        HashMap<SegmentSong,Character> language=new HashMap<>();
+        ArrayList<AudioInterval> reducedSong=new ArrayList<>();
+        HashMap<AudioInterval,Character> language=new HashMap<>();
 
 
         char newChar='A';
@@ -56,8 +56,8 @@ public class Custom {
                 continue;
             }
 
-            SegmentSong segOrig = new SegmentSong(song.number, i);
-            SegmentSong segMapped = smallercluster.get(segOrig);
+            AudioInterval segOrig = song.getAudioIntervalForSegment(i);
+            AudioInterval segMapped = smallercluster.get(segOrig);
             reducedSong.add(segMapped);
             if (!language.containsKey(segMapped)){
                 language.put(segMapped,newChar);
@@ -67,7 +67,7 @@ public class Custom {
         }
         System.out.println((newChar-65)+" characters in language");
         String forRnn="";
-        for (SegmentSong s:reducedSong){
+        for (AudioInterval s:reducedSong){
             forRnn+=language.get(s);
         }
         String out="";
@@ -87,11 +87,11 @@ public class Custom {
         }).start();
 
 
-//        HashMap<SegmentSong, SegmentSong> mapr = makeMap(numClusters, song, true);
-//        HashMap<SegmentSong, Integer> count = new HashMap<>();
+//        HashMap<AudioInterval, AudioInterval> mapr = makeMap(numClusters, song, true);
+//        HashMap<AudioInterval, Integer> count = new HashMap<>();
 //        for (Segment s : segments) {
-//            SegmentSong segOrig = new SegmentSong(song.number, i);
-//            SegmentSong segMapped = map1.get(segOrig);
+//            AudioInterval segOrig = new AudioInterval(song.number, i);
+//            AudioInterval segMapped = map1.get(segOrig);
 //            Segment sem=segments.get(segMapped.segment);
 //            audio.play(song.getAudioInterval(sem,segMapped));
 //
@@ -102,17 +102,22 @@ public class Custom {
 //        }
 //        i = 0;
 //        for (Segment s : segments) {
-//            System.out.println(i + "\t" + count.get(map1.get(new SegmentSong(song.number, i))));
+//            System.out.println(i + "\t" + count.get(map1.get(new AudioInterval(song.number, i))));
 //            i++;
 //        }
     }
 
-    private HashMap<SegmentSong,SegmentSong> makeMap(int numClusters,Song song){
+    private HashMap<AudioInterval,AudioInterval> makeMap(int numClusters,Song song){
         List<Segment> segs=song.analysis.getSegments();
-        return makeMap(numClusters,song.number,segs);
+        List<AudioInterval> aulist=new ArrayList<>();
+        int cnt=0;
+        for (Segment s:segs){
+            aulist.add(song.getAudioIntervalForSegment(cnt++));
+        }
+        return makeMap(numClusters,song,aulist);
     }
 
-    private  HashMap<SegmentSong, SegmentSong> makeMap(int numClusters, int songNumber,List<Segment> segments) {
+    private  HashMap<AudioInterval, AudioInterval> makeMap(int numClusters,Song song,List<AudioInterval> segments) {
 
         //one time attribute setup
         FastVector attrs = new FastVector();
@@ -133,14 +138,14 @@ public class Custom {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ArrayList<SegmentSong> coll = new ArrayList<>();
+        ArrayList<AudioInterval> coll = new ArrayList<>();
         Instances dataset = new Instances("my_dataset", attrs, 0);
-        SegmentSong[] lastSeen = new SegmentSong[numClusters];
+        AudioInterval[] lastSeen = new AudioInterval[numClusters];
 
         int cnt = 0;
-        for (Segment s : segments) {
+        for (AudioInterval s : segments) {
             Instance inst = getInstance(attlist, s);
-            coll.add(new SegmentSong(songNumber, cnt++));
+            coll.add(s);
             inst.setDataset(dataset);
             dataset.add(inst);
         }
@@ -168,19 +173,19 @@ public class Custom {
                     best = j;
                 }
             }
-            SegmentSong gg = coll.get(best);
+            AudioInterval gg = coll.get(best);
             lastSeen[io] = gg;
 //            System.out.println("centroid io " + io + "\t" + gg);
 
 
         }
         // get cluster membership for each instance
-        HashMap<SegmentSong, SegmentSong> map = new HashMap<>();
+        HashMap<AudioInterval, AudioInterval> map = new HashMap<>();
         for (int io = 0; io < dataset.numInstances(); io++) {
             try {
                 int cluster = kmeans.clusterInstance(dataset.instance(io));
-                SegmentSong tempSegmentSong = lastSeen[cluster];
-                 map.put(coll.get(io), tempSegmentSong);
+                AudioInterval tempAudioInterval = lastSeen[cluster];
+                 map.put(coll.get(io), tempAudioInterval);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -200,8 +205,9 @@ public class Custom {
         return tot;
     }
 
-    protected static Instance getInstance(Attribute[] attlist, Segment s) {
+    protected static Instance getInstance(Attribute[] attlist, AudioInterval ai) {
 
+        Segment s = ai.te;
         int cnt = 0;
         Instance inst = new Instance(attLength);
         inst.setValue(attlist[cnt++], s.getDuration() * Settings.durationFactor);

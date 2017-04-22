@@ -3,8 +3,8 @@ package com.klemstinegroup.wub.ai.vectorrnn;
 import com.echonest.api.v4.Segment;
 import com.klemstinegroup.wub.ai.custom.Levenshtein;
 import com.klemstinegroup.wub.system.Audio;
+import com.klemstinegroup.wub.system.AudioInterval;
 import com.klemstinegroup.wub.system.ObjectManager;
-import com.klemstinegroup.wub.system.SegmentSong;
 import com.klemstinegroup.wub.system.Song;
 import org.deeplearning4j.nn.api.Layer;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
@@ -62,14 +62,14 @@ public class RNNDemo {
 //
 //    }
 
-    public static String[] process(Song song, HashMap<SegmentSong, Character> language, Audio audio, String input) {
+    public static String[] process(Song song, HashMap<AudioInterval, Character> language, Audio audio, String input) {
         generationInitialization = input.substring(input.length() / 2 - 20, input.length() / 2 + 20);
-        HashMap<Character, SegmentSong> languageRev = new HashMap<>();
-        for (Map.Entry<SegmentSong, Character> entry : language.entrySet())
+        HashMap<Character, AudioInterval> languageRev = new HashMap<>();
+        for (Map.Entry<AudioInterval, Character> entry : language.entrySet())
             languageRev.put(entry.getValue(), entry.getKey());
         boolean smoothing = false;
         final double[] bestScore = {Double.MAX_VALUE};
-        double startPlayingScore = 40d;
+        double startPlayingScore = 10040d;
         int lstmLayerSize = 250;                    //Number of units in each GravesLSTM layer
         int mstmLayerSize = 250;                    //Number of units in each GravesLSTM layer
 //        int nstmLayerSize = 200;                    //Number of units in each GravesLSTM layer
@@ -170,17 +170,17 @@ public class RNNDemo {
                             if (generationInitialization != null && samples != null && samples[0] != null && samples[0].startsWith(generationInitialization))
                                 samples[0] = samples[0].substring(generationInitialization.length());
 
-                            List<Segment> segments = song.analysis.getSegments();
+//                            List<Segment> segments = song.analysis.getSegments();
 
 //            audio.play(song.getAudioInterval(sem,segMapped));
 
                             if (net.score() < startPlayingScore && audio.queue.size() < nCharactersToSample * 3) {
                                 generationInitialization = samples[0];
-                                SegmentSong[] listSegmentSongs = new SegmentSong[generationInitialization.length()];
+                                AudioInterval[] listAudioIntervals = new AudioInterval[generationInitialization.length()];
                                 for (int j = 0; j < generationInitialization.length(); j++) {
-                                    SegmentSong ss = languageRev.get(generationInitialization.charAt(j));
+                                    AudioInterval ss = languageRev.get(generationInitialization.charAt(j));
 //                                    Segment sem = segments.get(ss.segment);
-                                    listSegmentSongs[j] = ss;
+                                    listAudioIntervals[j] = ss;
 //
 //                            audio.play(song.getAudioInterval(sem, ss));
                                 }
@@ -216,16 +216,16 @@ public class RNNDemo {
                                         }
                                         int pos2 = pos;
                                         for (int hh = bestpos; hh < bestpos + best.length(); hh++) {
-                                            listSegmentSongs[pos2] = new SegmentSong(song.number, hh);
+
+                                            listAudioIntervals[pos2] = song.getAudioIntervalForSegment(hh);
                                             pos2++;
                                         }
                                         toProcess = toProcess.substring(best.length());
                                         pos += best.length();
                                     }
                                 }
-                                for (SegmentSong s : listSegmentSongs) {
-                                    if (s.segment < segments.size())
-                                        audio.play(song.getAudioInterval(segments.get(s.segment), s));
+                                for (AudioInterval s : listAudioIntervals) {
+                                        audio.play(s);
                                 }
 
 
@@ -279,11 +279,11 @@ public class RNNDemo {
     }
 
 
-    private static HashMap<SegmentSong, Character> loadSamples() {
-        return (HashMap<SegmentSong, Character>) ObjectManager.read("samples.ser");
+    private static HashMap<AudioInterval, Character> loadSamples() {
+        return (HashMap<AudioInterval, Character>) ObjectManager.read("samples.ser");
     }
 
-    private static void saveSamples(HashMap<SegmentSong, Character> samples) {
+    private static void saveSamples(HashMap<AudioInterval, Character> samples) {
         ObjectManager.write(samples, "samples.ser");
     }
 

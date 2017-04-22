@@ -48,20 +48,20 @@ public class Audio {
     public static final AudioFormat audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sampleRate, resolution, channels, frameSize, sampleRate, false);
     public static final AudioFormat audioFormatMono = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sampleRate, resolution, channels / 2, frameSize / 2, sampleRate, false);
     public static final int bufferSize = 8192;
-    private Song cachedSong;
-    private int cachedSongIndex;
+    //    private Song cachedSong;
+//    private int cachedSongIndex;
     public static ByteArrayOutputStream baos = new ByteArrayOutputStream();
     Node lastNode1 = null;
     Node lastNode2 = null;
     private int start;
     private int lastSeg;
-    private Queue<Segment> lastPlayedQueue = new LinkedList<>();
+    private Queue<AudioInterval> lastPlayedQueue = new LinkedList<>();
 
     public Audio() {
         this(null, null, 1);
     }
 
-    public Audio(JFrame jframe, ImagePanel ip, int numClusters) {
+    public Audio(JFrame jframe, Canvas ip, int numClusters) {
 
         queue = new LinkedList<AudioInterval>();
         startPlaying(jframe, ip, numClusters);
@@ -114,7 +114,7 @@ public class Audio {
 
     }
 
-    private void startPlaying(JFrame jframe, ImagePanel tf, int numClusters) {
+    private void startPlaying(JFrame jframe, Canvas tf, int numClusters) {
         HashMap<String, Integer> hm = new HashMap<>();
         line = getLine();
 
@@ -127,103 +127,59 @@ public class Audio {
                         cnt = 25000000;
                         AudioInterval i = queue.poll();
                         currentlyPlaying = i;
-                        System.out.println("size:" + queue.size() + "\tcurrently playing:" + i.payloadPrintout);
-                        if (i.payloadPrintout != null) {
-//                            System.out.println("now playing " + i.payloadPrintout);
 
-                            if (tf != null) {
-                                new Thread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (!tem.contains(i.payloadPrintout.segment))
-                                            tem.add(i.payloadPrintout.segment);
-                                        int norm = tem.indexOf(i.payloadPrintout.segment);
-//                                tf.append(norm + "\n");
-                                        double normd = ((double) norm / (double) numClusters) * 100d;
+                        if (tf != null) {
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
 
-//                                tf.invalidate();
-                                        if (i.payloadPrintout.song == -1) {
-                                            cachedSong = AudioParams.firstSong;
-                                            cachedSongIndex = -1;
-                                        } else {
-                                            if (cachedSong == null || cachedSongIndex != i.payloadPrintout.song) {
-                                                cachedSong = SongManager.getRandom(i.payloadPrintout.song);
-                                                cachedSongIndex = i.payloadPrintout.song;
-                                            }
-                                        }
-                                        if (i.payloadPrintout != null && i.payloadPrintout.segment > -1) {
 
-                                            if (Settings.makeVideo) {
-                                                BufferedImage grab = robot.createScreenCapture(jframe.getBounds());
-//                                                System.out.println(grab.getWidth()+","+grab.getHeight());
-                                                Frame frame = converter.convert(grab);
-                                                short[] samples = new short[i.data.length / 2];
-                                                ByteBuffer.wrap(i.data).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(samples);
-                                                ShortBuffer sBuff = ShortBuffer.wrap(samples, 0, i.data.length / 2);
-                                                frame.sampleRate = (int) audioFormat.getSampleRate();
-                                                frame.audioChannels = 2;
-                                                frame.samples = new Buffer[]{sBuff};
-                                                frame.timestamp = start;
-                                                start += 500 * (int) (1000 * (i.data.length / 2) / audioFormat.getSampleRate());
-                                                if (Settings.makeVideo) try {
-                                                    recorder.record(frame, AV_PIX_FMT_ARGB);
-                                                    recorder.setTimestamp(start);
-                                                } catch (FrameRecorder.Exception e) {
-                                                    e.printStackTrace();
-                                                }
-                                            }
-
-                                            ArrayList<Segment> list = new ArrayList<>();
-                                            if (i.payloadPrintout.segment < cachedSong.analysis.getSegments().size()) {
-                                                Segment bbbb = cachedSong.analysis.getSegments().get(i.payloadPrintout.segment);
-                                                list.add(bbbb);
-                                            }
+                                    ArrayList<Segment> list = new ArrayList<>();
+                                    Segment bbbb = i.te;
+                                    list.add(bbbb);
 //
 
-                                            double seconds = 1;
-                                            for (Segment s : cachedSong.analysis.getSegments()) {
-                                                seconds = Math.max(seconds, s.getStart() + s.getDuration());
-                                            }
-                                            double duration = 1;
-                                            if (i.payloadPrintout.segment < cachedSong.analysis.getSegments().size()) {
-                                                duration = cachedSong.analysis.getSegments().get(i.payloadPrintout.segment).duration;
-                                                normd = cachedSong.analysis.getSegments().get(i.payloadPrintout.segment).start * 100d / seconds;
-                                                tf.setBackground(ColorHelper.numberToColor(normd));
-                                            }
+//                                        double seconds = 1;
+//                                        for (Segment s : cachedSong.analysis.getSegments()) {
+//                                            seconds = Math.max(seconds, s.getStart() + s.getDuration());
+//                                        }
+                                    double duration = 1;
+                                    duration = i.te.duration;
 
-                                            BufferedImage bi = new SamplingGraph().createWaveForm(list, duration, i.data, audioFormat, tf.getWidth(), tf.getHeight());
-                                            Graphics g = bi.getGraphics();
+                                    System.out.println("creating waveform");
+                                    BufferedImage bi = new SamplingGraph().createWaveForm(list, duration, i.data, audioFormat, tf.getWidth(), tf.getHeight());
+                                    Graphics g = bi.getGraphics();
 
-                                            g.setFont(new Font("Arial", Font.BOLD, 20));
+                                    g.setFont(new Font("Arial", Font.BOLD, 20));
 
 
-                                            JSONObject js = (JSONObject) cachedSong.analysis.getMap().get("meta");
-                                            String title = null;
-                                            String artist = null;
-                                            String album = null;
-                                            String genre = null;
-
-
-                                            try {
-                                                title = (String) js.get("title");
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                            try {
-                                                artist = (String) js.get("artist");
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                            try {
-                                                album = (String) js.get("album");
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                            try {
-                                                genre = (String) js.get("genre");
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
+//                                        JSONObject js = (JSONObject) cachedSong.analysis.getMap().get("meta");
+//                                        String title = null;
+//                                        String artist = null;
+//                                        String album = null;
+//                                        String genre = null;
+//
+//
+//                                        try {
+//                                            title = (String) js.get("title");
+//                                        } catch (Exception e) {
+//                                            e.printStackTrace();
+//                                        }
+//                                        try {
+//                                            artist = (String) js.get("artist");
+//                                        } catch (Exception e) {
+//                                            e.printStackTrace();
+//                                        }
+//                                        try {
+//                                            album = (String) js.get("album");
+//                                        } catch (Exception e) {
+//                                            e.printStackTrace();
+//                                        }
+//                                        try {
+//                                            genre = (String) js.get("genre");
+//                                        } catch (Exception e) {
+//                                            e.printStackTrace();
+//                                        }
 //                                            try {
 //                                                seconds = (Long) js.get("seconds");
 //                                            } catch (Exception e) {
@@ -232,98 +188,52 @@ public class Audio {
 
 //                                            String sonTit = "Title: " + artist;
 //                                            String sonArt = "Artist: " + title;
-                                            String sonSeq = "#" + i.payloadPrintout.segment;
+//                                        String sonSeq = "#" + i.payloadString.segment;
 
-                                            Segment seg = cachedSong.analysis.getSegments().get(i.payloadPrintout.segment);
-                                            lastPlayedQueue.add(seg);
-                                            LinkedList<Segment> lastPlayedQueue1 = new LinkedList(lastPlayedQueue);
-                                            Iterator<Segment> quit = lastPlayedQueue1.iterator();
-                                            int cnt = 0;
-                                            int qsize = 15;
-                                            while (quit.hasNext()) {
-                                                Segment seg1 = quit.next();
-                                                g.setColor(ColorHelper.numberToColor((cnt * 100) / lastPlayedQueue.size()));
-                                                //System.out.println(seg1+"\t"+seg1.getDuration());
-                                                int x = (int) ((bi.getWidth() * seg1.getStart()) / seconds) - cnt;
-                                                int y = bi.getHeight() / 2 - (bi.getHeight() / 2) * cnt / qsize;
-                                                int w = (int) ((bi.getWidth() * seg1.getDuration() * cnt * 2) / seconds);
-                                                int h = (bi.getHeight()) * cnt / qsize;
-                                                g.fillRect(x, y, w, h);
-                                                cnt++;
-                                            }
-                                            while (lastPlayedQueue1.size() > qsize) {
-                                                lastPlayedQueue1.removeFirst();
-                                            }
-                                            lastPlayedQueue = new LinkedList<>(lastPlayedQueue1);
-                                            g.setColor(Color.YELLOW);
-                                            String sonArt = "";
-                                            if ((artist != null && !artist.isEmpty()) && (title != null && !title.isEmpty()))
-                                                sonArt += " - ";
-                                            if (title != null && !title.isEmpty()) sonArt += artist;
-                                            if (artist != null && !artist.isEmpty()) sonArt = artist + sonArt;
+//                                        Segment seg = cachedSong.analysis.getSegments().get(i.payloadString.segment);
+                                    lastPlayedQueue.add(i);
+                                    LinkedList<AudioInterval> lastPlayedQueue1 = new LinkedList(lastPlayedQueue);
+                                    Iterator<AudioInterval> quit = lastPlayedQueue1.iterator();
+                                    int cnt = 0;
+                                    int qsize = 15;
+                                    while (quit.hasNext()) {
+                                        Segment seg1 = quit.next().te;
+                                        g.setColor(ColorHelper.numberToColor((cnt * 100) / lastPlayedQueue.size()));
+                                        //System.out.println(seg1+"\t"+seg1.getDuration());
+                                        int x = (int) ((bi.getWidth() * seg1.getStart()) / duration) - cnt;
+                                        int y = bi.getHeight() / 2 - (bi.getHeight() / 2) * cnt / qsize;
+                                        int w = (int) ((bi.getWidth() * seg1.getDuration() * cnt * 2) / duration);
+                                        int h = (bi.getHeight()) * cnt / qsize;
+                                        g.fillRect(x, y, w, h);
+                                        cnt++;
+                                    }
+                                    while (lastPlayedQueue1.size() > qsize) {
+                                        lastPlayedQueue1.removeFirst();
+                                    }
+                                    lastPlayedQueue = new LinkedList<AudioInterval>(lastPlayedQueue1);
 
-                                            for (int xi = -1; xi < 2; xi++) {
-
-                                                for (int yi = -1; yi < 2; yi++) {
-                                                    g.drawString(sonArt, 10 - xi, 25 + yi);
-                                                    g.drawString(sonSeq, 10 - xi, 45 + yi);
-                                                }
-
-                                            }
-                                            g.setColor(Color.RED);
-                                            g.drawString(sonArt, 10, 25);
-                                            g.drawString(sonSeq, 10, 45);
-
-                                            g.setColor(Color.black);
-
-                                            int val = 0;
-                                            if (hm.get(lastSeg + "") == null) {
-                                                hm.put(lastSeg + "", 0);
-                                            } else {
-                                                Integer bbbb = hm.get(lastSeg + "");
-                                                if (bbbb != null) val = bbbb + 1;
-                                                else val = 1;
-                                            }
-                                            hm.put(lastSeg + "", val);
-                                            lastSeg = i.payloadPrintout.segment;
-                                            Color color = ColorHelper.numberToColorPercentage((double) val / (double) AudioParams.maxValue);
-                                            if (lastNode1 != null) {
-                                                lastNode1.addAttribute("ui.style", "fill-color: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ");");
-                                                lastNode1.addAttribute("ui.style", "size: 15;");
-                                            }
-                                            if (lastNode2 != null) {
-                                                lastNode2.addAttribute("ui.style", "fill-color: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ");");
-                                                lastNode2.addAttribute("ui.style", "size: 15;");
-                                            }
-                                            if (AudioParams.graph != null) {
-                                                Node node1 = AudioParams.graph.getNode(i.payloadPrintout.hashCode() + "");
-                                                if (node1 != null) {
-                                                    node1.addAttribute("ui.style", "fill-color: rgb(255,0,0);");
-                                                    node1.addAttribute("ui.style", "size:25;");
-                                                }
-                                                lastNode1 = node1;
-
-                                                if (i.payloadPrintout != i.payloadPrintout) {
-                                                    Node node2 = AudioParams.graph.getNode(i.payloadPrintout.hashCode() + "");
-                                                    if (node2 != null) {
-                                                        //node2.addAttribute("ui.style", "fill-color: rgb(255,0,0);");
-                                                        node2.addAttribute("ui.style", "size:20;");
-                                                    }
-
-                                                    lastNode2 = node2;
-                                                }
-                                            }
-                                            tf.setImage(bi);
-                                            tf.invalidate();
+                                    String sonArt = "test";
+                                    g.setColor(Color.YELLOW);
+                                    for (int xi = -1; xi < 2; xi++) {
+                                        for (int yi = -1; yi < 2; yi++) {
+                                            g.drawString(sonArt, 10 - xi, 25 + yi);
                                         }
+                                    }
+                                    g.setColor(Color.RED);
+                                    g.drawString(sonArt, 10, 25);
+
+                                    Graphics gra = tf.getGraphics();
+                                    gra.setColor(new Color(0,0,0));
+                                    gra.clearRect(0,0,tf.getWidth(),tf.getHeight());
+                                    gra.drawImage(bi, 0, 0, null);
+                                }
 //                                System.out.println("hetre2");
 
-                                    }
-                                }).start();
-                            }
 
-
+                            }).start();
                         }
+
+
                         int j = 0;
                         for (j = 0; j <= i.data.length - bufferSize; j += bufferSize) {
                             while (pause || breakPlay) {

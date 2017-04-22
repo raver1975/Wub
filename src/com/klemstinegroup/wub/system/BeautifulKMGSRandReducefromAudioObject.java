@@ -25,8 +25,8 @@ public class BeautifulKMGSRandReducefromAudioObject {
 //    public static final int Settings.decreaseClustersBy = 15;// * playback.length;
 //    public static final float segmentsKept = .55f;
 
-    public static ImagePanel tf;
-    private static SegmentSong firstSaved = null;
+    public static Canvas tf;
+    private static AudioInterval firstSaved = null;
 
     private static int width = 1200;
     private static int height = 800;
@@ -111,11 +111,11 @@ public class BeautifulKMGSRandReducefromAudioObject {
                 System.out.println(" path clusters=" + (totsegm - Settings.decreaseClustersBy));
                 System.out.println(" kept clusters=" + ((int) (totsegm * Settings.segmentsKept)));
                 AudioParams.numClusters = ((int) (totsegm * Settings.segmentsKept));
-                tf = new ImagePanel();
+                tf = new Canvas();
                 tf.setFont(new Font("Arial", Font.BOLD, 300));
 
-                HashMap<SegmentSong, SegmentSong> map1 = makeMap(totsegm - Settings.decreaseClustersBy, song);
-                HashMap<SegmentSong, SegmentSong> map2 = makeMap((int) (totsegm * Settings.segmentsKept), song);
+                HashMap<AudioInterval, AudioInterval> map1 = makeMap(totsegm - Settings.decreaseClustersBy, song);
+                HashMap<AudioInterval, AudioInterval> map2 = makeMap((int) (totsegm * Settings.segmentsKept), song);
 
                 Audio audio = new Audio(jframe, tf, (totsegm - Settings.decreaseClustersBy));
 
@@ -128,9 +128,9 @@ public class BeautifulKMGSRandReducefromAudioObject {
                 sb.setForce(1.5f);
                 viewer.enableAutoLayout(sb);
                 View view = viewer.addDefaultView(false);
-                final SegmentSong[] startNode = {new SegmentSong(-1, 0)};
+                final AudioInterval[] startNode = new AudioInterval[]{song.getAudioIntervalForSegment(0)};
 
-                HashMap<Integer, SegmentSong> nodes = new HashMap<>();
+                HashMap<Integer, AudioInterval> nodes = new HashMap<>();
                 HashSet<Integer> nodeset = new HashSet<>();
 
                 final int[] lastSong = {-1};
@@ -139,8 +139,8 @@ public class BeautifulKMGSRandReducefromAudioObject {
 
 
                 for (int cnt = 0; cnt < song.analysis.getSegments().size(); cnt++) {
-                    SegmentSong pp = new SegmentSong(-1, cnt);
-                    SegmentSong play = map1.get(pp);
+                    AudioInterval pp = song.getAudioIntervalForSegment(cnt);
+                    AudioInterval play = map1.get(pp);
 //            }
                     if (play == null) {
                         System.out.println("null! " + pp);
@@ -158,7 +158,7 @@ public class BeautifulKMGSRandReducefromAudioObject {
                     AudioParams.graph.addEdge((cnt2) + "", startNode[0].hashCode() + "", play.hashCode() + "", true);
                     if (nodes.isEmpty()) firstSaved = play;
                     nodes.put(play.hashCode(), play);
-                    startNode[0] = new SegmentSong(play.song, play.segment);
+                    startNode[0] =play;
                     cnt2++;
                 }
                 AudioParams.graph.addEdge((cnt2++) + "", startNode[0].hashCode() + "", firstSaved.hashCode() + "", true);
@@ -190,7 +190,7 @@ public class BeautifulKMGSRandReducefromAudioObject {
 
                 HashMap<String, Integer> hm = new HashMap<>();
 
-                startNode[0] = new SegmentSong(-1, 0);
+                startNode[0] = song.getAudioIntervalForSegment(0);
 
                 try {
                     Thread.sleep(3000);
@@ -213,20 +213,19 @@ public class BeautifulKMGSRandReducefromAudioObject {
 
                 int cnn = Settings.lengthOfBeaut;
                 while (cnn-- > 0) {
-                    SegmentSong trans = map2.get(startNode[0]);
+                    AudioInterval trans = map2.get(startNode[0]);
 //                    if (lastSong[0] != trans.song) {
 //                        tempSong[0] = SongManager.getRandom(trans.song);
 //                        lastSong[0] = trans.song;
 //
 //                    System.out.println(trans);
-                    AudioInterval ai2 = song.getAudioInterval(song.analysis.getSegments().get(trans.segment),song.number,startNode[0].segment);
-                    ai2.payloadPrintout = new SegmentSong(startNode[0].song, startNode[0].segment);
-//                    ai2.payloadPrintout = new SegmentSong(trans.song, trans.segment);
+                    AudioInterval ai2 = trans;
+//                    ai2.payloadPrintout = new AudioInterval(trans.song, trans.segment);
 
 //                    AudioInterval ai = tempSong[0].getAudioInterval(tempSong[0].analysis.getSegments().get(startNode[0].segment));
-//                    ai.payloadPlay = new SegmentSong(trans.song, trans.segment);
+//                    ai.payloadPlay = new AudioInterval(trans.song, trans.segment);
 
-//                   SegmentSong ais2=map.get(ai.payloadPlay);
+//                   AudioInterval ais2=map.get(ai.payloadPlay);
 //                    AudioInterval ai2=  tempSong[0].getAudioInterval(tempSong[0].analysis.getSegments().get(ais2.segment));
 
                     if (trans != null) audio.play(ai2);
@@ -300,7 +299,7 @@ public class BeautifulKMGSRandReducefromAudioObject {
 
     }
 
-    private static HashMap<SegmentSong, SegmentSong> makeMap(int numClusters, Song song1) {
+    private static HashMap<AudioInterval, AudioInterval> makeMap(int numClusters, Song song1) {
 
         //one time attribute setup
         FastVector attrs = new FastVector();
@@ -321,14 +320,14 @@ public class BeautifulKMGSRandReducefromAudioObject {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ArrayList<SegmentSong> coll = new ArrayList<>();
+        ArrayList<AudioInterval> coll = new ArrayList<>();
         Instances dataset = new Instances("my_dataset", attrs, 0);
-        SegmentSong[] lastSeen = new SegmentSong[numClusters];
+        AudioInterval[] lastSeen = new AudioInterval[numClusters];
 
         int cnt = 0;
         for (Segment s : song1.analysis.getSegments()) {
             Instance inst = getInstance(attlist, s);
-            coll.add(new SegmentSong(-1, cnt++));
+            coll.add(song1.getAudioIntervalForSegment(cnt++));
             inst.setDataset(dataset);
             dataset.add(inst);
         }
@@ -356,19 +355,19 @@ public class BeautifulKMGSRandReducefromAudioObject {
                     best = j;
                 }
             }
-            SegmentSong gg = coll.get(best);
+            AudioInterval gg = coll.get(best);
             lastSeen[io] = gg;
 //            System.out.println("centroid io " + io + "\t" + gg);
 
 
         }
         // get cluster membership for each instance
-        HashMap<SegmentSong, SegmentSong> map = new HashMap<>();
+        HashMap<AudioInterval, AudioInterval> map = new HashMap<>();
         for (int io = 0; io < dataset.numInstances(); io++) {
             try {
                 int cluster = kmeans.clusterInstance(dataset.instance(io));
-                SegmentSong tempSegmentSong = lastSeen[cluster];
-                map.put(coll.get(io), tempSegmentSong);
+                AudioInterval tempAudioInterval = lastSeen[cluster];
+                map.put(coll.get(io), tempAudioInterval);
 
             } catch (Exception e) {
                 e.printStackTrace();
