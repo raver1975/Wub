@@ -23,12 +23,12 @@ public class AudioUtils implements Handler {
         this.cdl = cdl;
     }
 
-//    public static void timeStretch(AudioInterval ad,double stretch){
-//        AudioInterval[] ai=ad.getMono();
-//        timeStretch1(ai[0],stretch);
-//        timeStretch1(ai[1],stretch);
-//        ad.makeStereo(ai);
-//    }
+    public static void timeStretch(AudioInterval ad,double stretch){
+        AudioInterval[] ai=ad.getMono();
+        timeStretch1(ai[0],stretch);
+        timeStretch1(ai[1],stretch);
+        ad.makeStereo(ai);
+    }
 
     private static void timeStretch1(AudioInterval ad, double stretch){
         AudioDispatcher adp= null;
@@ -67,12 +67,12 @@ public class AudioUtils implements Handler {
 
     }
 
-//    public static void pitchShift(AudioInterval ad,double shift){
-//        AudioInterval[] ai=ad.getMono();
-//        pitchShift1(ai[0],shift);
-//        pitchShift1(ai[1],shift);
-//        ad.makeStereo(ai);
-//    }
+    public static void pitchShift(AudioInterval ad,double shift){
+        AudioInterval[] ai=ad.getMono();
+        pitchShift1(ai[0],shift);
+        pitchShift1(ai[1],shift);
+        ad.makeStereo(ai);
+    }
 
     private static void pitchShift1(AudioInterval ad, double shift){
         shift=1d/shift;
