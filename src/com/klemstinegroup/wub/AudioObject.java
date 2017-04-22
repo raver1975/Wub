@@ -406,7 +406,7 @@ public class AudioObject implements Serializable {
 		}
 	}
 
-	public void createAudioObject(TrackAnalysis ta) {
+	public void createAudioObject() {
 		boolean savePause = pause;
 		pause = true;
 		final FakeTrackAnalysis fa = new FakeTrackAnalysis();
@@ -573,28 +573,7 @@ public class AudioObject implements Serializable {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				TrackAnalysis analysis1 = ta;
-				if (analysis1.getSegments().size() > 0) {
-					fa.segments.clear();
-					fa.segments.addAll(analysis1.getSegments());
-				}
-				if (analysis1.getSections().size() > 0) {
-					fa.sections.clear();
-					fa.sections.addAll(analysis1.getSections());
-				}
-				if (analysis1.getBars().size() > 0) {
-					fa.bars.clear();
-					fa.bars.addAll(analysis1.getBars());
-				}
-				if (analysis1.getBeats().size() > 0) {
-					fa.beats.clear();
-					fa.beats.addAll(analysis1.getBeats());
-				}
-				if (analysis1.getTatums().size() > 0) {
-					fa.tatums.clear();
-					fa.tatums.addAll(analysis1.getTatums());
-				}
-				ao.mc.paint1();
+                ao.mc.paint1();
 				try {
 					Serializer.store(ao, newFileWub);
 

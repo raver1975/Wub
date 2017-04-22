@@ -370,7 +370,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
             List<TimedEvent> list = au.analysis.getSections();
             Collections.reverse(list);
             for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getStart() <= loc&& list.get(i).getStart()+list.get(i).getDuration()>=loc) {
+                if (list.get(i).getStart() <= loc && list.get(i).getStart() + list.get(i).getDuration() >= loc) {
                     tempTimedEvent = new Interval(list.get(i), 0);
                     // au.play(list.get(i), 0);
                     tempQueue.add(tempTimedEvent);
@@ -383,7 +383,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
             List<TimedEvent> list = au.analysis.getBars();
             Collections.reverse(list);
             for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getStart() <= loc&& list.get(i).getStart()+list.get(i).getDuration()>=loc) {
+                if (list.get(i).getStart() <= loc && list.get(i).getStart() + list.get(i).getDuration() >= loc) {
                     tempTimedEvent = new Interval(list.get(i), 20);
                     // au.play(list.get(i), 20);
                     tempQueue.add(tempTimedEvent);
@@ -396,7 +396,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
             List<TimedEvent> list = au.analysis.getBeats();
             Collections.reverse(list);
             for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getStart() <= loc&& list.get(i).getStart()+list.get(i).getDuration()>=loc) {
+                if (list.get(i).getStart() <= loc && list.get(i).getStart() + list.get(i).getDuration() >= loc) {
                     tempTimedEvent = new Interval(list.get(i), 40);
                     // au.play(list.get(i), 40);
                     tempQueue.add(tempTimedEvent);
@@ -410,7 +410,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
             List<TimedEvent> list = au.analysis.getTatums();
             Collections.reverse(list);
             for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getStart() <= loc&& list.get(i).getStart()+list.get(i).getDuration()>=loc) {
+                if (list.get(i).getStart() <= loc && list.get(i).getStart() + list.get(i).getDuration() >= loc) {
                     tempTimedEvent = new Interval(list.get(i), 60);
                     // au.play(list.get(i), 60);
                     tempQueue.add(tempTimedEvent);
@@ -524,7 +524,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
             List<TimedEvent> list = au.analysis.getSections();
             Collections.reverse(list);
             for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getStart() <= loc&& list.get(i).getStart()+list.get(i).getDuration()>=loc) {
+                if (list.get(i).getStart() <= loc && list.get(i).getStart() + list.get(i).getDuration() >= loc) {
                     hovering = new Interval(list.get(i), 0);
                     if (tempTimedEvent == null || tempTimedEvent.te.getStart() != list.get(i).getStart()) {
                         tempTimedEvent = new Interval(list.get(i), 0);
@@ -540,7 +540,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
             List<TimedEvent> list = au.analysis.getBars();
             Collections.reverse(list);
             for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getStart() <= loc&& list.get(i).getStart()+list.get(i).getDuration()>=loc) {
+                if (list.get(i).getStart() <= loc && list.get(i).getStart() + list.get(i).getDuration() >= loc) {
                     hovering = new Interval(list.get(i), 20);
                     if (tempTimedEvent == null || tempTimedEvent.te.getStart() != list.get(i).getStart()) {
                         tempTimedEvent = new Interval(list.get(i), 20);
@@ -555,7 +555,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
             List<TimedEvent> list = au.analysis.getBeats();
             Collections.reverse(list);
             for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getStart() <= loc&& list.get(i).getStart()+list.get(i).getDuration()>=loc) {
+                if (list.get(i).getStart() <= loc && list.get(i).getStart() + list.get(i).getDuration() >= loc) {
                     hovering = new Interval(list.get(i), 40);
                     if (tempTimedEvent == null || tempTimedEvent.te.getStart() != list.get(i).getStart()) {
                         tempTimedEvent = new Interval(list.get(i), 40);
@@ -571,7 +571,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
             List<TimedEvent> list = au.analysis.getTatums();
             Collections.reverse(list);
             for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getStart() <= loc&& list.get(i).getStart()+list.get(i).getDuration()>=loc) {
+                if (list.get(i).getStart() <= loc && list.get(i).getStart() + list.get(i).getDuration() >= loc) {
                     hovering = new Interval(list.get(i), 60);
                     if (tempTimedEvent == null || tempTimedEvent.te.getStart() != list.get(i).getStart()) {
                         tempTimedEvent = new Interval(list.get(i), 60);
@@ -606,7 +606,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
             List<TimedEvent> list = au.analysis.getSections();
             Collections.reverse(list);
             for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getStart() <= loc && list.get(i).getStart()+list.get(i).getDuration()>=loc) {
+                if (list.get(i).getStart() <= loc && list.get(i).getStart() + list.get(i).getDuration() >= loc) {
                     hovering = new Interval(list.get(i), 0);
                     break;
 
@@ -619,7 +619,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
             hovering = null;
             Collections.reverse(list);
             for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getStart() <= loc&& list.get(i).getStart()+list.get(i).getDuration()>=loc) {
+                if (list.get(i).getStart() <= loc && list.get(i).getStart() + list.get(i).getDuration() >= loc) {
                     hovering = new Interval(list.get(i), 20);
                     break;
                 }
@@ -631,7 +631,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
             hovering = null;
             Collections.reverse(list);
             for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getStart() <= loc&& list.get(i).getStart()+list.get(i).getDuration()>=loc) {
+                if (list.get(i).getStart() <= loc && list.get(i).getStart() + list.get(i).getDuration() >= loc) {
                     hovering = new Interval(list.get(i), 40);
                     break;
                 }
@@ -644,7 +644,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
             hovering = null;
             Collections.reverse(list);
             for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getStart() <= loc&& list.get(i).getStart()+list.get(i).getDuration()>=loc) {
+                if (list.get(i).getStart() <= loc && list.get(i).getStart() + list.get(i).getDuration() >= loc) {
                     hovering = new Interval(list.get(i), 60);
                     break;
                 }
@@ -729,8 +729,18 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 
     @Override
     public void keyPressed(KeyEvent e) {
+
         if (e.getKeyChar() == ' ')
             au.pause = !au.pause;
+        else if (e.isAltDown()) {
+            au.midiMap.put((char) e.getKeyCode() + "", hovering);
+        } else if (e.isControlDown()) {
+            au.midiMap.remove((char) e.getKeyCode() + "");
+
+        }
+        else if (e.isShiftDown()) {
+            CentralCommand.key((char) e.getKeyCode() + "");
+        }
         else if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
             AudioObject.factory();
         else if (e.getKeyCode() == KeyEvent.VK_L)
@@ -742,17 +752,15 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
             au.breakPlay = true;
         } else if (e.getKeyCode() == KeyEvent.VK_F5) {
             au.midiMap.clear();
-        }
-        else if (e.getKeyCode() == KeyEvent.VK_F6) {
+        } else if (e.getKeyCode() == KeyEvent.VK_F6) {
             Node n = new Node(new Rectangle2D.Double(0, 0, 1, 40), this.au);
             CentralCommand.addRectangle(n);
 
+        } else if (e.getKeyCode() == KeyEvent.VK_P) {
+            au.createAudioObject();
+            au.pause = true;
+            au.breakPlay = true;
         }
-		else if (e.getKeyCode() == KeyEvent.VK_P) {
-			au.createAudioObject(analysis);
-			au.pause=true;
-			au.breakPlay=true;
-		}
 //		else if (e.getKeyCode() == KeyEvent.VK_F7) {
 //			au.createReverseAudioObject();
 //			au.pause=true;
@@ -773,16 +781,9 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
             js.getHorizontalScrollBar().setValue(js.getHorizontalScrollBar().getValue() - js.getHorizontalScrollBar().getUnitIncrement());
         } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
             js.getHorizontalScrollBar().setValue(js.getHorizontalScrollBar().getValue() + js.getHorizontalScrollBar().getUnitIncrement());
-        }  else {
-            // au.sendMidi(e.getKeyChar() + "", 127);
-            if (Character.isAlphabetic((char) e.getKeyCode())) {
-                if (e.isAltDown()) {
-                    au.midiMap.put((char) e.getKeyCode() + "", hovering);
-                } else if (e.isControlDown()) {
-                    au.midiMap.remove((char) e.getKeyCode() + "");
-                } else
-                    CentralCommand.key((char) e.getKeyCode() + "");
-            }
+        } else {
+            CentralCommand.key((char) e.getKeyCode() + "");
+
         }
     }
 
