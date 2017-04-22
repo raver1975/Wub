@@ -19,7 +19,7 @@ public class Song {
     }
 
     public AudioInterval getAudioIntervalForSegment(int segnum){
-        AudioInterval ai=new AudioInterval(analysis.getSegments().get(segnum),data);
+        AudioInterval ai=new AudioInterval(analysis.getSegments().get(segnum),data,segnum);
         return ai;
     }
 

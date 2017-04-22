@@ -83,8 +83,9 @@ public class SamplingGraph {
 		g2.setBackground(new Color(0, 0, 0, 0));
 		//glossy
 //		g2.setBackground(new Color(50, 50, 150, 255));
-		g2.clearRect(0, 0, w, h);
 		g2.setColor(Color.black);
+		g2.clearRect(0, 0, w, h);
+
 
 		HashMap<Integer, Color> hm = new HashMap<Integer, Color>();
 		if (segment != null) {

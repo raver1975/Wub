@@ -35,7 +35,7 @@ public class AudioObject implements Serializable {
 	public transient boolean pause = false;
 	public transient boolean loop = false;
 	public transient HashMap<String, Interval> midiMap;
-	public static double tolerance = .1d;
+//	public static double tolerance = .2d;
 
 	public static final int resolution = 16;
 	public static final int channels = 2;
@@ -439,9 +439,14 @@ public class AudioObject implements Serializable {
 
 		});
 		for (Interval i : ll) {
-
+			double ts=i.te.getStart();
+			double te=i.te.getStart()+i.te.getDuration();
 			for (Segment e : analysis.getSegments()) {
-				if (e.getStart() >= i.te.getStart() - 1d && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + 1d) {
+				double es=e.getStart();
+				double ee=e.getStart()+e.getDuration();
+//				if ((es>=ts||ee>=ts)&&(es<=te||ee<=te) ){
+				if (true){
+//				if (e.getStart() >= i.te.getStart() - 1d && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + 1d) {
 					Segment f = null;
 					try {
 						f = (Segment) Serializer.deepclone(e);
@@ -459,10 +464,15 @@ public class AudioObject implements Serializable {
 			hm1.put("start", 0d);
 			hm1.put("duration", fa.getDuration());
 			hm1.put("confidence", 1d);
+
 			fa.sections.add(new TimedEvent(hm1));
 
 			for (TimedEvent e : analysis.getBars()) {
-				if (e.getStart() >= i.te.getStart() - tolerance && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + tolerance) {
+				double es=e.getStart();
+				double ee=e.getStart()+e.getDuration();
+//				if ((es>=ts||ee>=ts)&&(es<=te||ee<=te) ){
+				if (true){
+//				if (e.getStart() >= i.te.getStart() - tolerance && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + tolerance) {
 					HashMap<String, Double> hm = new HashMap<String, Double>();
 					hm.put("start", e.getStart() - i.te.getStart() + convertByteToTime(i.newbytestart));
 					hm.put("duration", e.getDuration());
@@ -472,7 +482,11 @@ public class AudioObject implements Serializable {
 			}
 
 			for (TimedEvent e : analysis.getBeats()) {
-				if (e.getStart() >= i.te.getStart() - tolerance && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + tolerance) {
+				double es=e.getStart();
+				double ee=e.getStart()+e.getDuration();
+//				if ((es>=ts||ee>=ts)&&(es<=te||ee<=te) ){
+				if (true){
+//				if (e.getStart() >= i.te.getStart() - tolerance && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + tolerance) {
 					HashMap<String, Double> hm = new HashMap<String, Double>();
 					hm.put("start", e.getStart() - i.te.getStart() + convertByteToTime(i.newbytestart));
 					hm.put("duration", e.getDuration());
@@ -482,7 +496,11 @@ public class AudioObject implements Serializable {
 			}
 
 			for (TimedEvent e : analysis.getTatums()) {
-				if (e.getStart() >= i.te.getStart() - tolerance && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + tolerance) {
+				double es=e.getStart();
+				double ee=e.getStart()+e.getDuration();
+//				if ((es>=ts||ee>=ts)&&(es<=te||ee<=te) ){
+				if (true){
+//				if (e.getStart() >= i.te.getStart() - tolerance && e.getStart() + e.getDuration() <= i.te.getStart() + i.te.getDuration() + tolerance) {
 					HashMap<String, Double> hm = new HashMap<String, Double>();
 					hm.put("start", e.getStart() - i.te.getStart() + convertByteToTime(i.newbytestart));
 					hm.put("duration", e.getDuration());

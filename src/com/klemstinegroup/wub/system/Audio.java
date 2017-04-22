@@ -48,6 +48,7 @@ public class Audio {
     public static final AudioFormat audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sampleRate, resolution, channels, frameSize, sampleRate, false);
     public static final AudioFormat audioFormatMono = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sampleRate, resolution, channels / 2, frameSize / 2, sampleRate, false);
     public static final int bufferSize = 8192;
+    public static double maxDuration=1;
     //    private Song cachedSong;
 //    private int cachedSongIndex;
     public static ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -125,8 +126,8 @@ public class Audio {
                 while (cnt-- > 0) {
                     if (!queue.isEmpty()) {
                         cnt = 25000000;
-                        AudioInterval i = queue.poll();
-                        currentlyPlaying = i;
+                        AudioInterval audioInterval = queue.poll();
+                        currentlyPlaying = audioInterval;
 
                         if (tf != null) {
                             new Thread(new Runnable() {
@@ -135,8 +136,8 @@ public class Audio {
 
 
                                     ArrayList<Segment> list = new ArrayList<>();
-                                    Segment bbbb = i.te;
-                                    list.add(bbbb);
+                                    Segment bbbb1 = audioInterval.te;
+                                    list.add(bbbb1);
 //
 
 //                                        double seconds = 1;
@@ -144,13 +145,16 @@ public class Audio {
 //                                            seconds = Math.max(seconds, s.getStart() + s.getDuration());
 //                                        }
                                     double duration = 1;
-                                    duration = i.te.duration;
+                                    duration = audioInterval.te.duration;
 
-                                    System.out.println("creating waveform");
-                                    BufferedImage bi = new SamplingGraph().createWaveForm(list, duration, i.data, audioFormat, tf.getWidth(), tf.getHeight());
+                                    if (bbbb1.getStart()+bbbb1.getDuration()>maxDuration){
+                                        maxDuration=bbbb1.getDuration()+bbbb1.getStart();
+                                    }
+
+                                    BufferedImage bi = new SamplingGraph().createWaveForm(list, duration, audioInterval.data, audioFormat, tf.getWidth(), tf.getHeight());
                                     Graphics g = bi.getGraphics();
 
-                                    g.setFont(new Font("Arial", Font.BOLD, 20));
+
 
 
 //                                        JSONObject js = (JSONObject) cachedSong.analysis.getMap().get("meta");
@@ -191,18 +195,20 @@ public class Audio {
 //                                        String sonSeq = "#" + i.payloadString.segment;
 
 //                                        Segment seg = cachedSong.analysis.getSegments().get(i.payloadString.segment);
-                                    lastPlayedQueue.add(i);
-                                    LinkedList<AudioInterval> lastPlayedQueue1 = new LinkedList(lastPlayedQueue);
+                                    lastPlayedQueue.add(audioInterval);
+                                    LinkedList<AudioInterval> lastPlayedQueue1 = new LinkedList();
+                                    lastPlayedQueue1.addAll(lastPlayedQueue);
                                     Iterator<AudioInterval> quit = lastPlayedQueue1.iterator();
                                     int cnt = 0;
                                     int qsize = 15;
+                                    g.setFont(new Font("Arial", Font.BOLD, 20));
                                     while (quit.hasNext()) {
                                         Segment seg1 = quit.next().te;
                                         g.setColor(ColorHelper.numberToColor((cnt * 100) / lastPlayedQueue.size()));
                                         //System.out.println(seg1+"\t"+seg1.getDuration());
-                                        int x = (int) ((bi.getWidth() * seg1.getStart()) / duration) - cnt;
+                                        int x = (int) ((bi.getWidth() * seg1.getStart()) / maxDuration) - cnt;
                                         int y = bi.getHeight() / 2 - (bi.getHeight() / 2) * cnt / qsize;
-                                        int w = (int) ((bi.getWidth() * seg1.getDuration() * cnt * 2) / duration);
+                                        int w = (int) ((bi.getWidth() * seg1.getDuration() * cnt * 2) / maxDuration);
                                         int h = (bi.getHeight()) * cnt / qsize;
                                         g.fillRect(x, y, w, h);
                                         cnt++;
@@ -210,17 +216,55 @@ public class Audio {
                                     while (lastPlayedQueue1.size() > qsize) {
                                         lastPlayedQueue1.removeFirst();
                                     }
-                                    lastPlayedQueue = new LinkedList<AudioInterval>(lastPlayedQueue1);
+                                    lastPlayedQueue = new LinkedList<AudioInterval>();
+                                    lastPlayedQueue.addAll(lastPlayedQueue1);
 
-                                    String sonArt = "test";
                                     g.setColor(Color.YELLOW);
                                     for (int xi = -1; xi < 2; xi++) {
                                         for (int yi = -1; yi < 2; yi++) {
-                                            g.drawString(sonArt, 10 - xi, 25 + yi);
+                                            g.drawString("#"+audioInterval.label, 10 - xi, 25 + yi);
                                         }
                                     }
                                     g.setColor(Color.RED);
-                                    g.drawString(sonArt, 10, 25);
+                                    g.drawString("#"+audioInterval.label, 10, 25);
+
+                                    //------------------------------------------------
+                                    int val = 0;
+                                    if (hm.get(lastSeg + "") == null) {
+                                        hm.put(lastSeg + "", 0);
+                                    } else {
+                                        Integer bbbb = hm.get(lastSeg + "");
+                                        if (bbbb != null) val = bbbb + 1;
+                                        else val = 1;
+                                    }
+                                    hm.put(lastSeg + "", val);
+                                    lastSeg = audioInterval.label;
+                                    Color color = ColorHelper.numberToColorPercentage((double) val / (double) AudioParams.maxValue);
+                                    if (lastNode1 != null) {
+                                        lastNode1.addAttribute("ui.style", "fill-color: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ");");
+                                        lastNode1.addAttribute("ui.style", "size: 15;");
+                                    }
+                                    if (lastNode2 != null) {
+                                        lastNode2.addAttribute("ui.style", "fill-color: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ");");
+                                        lastNode2.addAttribute("ui.style", "size: 15;");
+                                    }
+                                    if (AudioParams.graph != null) {
+                                        Node node1 = AudioParams.graph.getNode(audioInterval.hashCode() + "");
+                                        if (node1 != null) {
+                                            node1.addAttribute("ui.style", "fill-color: rgb(255,0,0);");
+                                            node1.addAttribute("ui.style", "size:25;");
+                                        }
+                                        lastNode1 = node1;
+
+                                            Node node2 = AudioParams.graph.getNode(audioInterval.hashCode() + "");
+                                            if (node2 != null) {
+                                                //node2.addAttribute("ui.style", "fill-color: rgb(255,0,0);");
+                                                node2.addAttribute("ui.style", "size:20;");
+                                            }
+
+                                            lastNode2 = node2;
+                                    }
+                                    //------------------------------------------------
 
                                     Graphics gra = tf.getGraphics();
                                     gra.setColor(new Color(0,0,0));
@@ -235,7 +279,7 @@ public class Audio {
 
 
                         int j = 0;
-                        for (j = 0; j <= i.data.length - bufferSize; j += bufferSize) {
+                        for (j = 0; j <= audioInterval.data.length - bufferSize; j += bufferSize) {
                             while (pause || breakPlay) {
                                 if (breakPlay) {
                                     breakPlay = false;
@@ -253,17 +297,17 @@ public class Audio {
                                 }
                             }
                             position = j;
-                            line.write(i.data, j, bufferSize);
+                            line.write(audioInterval.data, j, bufferSize);
 
                         }
 
-                        if (j < i.data.length) {
+                        if (j < audioInterval.data.length) {
                             position = j;
-                            line.write(i.data, j, i.data.length - j);
+                            line.write(audioInterval.data, j, audioInterval.data.length - j);
                             // line.drain();
                         }
                         if (loop)
-                            queue.add(i);
+                            queue.add(audioInterval);
                     } else {
                         currentlyPlaying = null;
                         try {

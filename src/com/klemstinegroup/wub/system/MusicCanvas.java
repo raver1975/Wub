@@ -743,11 +743,16 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
         } else if (e.getKeyCode() == KeyEvent.VK_F5) {
             au.midiMap.clear();
         }
-//		else if (e.getKeyCode() == KeyEvent.VK_F6) {
-//			au.createAudioObject();
-//			au.pause=true;
-//			au.breakPlay=true;
-//		}
+        else if (e.getKeyCode() == KeyEvent.VK_F6) {
+            Node n = new Node(new Rectangle2D.Double(0, 0, 1, 40), this.au);
+            CentralCommand.addRectangle(n);
+
+        }
+		else if (e.getKeyCode() == KeyEvent.VK_P) {
+			au.createAudioObject(analysis);
+			au.pause=true;
+			au.breakPlay=true;
+		}
 //		else if (e.getKeyCode() == KeyEvent.VK_F7) {
 //			au.createReverseAudioObject();
 //			au.pause=true;
@@ -768,11 +773,7 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
             js.getHorizontalScrollBar().setValue(js.getHorizontalScrollBar().getValue() - js.getHorizontalScrollBar().getUnitIncrement());
         } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
             js.getHorizontalScrollBar().setValue(js.getHorizontalScrollBar().getValue() + js.getHorizontalScrollBar().getUnitIncrement());
-        } else if (e.getKeyCode() == KeyEvent.VK_F6) {
-            Node n = new Node(new Rectangle2D.Double(0, 0, 1, 40), this.au);
-            CentralCommand.addRectangle(n);
-
-        } else {
+        }  else {
             // au.sendMidi(e.getKeyChar() + "", 127);
             if (Character.isAlphabetic((char) e.getKeyCode())) {
                 if (e.isAltDown()) {
