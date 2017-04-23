@@ -2,10 +2,7 @@ package com.klemstinegroup.wub.ai.vectorrnn;
 
 import com.echonest.api.v4.Segment;
 import com.klemstinegroup.wub.ai.custom.Levenshtein;
-import com.klemstinegroup.wub.system.Audio;
-import com.klemstinegroup.wub.system.AudioInterval;
-import com.klemstinegroup.wub.system.ObjectManager;
-import com.klemstinegroup.wub.system.Song;
+import com.klemstinegroup.wub.system.*;
 import org.deeplearning4j.nn.api.Layer;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.BackpropType;
@@ -81,6 +78,8 @@ public class RNNDemo {
         int nSamplesToGenerate = 1;                    //Number of samples to generate after each training epoch
         int nCharactersToSample = 60;                //Length of each sample to generate
 //        String generationInitialization = null;        //Optional character initialization; a random character is used if null
+
+
 
         // Above is Used to 'prime' the LSTM with a character sequence to continue/complete.
         // Initialization characters must all be in CharacterIteratorRNN.getMinimalCharacterSet() by default
@@ -224,8 +223,8 @@ public class RNNDemo {
                                         pos += best.length();
                                     }
                                 }
-                                for (AudioInterval s : listAudioIntervals) {
-                                        audio.play(s);
+                                for (AudioInterval audioInterval : listAudioIntervals) {
+                                    audio.play(audioInterval);
                                 }
 
 

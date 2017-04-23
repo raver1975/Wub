@@ -34,7 +34,10 @@ public class Audio {
     public static FFmpegFrameRecorder recorder;
     public transient SourceDataLine line;
     public transient Queue<AudioInterval> queue;
-
+    final AudioInterval[] lastPlayed = {null};
+    final Node[] lastNode = {null};
+    public static HashSet<Integer> nodeset = new HashSet<>();
+    final int[] idEdge = {0};
     transient int position = 0;
     transient AudioInterval currentlyPlaying;
     protected transient boolean breakPlay;
@@ -48,7 +51,7 @@ public class Audio {
     public static final AudioFormat audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sampleRate, resolution, channels, frameSize, sampleRate, false);
     public static final AudioFormat audioFormatMono = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sampleRate, resolution, channels / 2, frameSize / 2, sampleRate, false);
     public static final int bufferSize = 8192;
-    public static double maxDuration=1;
+    public static double maxDuration = 1;
     //    private Song cachedSong;
 //    private int cachedSongIndex;
     public static ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -59,28 +62,28 @@ public class Audio {
     private Queue<AudioInterval> lastPlayedQueue = new LinkedList<>();
 
     public Audio() {
-        this(null, null, 1);
+        this(null, 1);
     }
 
-    public Audio(JFrame jframe, Canvas ip, int numClusters) {
+    public Audio(Canvas ip, int numClusters) {
 
         queue = new LinkedList<AudioInterval>();
-        startPlaying(jframe, ip, numClusters);
+        startPlaying(ip, numClusters);
         try {
             robot = new Robot();
         } catch (AWTException e) {
             e.printStackTrace();
         }
         if (Settings.makeVideo) {
-            recorder = new FFmpegFrameRecorder(new File("out" + Settings.spotifyId + ".mp4"), jframe.getWidth(), jframe.getHeight(), 2);
+            recorder = new FFmpegFrameRecorder(new File("out" + Settings.spotifyId + ".mp4"), ip.getWidth(), ip.getHeight(), 2);
             recorder.setSampleRate((int) audioFormat.getSampleRate());
             recorder.setAudioChannels(2);
             recorder.setInterleaved(true);
             recorder.setVideoQuality(0);
 //            recorder.setVideoBitrate(10000000);
 //            recorder.setAudioBitrate(10000000);
-            recorder.setImageWidth(jframe.getWidth());
-            recorder.setImageHeight(jframe.getHeight());
+            recorder.setImageWidth(ip.getWidth());
+            recorder.setImageHeight(ip.getHeight());
             try {
                 recorder.start();
                 Thread.sleep(2000);
@@ -115,7 +118,8 @@ public class Audio {
 
     }
 
-    private void startPlaying(JFrame jframe, Canvas tf, int numClusters) {
+    private void startPlaying(Canvas tf, int numClusters) {
+
         HashMap<String, Integer> hm = new HashMap<>();
         line = getLine();
 
@@ -147,14 +151,12 @@ public class Audio {
                                     double duration = 1;
                                     duration = audioInterval.te.duration;
 
-                                    if (bbbb1.getStart()+bbbb1.getDuration()>maxDuration){
-                                        maxDuration=bbbb1.getDuration()+bbbb1.getStart();
+                                    if (bbbb1.getStart() + bbbb1.getDuration() > maxDuration) {
+                                        maxDuration = bbbb1.getDuration() + bbbb1.getStart();
                                     }
 
                                     BufferedImage bi = new SamplingGraph().createWaveForm(list, duration, audioInterval.data, audioFormat, tf.getWidth(), tf.getHeight());
                                     Graphics g = bi.getGraphics();
-
-
 
 
 //                                        JSONObject js = (JSONObject) cachedSong.analysis.getMap().get("meta");
@@ -222,11 +224,11 @@ public class Audio {
                                     g.setColor(Color.YELLOW);
                                     for (int xi = -1; xi < 2; xi++) {
                                         for (int yi = -1; yi < 2; yi++) {
-                                            g.drawString("#"+audioInterval.label, 10 - xi, 25 + yi);
+                                            g.drawString("#" + audioInterval.label, 10 - xi, 25 + yi);
                                         }
                                     }
                                     g.setColor(Color.RED);
-                                    g.drawString("#"+audioInterval.label, 10, 25);
+                                    g.drawString("#" + audioInterval.label, 10, 25);
 
                                     //------------------------------------------------
                                     int val = 0;
@@ -256,20 +258,51 @@ public class Audio {
                                         }
                                         lastNode1 = node1;
 
-                                            Node node2 = AudioParams.graph.getNode(audioInterval.hashCode() + "");
-                                            if (node2 != null) {
-                                                //node2.addAttribute("ui.style", "fill-color: rgb(255,0,0);");
-                                                node2.addAttribute("ui.style", "size:20;");
-                                            }
+                                        Node node2 = AudioParams.graph.getNode(audioInterval.hashCode() + "");
+                                        if (node2 != null) {
+                                            //node2.addAttribute("ui.style", "fill-color: rgb(255,0,0);");
+                                            node2.addAttribute("ui.style", "size:20;");
+                                        }
 
-                                            lastNode2 = node2;
+                                        lastNode2 = node2;
                                     }
                                     //------------------------------------------------
 
                                     Graphics gra = tf.getGraphics();
-                                    gra.setColor(new Color(0,0,0));
-                                    gra.clearRect(0,0,tf.getWidth(),tf.getHeight());
-                                    gra.drawImage(bi, 0, 0, null);
+                                    if (gra != null) {
+                                        gra.setColor(new Color(0, 0, 0));
+                                        gra.clearRect(0, 0, tf.getWidth(), tf.getHeight());
+                                        gra.drawImage(bi, 0, 0, null);
+                                    }
+                                    if (audioInterval != null && !nodeset.contains(audioInterval.hashCode())) {
+                                        System.out.println("adding node");
+                                        Node n = AudioParams.graph.addNode(audioInterval.hashCode() + "");
+                                        if (lastNode[0] != null) {
+                                            double xx=lastNode[0].getAttribute("x");
+                                            double yy= lastNode[0].getAttribute("y");
+                                            n.setAttribute("x",xx );
+                                            n.setAttribute("y",yy );
+                                        }
+                                        else {
+                                            n.setAttribute("x", Math.random() * 200);
+                                            n.setAttribute("y", Math.random() * 200);
+                                        }
+                                        lastNode[0]=n;
+                                        nodeset.add(audioInterval.hashCode());
+                                    }
+
+                                    if (lastPlayed[0] != null && !nodeset.contains(lastPlayed[0].hashCode())) {
+                                        System.out.println("adding node");
+                                        AudioParams.graph.addNode(lastPlayed[0].hashCode() + "");
+                                        nodeset.add(lastPlayed[0].hashCode());
+                                    }
+
+                                    if (lastPlayed[0] != null && audioInterval != null) {
+                                        System.out.println("adding edge");
+                                        AudioParams.graph.addEdge("" + (idEdge[0]++), audioInterval.hashCode() + "", lastPlayed[0].hashCode() + "");
+                                    }
+                                    lastPlayed[0] = audioInterval;
+
                                 }
 //                                System.out.println("hetre2");
 

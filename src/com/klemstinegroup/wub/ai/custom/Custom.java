@@ -3,55 +3,92 @@ package com.klemstinegroup.wub.ai.custom;
 import com.echonest.api.v4.Segment;
 import com.klemstinegroup.wub.ai.vectorrnn.RNNDemo;
 import com.klemstinegroup.wub.system.*;
+import org.graphstream.graph.implementations.MultiGraph;
+import org.graphstream.ui.layout.springbox.implementations.SpringBox;
+import org.graphstream.ui.swingViewer.ViewPanel;
+import org.graphstream.ui.view.Viewer;
 import weka.clusterers.SimpleKMeans;
 import weka.core.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by Paul on 4/4/2017.
  */
-public class Custom {
+public class Custom implements KeyListener {
 
     static final int attLength = 28;
-    public  Attribute[] attlist;
+    private final Audio audio;
+    public Attribute[] attlist;
     int width = 1200;
     int height = 400;
-    int numClusters=200;
+    int numClusters = 200;
 
     public Custom() {
         this(SongManager.getRandom((int) (Math.random() * 1300)));
 
     }
-    public Custom(Song song){
+
+    public Custom(Song song) {
         Canvas tf = new Canvas();
-        tf.setBackground(new Color(0,0,0));
+        tf.setBackground(new Color(0, 0, 0));
+        tf.setSize(width, height);
 //        JTextArea jta = new JTextArea(4, 20);
         JFrame jframe = new JFrame("Wub");
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        jframe.setSize(width, height);
-        jframe.setResizable(false);
-        jframe.add("Center", tf);
+        jframe.setSize(width, height * 2);
+        jframe.setResizable(true);
+
         jframe.setVisible(true);
-        Audio audio = new Audio(jframe, tf, numClusters);
-        AudioParams.firstSong=song;
+        audio = new Audio(tf, numClusters);
+        AudioParams.graph = new MultiGraph("id");
+        AudioParams.graph.addAttribute("ui.quality");
+        AudioParams.graph.addAttribute("ui.antialias");
+        Viewer viewer = new Viewer(AudioParams.graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+        SpringBox sb = new SpringBox();
+        sb.setForce(1.5f);
+//        sb.setQuality(0);
+        viewer.enableAutoLayout(sb);
+        ViewPanel vp=viewer.addDefaultView(false);
+        jframe.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent windowEvent) {
+                Audio.stop();
+
+            }
+        });
+
+        jframe.getContentPane().add("North", tf);
+        jframe.getContentPane().add("Center", vp);
+//        tf.setMinimumSize(new Dimension(100, 100));
+//        tf.setPreferredSize(new Dimension(100, 100));
+        jframe.invalidate();
+        tf.addKeyListener(this);
+        jframe.addKeyListener(this);
+        vp.addKeyListener(this);
         List<Segment> segments = song.analysis.getSegments();
 
 
         HashMap<AudioInterval, AudioInterval> smallercluster = makeMap(numClusters, song);
 
-        ArrayList<AudioInterval> reducedSong=new ArrayList<>();
-        HashMap<AudioInterval,Character> language=new HashMap<>();
+        ArrayList<AudioInterval> reducedSong = new ArrayList<>();
+        HashMap<AudioInterval, Character> language = new HashMap<>();
 
 
-        char newChar='A';
-        int i=0;
-        double lleng=segments.size();
-        for (Segment s:segments){
-            if (i<lleng/8d||i>(7d*lleng)/8d){
+        char newChar = 'A';
+        int i = 0;
+        double lleng = segments.size();
+        for (Segment s : segments) {
+            if (i < lleng / 8d || i > (7d * lleng) / 8d) {
                 i++;
                 continue;
             }
@@ -59,26 +96,26 @@ public class Custom {
             AudioInterval segOrig = song.getAudioIntervalForSegment(i);
             AudioInterval segMapped = smallercluster.get(segOrig);
             reducedSong.add(segMapped);
-            if (!language.containsKey(segMapped)){
-                language.put(segMapped,newChar);
+            if (!language.containsKey(segMapped)) {
+                language.put(segMapped, newChar);
                 newChar++;
             }
             i++;
         }
-        System.out.println((newChar-65)+" characters in language");
-        String forRnn="";
-        for (AudioInterval s:reducedSong){
-            forRnn+=language.get(s);
+        System.out.println((newChar - 65) + " characters in language");
+        String forRnn = "";
+        for (AudioInterval s : reducedSong) {
+            forRnn += language.get(s);
         }
-        String out="";
-        for (int kk=0;kk<10;kk++)out+=forRnn;
+        String out = "";
+        for (int kk = 0; kk < 10; kk++) out += forRnn;
 //        System.out.println(forRnn);
         String finalOut = out;
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    String[] samples=RNNDemo.process(song,language,audio,finalOut);
+                    String[] samples = RNNDemo.process(song, language, audio, finalOut);
                     System.out.println(Arrays.toString(samples));
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -107,17 +144,17 @@ public class Custom {
 //        }
     }
 
-    private HashMap<AudioInterval,AudioInterval> makeMap(int numClusters,Song song){
-        List<Segment> segs=song.analysis.getSegments();
-        List<AudioInterval> aulist=new ArrayList<>();
-        int cnt=0;
-        for (Segment s:segs){
+    private HashMap<AudioInterval, AudioInterval> makeMap(int numClusters, Song song) {
+        List<Segment> segs = song.analysis.getSegments();
+        List<AudioInterval> aulist = new ArrayList<>();
+        int cnt = 0;
+        for (Segment s : segs) {
             aulist.add(song.getAudioIntervalForSegment(cnt++));
         }
-        return makeMap(numClusters,song,aulist);
+        return makeMap(numClusters, song, aulist);
     }
 
-    private  HashMap<AudioInterval, AudioInterval> makeMap(int numClusters,Song song,List<AudioInterval> segments) {
+    private HashMap<AudioInterval, AudioInterval> makeMap(int numClusters, Song song, List<AudioInterval> segments) {
 
         //one time attribute setup
         FastVector attrs = new FastVector();
@@ -185,7 +222,7 @@ public class Custom {
             try {
                 int cluster = kmeans.clusterInstance(dataset.instance(io));
                 AudioInterval tempAudioInterval = lastSeen[cluster];
-                 map.put(coll.get(io), tempAudioInterval);
+                map.put(coll.get(io), tempAudioInterval);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -248,5 +285,24 @@ public class Custom {
 
     public static void performMagic(Song song) {
         new Custom(song);
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyChar() == 'c') {
+            AudioParams.graph.clear();
+            Audio.nodeset.clear();
+        }
+        if (e.getKeyChar() == ' ') audio.pause = !audio.pause;
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
 }

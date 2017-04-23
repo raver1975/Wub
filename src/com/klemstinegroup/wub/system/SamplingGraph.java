@@ -20,7 +20,7 @@ public class SamplingGraph {
 
 	public BufferedImage createWaveForm(List<Segment> segment, double duration, byte[] audioBytes, AudioFormat format, int w, int h) {
 		if (w < 2)
-			return new BufferedImage(1, h, BufferedImage.TYPE_INT_ARGB);
+			return new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 		int[] audioData = null;
 		if (format.getSampleSizeInBits() == 16) {
 			int nlengthInSamples = audioBytes.length / 2;

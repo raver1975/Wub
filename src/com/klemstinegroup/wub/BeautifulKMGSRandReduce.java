@@ -172,7 +172,7 @@ public class BeautifulKMGSRandReduce {
                 HashMap<AudioInterval, AudioInterval> map1 = makeMap(totsegm - Settings.decreaseClustersBy);
                 HashMap<AudioInterval, AudioInterval> map2 = makeMap((int) (totsegm * Settings.segmentsKept));
 
-                Audio audio = new Audio(jframe, tf, (totsegm - Settings.decreaseClustersBy));
+                Audio audio = new Audio( tf, (totsegm - Settings.decreaseClustersBy));
 
 
                 AudioParams.graph = new MultiGraph("id");

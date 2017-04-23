@@ -32,7 +32,7 @@ public class BeautifulKMGSRandReducefromAudioObject {
     private static int height = 800;
 
     public static void bkrrao(Song song) {
-        AudioParams.firstSong = song;
+//        AudioParams.firstSong = song;
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -118,7 +118,7 @@ public class BeautifulKMGSRandReducefromAudioObject {
                 HashMap<AudioInterval, AudioInterval> map1 = makeMap(totsegm - Settings.decreaseClustersBy, song);
                 HashMap<AudioInterval, AudioInterval> map2 = makeMap((int) (totsegm * Settings.segmentsKept), song);
 
-                Audio audio = new Audio(jframe, tf, (totsegm - Settings.decreaseClustersBy));
+                Audio audio = new Audio( tf, (totsegm - Settings.decreaseClustersBy));
 
 
                 AudioParams.graph = new MultiGraph("id");
