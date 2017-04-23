@@ -62,12 +62,12 @@ public class BasicVertexLabelRenderer<V,E> implements Renderer.VertexLabel<V,E> 
 	}
 
 	/**
-	 * Labels the specified vertex with the specified label.  
+	 * Labels the specified vertex with the specified segment.
 	 * Uses the font specified by this instance's 
 	 * <code>VertexFontFunction</code>.  (If the font is unspecified, the existing
-	 * font for the graphics context is used.)  If vertex label centering
-	 * is active, the label is centered on the position of the vertex; otherwise
-     * the label is offset slightly.
+	 * font for the graphics context is used.)  If vertex segment centering
+	 * is active, the segment is centered on the position of the vertex; otherwise
+     * the segment is offset slightly.
      */
     public void labelVertex(RenderContext<V,E> rc, Layout<V,E> layout, V v, String label) {
     	Graph<V,E> graph = layout.getGraph();

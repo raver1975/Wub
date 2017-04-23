@@ -117,7 +117,7 @@ public class PluggableRenderContext<V, E> implements RenderContext<V, E> {
     /**
      * The CellRendererPane is used here just as it is in JTree
      * and JTable, to allow a pluggable JLabel-based renderer for
-     * Vertex and Edge label strings and icons.
+     * Vertex and Edge segment strings and icons.
      */
     protected CellRendererPane rendererPane = new CellRendererPane();
     

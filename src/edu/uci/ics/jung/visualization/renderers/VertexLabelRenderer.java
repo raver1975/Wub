@@ -22,7 +22,7 @@ import javax.swing.JComponent;
  */
 public interface VertexLabelRenderer {
 	/**
-     * Returns the component used for drawing the label.  This method is
+     * Returns the component used for drawing the segment.  This method is
      * used to configure the renderer appropriately before drawing.
 	 * 
 	 * @param vv the component that is asking the renderer to draw
@@ -30,11 +30,11 @@ public interface VertexLabelRenderer {
 	 * 		render the value are up to the renderer implementation.  For example,
 	 * 		if {@code value} is the string "true", it could be rendered as the
 	 * 		string or as a checked checkbox.  
-	 * @param font the font to use in rendering the label
+	 * @param font the font to use in rendering the segment
 	 * @param isSelected whether the vertex is currently selected
-	 * @param vertex the edge whose label is being drawn
+	 * @param vertex the edge whose segment is being drawn
 	 * @param <V> the vertex type
-	 * @return the component used for drawing the label
+	 * @return the component used for drawing the segment
 	 */
     <V> Component getVertexLabelRendererComponent(JComponent vv, Object value,
 					   Font font, boolean isSelected, V vertex);

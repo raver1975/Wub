@@ -28,8 +28,8 @@ import edu.uci.ics.jung.visualization.transform.shape.GraphicsDecorator;
 
 /**
  * Renders Vertex Labels, but can also supply Shapes for vertices.
- * This has the effect of making the vertex label the actual vertex
- * shape. The user will probably want to center the vertex label
+ * This has the effect of making the vertex segment the actual vertex
+ * shape. The user will probably want to center the vertex segment
  * on the vertex location.
  * 
  * @author Tom Nelson
@@ -54,12 +54,12 @@ public class VertexLabelAsShapeRenderer<V,E>
 	}
 
 	/**
-	 * Labels the specified vertex with the specified label.  
+	 * Labels the specified vertex with the specified segment.
 	 * Uses the font specified by this instance's 
 	 * <code>VertexFontFunction</code>.  (If the font is unspecified, the existing
-	 * font for the graphics context is used.)  If vertex label centering
-	 * is active, the label is centered on the position of the vertex; otherwise
-     * the label is offset slightly.
+	 * font for the graphics context is used.)  If vertex segment centering
+	 * is active, the segment is centered on the position of the vertex; otherwise
+     * the segment is offset slightly.
      */
     public void labelVertex(RenderContext<V,E> rc, Layout<V,E> layout, V v, String label) {
     	Graph<V,E> graph = layout.getGraph();

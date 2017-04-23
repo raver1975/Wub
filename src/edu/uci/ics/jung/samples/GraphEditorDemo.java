@@ -107,14 +107,14 @@ public class GraphEditorDemo extends JApplet implements Printable {
         "<li>Mouse1+drag elsewhere selects Vertices in a region"+
         "<li>Mouse1+Shift+drag adds selection of Vertices in a new region"+
         "<li>Mouse1+CTRL on a Vertex selects the vertex and centers the display on it"+
-        "<li>Mouse1 double-click on a vertex or edge allows you to edit the label"+
+        "<li>Mouse1 double-click on a vertex or edge allows you to edit the segment"+
         "</ul>"+
         "<h3>Transforming Mode:</h3>"+
         "<ul>"+
         "<li>Mouse1+drag pans the graph"+
         "<li>Mouse1+Shift+drag rotates the graph"+
         "<li>Mouse1+CTRL(or Command)+drag shears the graph"+
-        "<li>Mouse1 double-click on a vertex or edge allows you to edit the label"+
+        "<li>Mouse1 double-click on a vertex or edge allows you to edit the segment"+
         "</ul>"+
         "<h3>Annotation Mode:</h3>"+
         "<ul>"+

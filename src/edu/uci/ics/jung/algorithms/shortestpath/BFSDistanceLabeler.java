@@ -109,7 +109,7 @@ public class BFSDistanceLabeler<V, E> {
      * Computes the distances of all the node from the starting root nodes. If there is more than one root node
      * the minimum distance from each root node is used as the designated distance to a given node. Also keeps track
      * of the predecessors of each node traversed as well as the order of nodes traversed.
-     * @param graph the graph to label
+     * @param graph the graph to segment
      * @param rootSet the set of starting vertices to traverse from
      */
     public void labelDistances(Hypergraph<V,E> graph, Set<V> rootSet) {
@@ -139,7 +139,7 @@ public class BFSDistanceLabeler<V, E> {
     /**
      * Computes the distances of all the node from the specified root node. Also keeps track
      * of the predecessors of each node traversed as well as the order of nodes traversed.
-     *  @param graph the graph to label
+     *  @param graph the graph to segment
      * @param root the single starting vertex to traverse from
      */
     public void labelDistances(Hypergraph<V,E> graph, V root) {

@@ -89,7 +89,7 @@ public class CachingEdgeRenderer<V, E> extends BasicEdgeRenderer<V, E>
             Paint oldPaint = g.getPaint();
             
             // get Paints for filling and drawing
-            // (filling is done first so that drawing and label use same Paint)
+            // (filling is done first so that drawing and segment use same Paint)
             Paint fill_paint = rc.getEdgeFillPaintTransformer().apply(e); 
             if (fill_paint != null)
             {

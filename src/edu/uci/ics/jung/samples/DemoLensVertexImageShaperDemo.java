@@ -67,7 +67,7 @@ import edu.uci.ics.jung.visualization.transform.shape.MagnifyImageLensSupport;
  * Demonstrates the use of images to represent graph vertices.
  * The images are added to the DefaultGraphLabelRenderer and can
  * either be offset from the vertex, or centered on the vertex.
- * Additionally, the relative positioning of the label and
+ * Additionally, the relative positioning of the segment and
  * image is controlled by subclassing the DefaultGraphLabelRenderer
  * and setting the appropriate properties on its JLabel superclass
  *  FancyGraphLabelRenderer

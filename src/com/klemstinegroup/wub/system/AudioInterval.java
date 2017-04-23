@@ -6,14 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.echonest.api.v4.Segment;
-import com.echonest.api.v4.Segment;
 import com.echonest.api.v4.TimedEvent;
 
 public class AudioInterval implements Serializable {
 
     public byte[] data;
     public Segment te;
-    public int label;
+    public int segment;
 
     //public int endBytes;
 //	int newbytestart;
@@ -27,7 +26,7 @@ public class AudioInterval implements Serializable {
         int lengthBytes = (int) (lengthInFrames * Audio.frameSize) - (int) (lengthInFrames * Audio.frameSize) % Audio.frameSize;
         //int endBytes = startBytes + lengthBytes;
         data = new byte[lengthBytes];
-        this.label = label;
+        this.segment = label;
         if (startBytes + lengthBytes > fullData.length) lengthBytes = fullData.length - startBytes;
         System.arraycopy(fullData, startBytes, data, 0, lengthBytes);
         //System.out.println((startBytes+lengthBytes)+"\t"+fullData.length+"\t"+data.length+"\t"+lengthBytes);
@@ -37,7 +36,7 @@ public class AudioInterval implements Serializable {
     }
 
     public AudioInterval(List<TimedEvent> list, byte[] fullData, int label) {
-        this.label = label;
+        this.segment = label;
         double start1 = list.get(0).getStart();
         double duration = 0;
         for (TimedEvent t : list) duration += t.duration;

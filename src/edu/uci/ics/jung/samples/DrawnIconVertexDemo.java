@@ -76,7 +76,7 @@ public class DrawnIconVertexDemo {
 
         	/*
         	 * Implements the Icon interface to draw an Icon with background color and
-        	 * a text label
+        	 * a text segment
         	 */
 			public Icon apply(final Integer v) {
 				return new Icon() {

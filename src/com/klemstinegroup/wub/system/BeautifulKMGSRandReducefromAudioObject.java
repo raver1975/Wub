@@ -4,6 +4,7 @@ import com.echonest.api.v4.Segment;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.MultiGraph;
+import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.ui.layout.springbox.implementations.SpringBox;
 import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.Viewer;
@@ -121,7 +122,7 @@ public class BeautifulKMGSRandReducefromAudioObject {
                 Audio audio = new Audio( tf, (totsegm - Settings.decreaseClustersBy));
 
 
-                AudioParams.graph = new MultiGraph("id");
+                AudioParams.graph = new SingleGraph("id");
                 AudioParams.graph.addAttribute("ui.quality");
                 AudioParams.graph.addAttribute("ui.antialias");
                 Viewer viewer = new Viewer(AudioParams.graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);

@@ -44,7 +44,7 @@ import edu.uci.ics.jung.visualization.renderers.Renderer;
 import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
 
 /**
- * Demonstrates vertex label positioning 
+ * Demonstrates vertex segment positioning
  * controlled by the user.
  * In the AUTO setting, labels are placed according to
  * which quadrant the vertex is in

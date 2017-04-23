@@ -85,13 +85,13 @@ public class DefaultVertexLabelRenderer extends JLabel implements
     
     /**
      *
-     * Returns the default label renderer for a Vertex
+     * Returns the default segment renderer for a Vertex
      *
      * @param vv  the <code>VisualizationViewer</code> to render on
-     * @param value  the value to assign to the label for
+     * @param value  the value to assign to the segment for
      *			<code>Vertex</code>
      * @param vertex  the <code>Vertex</code>
-     * @return the default label renderer
+     * @return the default segment renderer
      */
     public <V> Component getVertexLabelRendererComponent(JComponent vv, Object value,
             Font font, boolean isSelected, V vertex) {

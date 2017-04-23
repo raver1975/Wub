@@ -257,7 +257,7 @@ public class PajekNetReader<G extends Graph<V,E>,V,E>
 
     /**
      * Parses <code>curLine</code> as a reference to a vertex, and optionally assigns 
-     * label and location information.
+     * segment and location information.
      */
     @SuppressWarnings("unchecked")
     private void readVertex(String curLine, List<V> id, int num_vertices)
@@ -267,7 +267,7 @@ public class PajekNetReader<G extends Graph<V,E>,V,E>
         int coord_idx = -1;     // index of first coordinate in parts; -1 indicates no coordinates found
         String index;
         String label = null;
-        // if there are quote marks on this line, split on them; label is surrounded by them
+        // if there are quote marks on this line, split on them; segment is surrounded by them
         if (curLine.indexOf('"') != -1)
         {
             String[] initial_split = curLine.trim().split("\"");
@@ -289,13 +289,13 @@ public class PajekNetReader<G extends Graph<V,E>,V,E>
             {
                 case 1:         // just the ID; nothing to do, continue
                     break;  
-                case 2:         // just the ID and a label
+                case 2:         // just the ID and a segment
                     label = parts[1];
                     break;
-                case 3:         // ID, no label, coordinates
+                case 3:         // ID, no segment, coordinates
                     coord_idx = 1;
                     break;
-                default:         // ID, label, (x,y) coordinates, maybe some other stuff
+                default:         // ID, segment, (x,y) coordinates, maybe some other stuff
                     coord_idx = 2;
                     break;
             }
@@ -308,7 +308,7 @@ public class PajekNetReader<G extends Graph<V,E>,V,E>
           v = id.get(v_id);
         else
           v = (V)(new Integer(v_id));
-        // only attach the label if there's one to attach
+        // only attach the segment if there's one to attach
         if (label != null && label.length() > 0 && vertex_labels != null)
         	vertex_labels.set(v, label);
 

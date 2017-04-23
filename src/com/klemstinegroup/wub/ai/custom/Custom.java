@@ -4,6 +4,7 @@ import com.echonest.api.v4.Segment;
 import com.klemstinegroup.wub.ai.vectorrnn.RNNDemo;
 import com.klemstinegroup.wub.system.*;
 import org.graphstream.graph.implementations.MultiGraph;
+import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.ui.layout.springbox.implementations.SpringBox;
 import org.graphstream.ui.swingViewer.ViewPanel;
 import org.graphstream.ui.view.Viewer;
@@ -50,7 +51,7 @@ public class Custom implements KeyListener {
 
         jframe.setVisible(true);
         audio = new Audio(tf, numClusters);
-        AudioParams.graph = new MultiGraph("id");
+        AudioParams.graph = new SingleGraph("id");
         AudioParams.graph.addAttribute("ui.quality");
         AudioParams.graph.addAttribute("ui.antialias");
         Viewer viewer = new Viewer(AudioParams.graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
@@ -59,6 +60,7 @@ public class Custom implements KeyListener {
 //        sb.setQuality(0);
         viewer.enableAutoLayout(sb);
         ViewPanel vp=viewer.addDefaultView(false);
+        vp.setSize(width,height);
         jframe.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent windowEvent) {
@@ -75,6 +77,7 @@ public class Custom implements KeyListener {
         tf.addKeyListener(this);
         jframe.addKeyListener(this);
         vp.addKeyListener(this);
+
         List<Segment> segments = song.analysis.getSegments();
 
 
@@ -142,6 +145,17 @@ public class Custom implements KeyListener {
 //            System.out.println(i + "\t" + count.get(map1.get(new AudioInterval(song.number, i))));
 //            i++;
 //        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                jframe.setSize(jframe.getWidth()-1,jframe.getHeight()-1);
+            }
+        }).start();
     }
 
     private HashMap<AudioInterval, AudioInterval> makeMap(int numClusters, Song song) {
@@ -297,6 +311,7 @@ public class Custom implements KeyListener {
         if (e.getKeyChar() == 'c') {
             AudioParams.graph.clear();
             Audio.nodeset.clear();
+            Audio.edgemap.clear();
         }
         if (e.getKeyChar() == ' ') audio.pause = !audio.pause;
     }

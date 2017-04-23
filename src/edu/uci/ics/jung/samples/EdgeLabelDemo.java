@@ -88,7 +88,7 @@ public class EdgeLabelDemo extends JApplet {
     
     /**
      * create an instance of a simple graph with controls to
-     * demo the label positioning features
+     * demo the segment positioning features
      * 
      */
     @SuppressWarnings("serial")
@@ -268,7 +268,7 @@ public class EdgeLabelDemo extends JApplet {
     
     /**
      * subclassed to hold two BoundedRangeModel instances that
-     * are used by JSliders to move the edge label positions
+     * are used by JSliders to move the edge segment positions
      * @author Tom Nelson
      *
      *

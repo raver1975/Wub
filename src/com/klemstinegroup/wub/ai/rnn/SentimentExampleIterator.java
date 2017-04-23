@@ -138,7 +138,7 @@ public class SentimentExampleIterator implements DataSetIterator {
 
             int idx = (positive[i] ? 0 : 1);
             int lastIdx = Math.min(tokens.size(),maxLength);
-            labels.putScalar(new int[]{i,idx,lastIdx-1},1.0);   //Set label: [0,1] for negative, [1,0] for positive
+            labels.putScalar(new int[]{i,idx,lastIdx-1},1.0);   //Set segment: [0,1] for negative, [1,0] for positive
             labelsMask.putScalar(new int[]{i,lastIdx-1},1.0);   //Specify that an output exists at the final time step for this example
         }
 
@@ -226,7 +226,7 @@ public class SentimentExampleIterator implements DataSetIterator {
         return FileUtils.readFileToString(f);
     }
 
-    /** Convenience method to get label for review */
+    /** Convenience method to get segment for review */
     public boolean isPositiveReview(int index){
         return index%2 == 0;
     }

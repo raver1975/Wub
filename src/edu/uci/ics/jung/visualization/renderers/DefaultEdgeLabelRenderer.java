@@ -107,13 +107,13 @@ public class DefaultEdgeLabelRenderer extends JLabel implements
     
     /**
     *
-    * Returns the default label renderer for an Edge
+    * Returns the default segment renderer for an Edge
     *
     * @param vv  the <code>VisualizationViewer</code> to render on
-    * @param value  the value to assign to the label for
+    * @param value  the value to assign to the segment for
     *			<code>Edge</code>
     * @param edge  the <code>Edge</code>
-    * @return the default label renderer
+    * @return the default segment renderer
     */
     public <E> Component getEdgeLabelRendererComponent(JComponent vv, Object value,
             Font font, boolean isSelected, E edge) {

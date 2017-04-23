@@ -80,11 +80,11 @@ public class AnnotationRenderer extends JLabel implements
     }
     
     /**
-     * Returns the default label renderer.
+     * Returns the default segment renderer.
      *
      * @param vv  the <code>VisualizationViewer</code> to render on
-     * @param value  the value to assign to the label
-     * @return the default label renderer
+     * @param value  the value to assign to the segment
+     * @return the default segment renderer
      */
     public Component getAnnotationRendererComponent(JComponent vv, Object value) {
         
