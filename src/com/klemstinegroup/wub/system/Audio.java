@@ -47,11 +47,11 @@ public class Audio {
     //    private Song cachedSong;
 //    private int cachedSongIndex;
     public static ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//    Node lastNode1 = null;
+    //    Node lastNode1 = null;
 //    Node lastNode2 = null;
     Node lastNode3 = null;
     private int start;
-//    private int lastSeg;
+    //    private int lastSeg;
     private Queue<AudioInterval> lastPlayedQueue = new LinkedList<>();
 
     public Audio() {
@@ -229,26 +229,24 @@ public class Audio {
                                         gra.clearRect(0, 0, tf.getWidth(), tf.getHeight());
                                         gra.drawImage(bi, 0, 0, null);
                                     }
-                                    if (audioInterval != null ) {
-                                        System.out.println("adding node");
-                                        if (!nodeset.contains(audioInterval.hashCode())){
+                                    if (audioInterval != null) {
+                                        if (!nodeset.contains(audioInterval.hashCode())) {
                                             Node n = AudioParams.graph.addNode(audioInterval.hashCode() + "");
                                             if (lastNode3 != null) {
                                                 n.setAttribute("x", lastNode3.getAttribute("x"));
                                                 n.setAttribute("y", lastNode3.getAttribute("y"));
-                                                lastNode3=n;
+                                                lastNode3 = n;
                                             }
                                             nodeset.add(audioInterval.hashCode());
                                         }
                                     }
 
                                     if (lastPlayed[0] != null && !nodeset.contains(lastPlayed[0].hashCode())) {
-                                        System.out.println("adding node");
                                         Node n = AudioParams.graph.addNode(lastPlayed[0].hashCode() + "");
                                         if (lastNode3 != null) {
                                             n.setAttribute("x", lastNode3.getAttribute("x"));
                                             n.setAttribute("y", lastNode3.getAttribute("y"));
-                                            lastNode3=n;
+                                            lastNode3 = n;
                                         }
                                         nodeset.add(lastPlayed[0].hashCode());
                                     }
@@ -257,7 +255,7 @@ public class Audio {
                                         if (!edgemap.contains(ep2)) {
                                             edgemap.add(ep2);
                                             AudioInterval lp = lastPlayed[0];
-                                            AudioInterval ai=audioInterval;
+                                            AudioInterval ai = audioInterval;
                                             new Thread(new Runnable() {
                                                 @Override
                                                 public void run() {
@@ -266,12 +264,11 @@ public class Audio {
                                                     } catch (InterruptedException e) {
                                                         e.printStackTrace();
                                                     }
-                                                    System.out.println("adding edge");
                                                     Edge edge = AudioParams.graph.addEdge("" + (idEdge[0]++), lp.hashCode() + "", ai.hashCode() + "", true);
-                                                    Color hhcolor=ColorHelper.numberToColorPercentage((double)(edge.getNode0().getInDegree()+edge.getNode0().getOutDegree())/10d);
+                                                    Color hhcolor = ColorHelper.numberToColorPercentage((double) (edge.getNode0().getInDegree() + edge.getNode0().getOutDegree()) / 10d);
                                                     edge.getNode0().addAttribute("ui.style", "fill-color: rgb(" + hhcolor.getRed() + "," + hhcolor.getGreen() + "," + hhcolor.getBlue() + ");");
                                                     edge.getNode0().addAttribute("ui.style", "size: 15;");
-                                                    hhcolor=ColorHelper.numberToColorPercentage((double)(edge.getNode1().getInDegree()+edge.getNode1().getOutDegree())/10d);
+                                                    hhcolor = ColorHelper.numberToColorPercentage((double) (edge.getNode1().getInDegree() + edge.getNode1().getOutDegree()) / 10d);
                                                     edge.getNode1().addAttribute("ui.style", "fill-color: rgb(" + hhcolor.getRed() + "," + hhcolor.getGreen() + "," + hhcolor.getBlue() + ");");
                                                     edge.getNode1().addAttribute("ui.style", "size: 15;");
 
@@ -296,17 +293,17 @@ public class Audio {
 //                                        lastNode1 = node1;
                                     }
 
-                                    while (edgemap.size() > 100) {
+                                    while (edgemap.size() > 30) {
                                         EdgePair ep = edgemap.removeFirst();
                                         Edge edge = AudioParams.graph.removeEdge(ep.s + "", ep.e + "");
 
 //                                        if (lastNode1 != null) {
 
-                                        if (edge.getNode0().getDegree() == 0) {
+                                        if (edge.getNode0().getInDegree() + edge.getNode0().getOutDegree() == 0) {
                                             Node n = AudioParams.graph.removeNode(edge.getNode0().getId());
                                             nodeset.remove(Integer.parseInt(n.getId()));
                                         }
-                                        if (edge.getNode1().getDegree() == 0) {
+                                        if (edge.getNode1().getInDegree() + edge.getNode1().getOutDegree() == 0) {
 
                                             Node n = AudioParams.graph.removeNode(edge.getNode1().getId());
                                             nodeset.remove(Integer.parseInt(n.getId()));
