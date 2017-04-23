@@ -198,7 +198,10 @@ public class Audio {
                                     int qsize = 15;
                                     g.setFont(new Font("Arial", Font.BOLD, 20));
                                     while (quit.hasNext()) {
-                                        Segment seg1 = quit.next().te;
+                                        AudioInterval ff = null;
+                                        if (quit != null) ff = quit.next();
+                                        Segment seg1 = null;
+                                        if (ff != null) seg1 = quit.next().te;
                                         g.setColor(ColorHelper.numberToColor((cnt * 100) / lastPlayedQueue.size() + .00001d));
                                         //System.out.println(seg1+"\t"+seg1.getDuration());
                                         int x = (int) ((bi.getWidth() * seg1.getStart()) / maxDuration) - cnt;
@@ -312,10 +315,10 @@ public class Audio {
                                                 nodeset.remove(Integer.parseInt(n.getId()));
                                             }
                                         }
-                                        for (int gg:nodeset){
+                                        for (int gg : nodeset) {
                                             Node node1 = AudioParams.graph.getNode(gg + "");
-                                            if (node1.getInDegree()==0&&node1.getOutDegree()==0){
-                                                new Thread(new Runnable(){
+                                            if (node1.getInDegree() == 0 && node1.getOutDegree() == 0) {
+                                                new Thread(new Runnable() {
                                                     @Override
                                                     public void run() {
                                                         try {
@@ -323,7 +326,7 @@ public class Audio {
                                                         } catch (InterruptedException e) {
                                                             e.printStackTrace();
                                                         }
-                                                        if (node1.getInDegree()==0&&node1.getOutDegree()==0){
+                                                        if (node1.getInDegree() == 0 && node1.getOutDegree() == 0) {
                                                             Node n = AudioParams.graph.removeNode(node1);
                                                             nodeset.remove(Integer.parseInt(n.getId()));
                                                         }
