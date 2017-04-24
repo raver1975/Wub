@@ -53,7 +53,7 @@ public class Audio {
     private int start;
     //    private int lastSeg;
     private Queue<AudioInterval> lastPlayedQueue = new LinkedList<>();
-    private int graphSize = 60;
+    private int graphSize = 30;
 
     public Audio() {
         this(null, 1);
@@ -237,26 +237,30 @@ public class Audio {
                                         gra.clearRect(0, 0, tf.getWidth(), tf.getHeight());
                                         gra.drawImage(bi, 0, 0, null);
                                     }
-                                    if (audioInterval != null&&AudioParams.graph!=null) {
-                                        if (!nodeset.contains(audioInterval.hashCode())) {
-                                            Node n = AudioParams.graph.addNode(audioInterval.hashCode() + "");
-                                            if (lastNode3 != null) {
-                                                n.setAttribute("x", lastNode3.getAttribute("x"));
-                                                n.setAttribute("y", lastNode3.getAttribute("y"));
-                                                lastNode3 = n;
+                                    if (audioInterval != null && AudioParams.graph != null) {
+                                        try {
+                                            if (!nodeset.contains(audioInterval.hashCode())) {
+                                                Node n = AudioParams.graph.addNode(audioInterval.hashCode() + "");
+                                                n.setAttribute("label", audioInterval.segment);
+                                                nodeset.add(audioInterval.hashCode());
                                             }
-                                            nodeset.add(audioInterval.hashCode());
                                         }
+                                        catch (Exception e){}
                                     }
 
                                     if (lastPlayed[0] != null && !nodeset.contains(lastPlayed[0].hashCode())) {
-                                        Node n = AudioParams.graph.addNode(lastPlayed[0].hashCode() + "");
-                                        if (lastNode3 != null) {
-                                            n.setAttribute("x", lastNode3.getAttribute("x"));
-                                            n.setAttribute("y", lastNode3.getAttribute("y"));
+                                        try {
+                                            Node n = AudioParams.graph.addNode(lastPlayed[0].hashCode() + "");
+                                            n.setAttribute("label", audioInterval.segment);
+                                            if (lastNode3 != null) {
+                                                n.setAttribute("x", lastNode3.getAttribute("x"));
+                                                n.setAttribute("y", lastNode3.getAttribute("y"));
+                                            }
                                             lastNode3 = n;
+//                                        }
+                                            nodeset.add(lastPlayed[0].hashCode());
+                                        } catch (Exception e) {
                                         }
-                                        nodeset.add(lastPlayed[0].hashCode());
                                     }
                                     if (lastPlayed[0] != null && audioInterval != null) {
                                         EdgePair ep2 = new EdgePair(lastPlayed[0].hashCode(), audioInterval.hashCode());
@@ -268,18 +272,18 @@ public class Audio {
                                                 @Override
                                                 public void run() {
                                                     try {
-                                                        Thread.sleep(1000);
+                                                        Thread.sleep(200);
                                                     } catch (InterruptedException e) {
                                                         e.printStackTrace();
                                                     }
                                                     try {
                                                         Edge edge = AudioParams.graph.addEdge("" + (idEdge[0]++), lp.hashCode() + "", ai.hashCode() + "", true);
                                                         Color hhcolor = ColorHelper.numberToColorPercentage((double) (edge.getNode0().getInDegree() + edge.getNode0().getOutDegree()) / 10d);
-                                                        edge.getNode0().addAttribute("ui.style", "fill-color: rgb(" + hhcolor.getRed() + "," + hhcolor.getGreen() + "," + hhcolor.getBlue() + ");");
-                                                        edge.getNode0().addAttribute("ui.style", "size: 15;");
+                                                        edge.getNode0().addAttribute("ui.style", "fill-color: rgba(" + hhcolor.getRed() + "," + hhcolor.getGreen() + "," + hhcolor.getBlue() + ",127);");
+                                                        edge.getNode0().addAttribute("ui.style", "size: 25;");
                                                         hhcolor = ColorHelper.numberToColorPercentage((double) (edge.getNode1().getInDegree() + edge.getNode1().getOutDegree()) / 10d);
-                                                        edge.getNode1().addAttribute("ui.style", "fill-color: rgb(" + hhcolor.getRed() + "," + hhcolor.getGreen() + "," + hhcolor.getBlue() + ");");
-                                                        edge.getNode1().addAttribute("ui.style", "size: 15;");
+                                                        edge.getNode1().addAttribute("ui.style", "fill-color: rgba(255,0,0,128);");
+                                                        edge.getNode1().addAttribute("ui.style", "size: 35;");
                                                     } catch (Exception e) {
                                                     }
                                                 }
@@ -287,62 +291,64 @@ public class Audio {
 
                                         }
                                     }
-
-                                    int val = 0;
-                                    Color color = ColorHelper.numberToColorPercentage(.5d);
-//                                    if (lastNode1 != null) {
-//                                        lastNode1.addAttribute("ui.style", "fill-color: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ");");
-//                                        lastNode1.addAttribute("ui.style", "size: 15;");
+//                                    if (AudioParams.graph != null) {
+//                                        Node node1 = AudioParams.graph.getNode(audioInterval.hashCode() + "");
+//                                        if (node1 != null) {
+//                                            node1.addAttribute("ui.style", "fill-color: rgba(127,127,127,128);");
+//                                            node1.addAttribute("ui.style", "size:35;");
+//                                        }
+////                                        lastNode1 = node1;
 //                                    }
-                                    if (AudioParams.graph != null) {
-                                        Node node1 = AudioParams.graph.getNode(audioInterval.hashCode() + "");
-                                        if (node1 != null) {
-                                            node1.addAttribute("ui.style", "fill-color: rgb(255,0,0);");
-                                            node1.addAttribute("ui.style", "size:25;");
-                                        }
-//                                        lastNode1 = node1;
-                                    }
                                     try {
                                         while (edgemap.size() > graphSize) {
 
                                             EdgePair ep = edgemap.removeFirst();
                                             Edge edge = AudioParams.graph.removeEdge(ep.s + "", ep.e + "");
+                                            Color hhcolor = ColorHelper.numberToColorPercentage((double) (edge.getNode0().getInDegree() + edge.getNode0().getOutDegree()) / 10d);
+                                            edge.getNode0().addAttribute("ui.style", "fill-color: rgba(" + hhcolor.getRed() + "," + hhcolor.getGreen() + "," + hhcolor.getBlue() + ",127);");
+                                            edge.getNode0().addAttribute("ui.style", "size: 25;");
+                                            hhcolor = ColorHelper.numberToColorPercentage((double) (edge.getNode1().getInDegree() + edge.getNode1().getOutDegree()) / 10d);
+                                            edge.getNode1().addAttribute("ui.style", "fill-color: rgba(" + hhcolor.getRed() + "," + hhcolor.getGreen() + "," + hhcolor.getBlue() + ",127);");
+                                            edge.getNode1().addAttribute("ui.style", "size: 25;");
 
 //                                        if (lastNode1 != null) {
-
-                                            if (edge.getNode0().getInDegree() + edge.getNode0().getOutDegree() == 0) {
-                                                Node n = AudioParams.graph.removeNode(edge.getNode0().getId());
-                                                nodeset.remove(Integer.parseInt(n.getId()));
+                                            try {
+                                                if (edge.getNode0().getInDegree() + edge.getNode0().getOutDegree() == 0) {
+                                                    Node n = AudioParams.graph.removeNode(edge.getNode0().getId());
+                                                    nodeset.remove(Integer.parseInt(n.getId()));
+                                                }
+                                            } catch (Exception e) {
                                             }
-                                            if (edge.getNode1().getInDegree() + edge.getNode1().getOutDegree() == 0) {
-
-                                                Node n = AudioParams.graph.removeNode(edge.getNode1().getId());
-                                                nodeset.remove(Integer.parseInt(n.getId()));
+                                            try {
+                                                if (edge.getNode1().getInDegree() + edge.getNode1().getOutDegree() == 0) {
+                                                    Node n = AudioParams.graph.removeNode(edge.getNode1().getId());
+                                                    nodeset.remove(Integer.parseInt(n.getId()));
+                                                }
+                                            } catch (Exception e) {
                                             }
                                         }
-                                        /*for (int gg : nodeset) {
-                                            Node node1 = AudioParams.graph.getNode(gg + "");
-                                            if ((node1.getInDegree() == 0 && node1.getOutDegree() == 0) || (node1.hasEdgeFrom(node1) || node1.hasEdgeToward(node1))) {
-                                                new Thread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        try {
-                                                            Thread.sleep(5000);
-                                                        } catch (InterruptedException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        try {
-                                                            nodeset.remove(Integer.parseInt(node1.getId()));
-                                                            AudioParams.graph.removeNode(node1);
+//                                        for (int gg : nodeset) {
+//                                            Node node1 = AudioParams.graph.getNode(gg + "");
+//                                            if ((node1.getInDegree() == 0 && node1.getOutDegree() == 0) || (node1.hasEdgeFrom(node1) || node1.hasEdgeToward(node1))) {
+//                                                new Thread(new Runnable() {
+//                                                    @Override
+//                                                    public void run() {
+//                                                        try {
+//                                                            Thread.sleep(5000);
+//                                                        } catch (InterruptedException e) {
+//                                                            e.printStackTrace();
+//                                                        }
+//                                                        try {
+//                                                            nodeset.remove(Integer.parseInt(node1.getId()));
+//                                                            AudioParams.graph.removeNode(node1);
+//
+//                                                        } catch (Exception e) {
+//                                                        }
+//                                                    }
+//                                                }).start();
+//                                            }
+//                                        }
 
-                                                        } catch (Exception e) {
-                                                        }
-                                                    }
-                                                }).start();
-
-                                            }
-
-                                        }*/
 
                                     } catch (Exception e) {
                                     }
@@ -352,7 +358,9 @@ public class Audio {
 //                                System.out.println("hetre2");
 
 
-                            }).start();
+                            }).
+
+                                    start();
                         }
 
 

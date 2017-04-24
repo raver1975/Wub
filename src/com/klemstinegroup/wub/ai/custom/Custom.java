@@ -59,11 +59,12 @@ public class Custom implements KeyListener {
                 AudioParams.graph.addAttribute("ui.antialias");
                 Viewer viewer = new Viewer(AudioParams.graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
                 SpringBox sb = new SpringBox();
-                sb.setForce(1.5f);
-//        sb.setQuality(0);
+                sb.setForce(.8f);
+                sb.setQuality(1);
+                sb.setGravityFactor(.1f);
                 viewer.enableAutoLayout(sb);
-                ViewPanel vp=viewer.addDefaultView(false);
-                vp.setSize(width,height);
+                ViewPanel vp = viewer.addDefaultView(false);
+                vp.setSize(width, height);
                 jframe.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosing(WindowEvent windowEvent) {
@@ -159,7 +160,7 @@ public class Custom implements KeyListener {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                jframe.setSize(jframe.getWidth()-1,jframe.getHeight()-1);
+                jframe.setSize(jframe.getWidth() - 1, jframe.getHeight() - 1);
             }
         }).start();
     }
