@@ -732,16 +732,13 @@ public class MusicCanvas extends JComponent implements MouseListener, MouseMotio
 
         if (e.getKeyChar() == ' ')
             au.pause = !au.pause;
-        else if (e.isAltDown()) {
+        else if (e.isAltDown() && Character.isAlphabetic((char) e.getKeyCode())) {
             au.midiMap.put((char) e.getKeyCode() + "", hovering);
-        } else if (e.isControlDown()) {
+        } else if (e.isControlDown() && Character.isAlphabetic((char) e.getKeyCode())) {
             au.midiMap.remove((char) e.getKeyCode() + "");
-
-        }
-        else if (e.isShiftDown()) {
+        } else if (e.isShiftDown() && Character.isAlphabetic((char) e.getKeyCode())) {
             CentralCommand.key((char) e.getKeyCode() + "");
-        }
-        else if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+        } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
             AudioObject.factory();
         else if (e.getKeyCode() == KeyEvent.VK_L)
             au.loop = !au.loop;
