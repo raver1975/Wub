@@ -53,7 +53,7 @@ public class Audio {
     private int start;
     //    private int lastSeg;
     private Queue<AudioInterval> lastPlayedQueue = new LinkedList<>();
-    private int graphSize = 40;
+    private int graphSize = 60;
 
     public Audio() {
         this(null, 1);
@@ -237,7 +237,7 @@ public class Audio {
                                         gra.clearRect(0, 0, tf.getWidth(), tf.getHeight());
                                         gra.drawImage(bi, 0, 0, null);
                                     }
-                                    if (audioInterval != null) {
+                                    if (audioInterval != null&&AudioParams.graph!=null) {
                                         if (!nodeset.contains(audioInterval.hashCode())) {
                                             Node n = AudioParams.graph.addNode(audioInterval.hashCode() + "");
                                             if (lastNode3 != null) {

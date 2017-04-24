@@ -79,8 +79,11 @@ public class SamplingGraph {
 		BufferedImage bufferedImage = new BufferedImage(w + 1, h + 1, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = bufferedImage.createGraphics();
 
-		//transparent
-		g2.setBackground(new Color(255, 255, 255, 255));
+//		transparent
+//		if (whiteBackground){g2.setBackground(new Color(255, 255, 255, 255));}
+//		else{
+			g2.setBackground(new Color(0, 0, 0, 0));
+//		}
 		//glossy
 //		g2.setBackground(new Color(50, 50, 150, 255));
 		g2.setColor(Color.white);
