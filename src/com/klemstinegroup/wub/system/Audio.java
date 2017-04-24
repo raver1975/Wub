@@ -53,6 +53,7 @@ public class Audio {
     private int start;
     //    private int lastSeg;
     private Queue<AudioInterval> lastPlayedQueue = new LinkedList<>();
+    private int graphSize = 40;
 
     public Audio() {
         this(null, 1);
@@ -197,18 +198,22 @@ public class Audio {
                                     int cnt = 0;
                                     int qsize = 15;
                                     g.setFont(new Font("Arial", Font.BOLD, 20));
-                                    while (quit.hasNext()) {
+                                    while (quit != null && quit.hasNext()) {
                                         AudioInterval ff = null;
-                                        if (quit != null) ff = quit.next();
+                                        ff = quit.next();
                                         Segment seg1 = null;
-                                        if (ff != null) seg1 = quit.next().te;
-                                        g.setColor(ColorHelper.numberToColor((cnt * 100) / lastPlayedQueue.size() + .00001d));
+                                        if (ff != null) seg1 = ff.te;
+                                        int zz = lastPlayedQueue.size();
+                                        if (zz == 0) zz = 1;
+                                        g.setColor(ColorHelper.numberToColor((cnt * 100) / zz));
                                         //System.out.println(seg1+"\t"+seg1.getDuration());
-                                        int x = (int) ((bi.getWidth() * seg1.getStart()) / maxDuration) - cnt;
-                                        int y = bi.getHeight() / 2 - (bi.getHeight() / 2) * cnt / qsize;
-                                        int w = (int) ((bi.getWidth() * seg1.getDuration() * cnt * 2) / maxDuration);
-                                        int h = (bi.getHeight()) * cnt / qsize;
-                                        g.fillRect(x, y, w, h);
+                                        if (seg1 != null) {
+                                            int x = (int) ((bi.getWidth() * seg1.getStart()) / maxDuration) - cnt;
+                                            int y = bi.getHeight() / 2 - (bi.getHeight() / 2) * cnt / qsize;
+                                            int w = (int) ((bi.getWidth() * seg1.getDuration() * cnt * 2) / maxDuration);
+                                            int h = (bi.getHeight()) * cnt / qsize;
+                                            g.fillRect(x, y, w, h);
+                                        }
                                         cnt++;
                                     }
                                     while (lastPlayedQueue1.size() > qsize) {
@@ -298,7 +303,7 @@ public class Audio {
 //                                        lastNode1 = node1;
                                     }
                                     try {
-                                        while (edgemap.size() > 100) {
+                                        while (edgemap.size() > graphSize) {
 
                                             EdgePair ep = edgemap.removeFirst();
                                             Edge edge = AudioParams.graph.removeEdge(ep.s + "", ep.e + "");
@@ -315,9 +320,9 @@ public class Audio {
                                                 nodeset.remove(Integer.parseInt(n.getId()));
                                             }
                                         }
-                                        for (int gg : nodeset) {
+                                        /*for (int gg : nodeset) {
                                             Node node1 = AudioParams.graph.getNode(gg + "");
-                                            if (node1.getInDegree() == 0 && node1.getOutDegree() == 0) {
+                                            if ((node1.getInDegree() == 0 && node1.getOutDegree() == 0) || (node1.hasEdgeFrom(node1) || node1.hasEdgeToward(node1))) {
                                                 new Thread(new Runnable() {
                                                     @Override
                                                     public void run() {
@@ -326,16 +331,18 @@ public class Audio {
                                                         } catch (InterruptedException e) {
                                                             e.printStackTrace();
                                                         }
-                                                        if (node1.getInDegree() == 0 && node1.getOutDegree() == 0) {
-                                                            Node n = AudioParams.graph.removeNode(node1);
-                                                            nodeset.remove(Integer.parseInt(n.getId()));
+                                                        try {
+                                                            nodeset.remove(Integer.parseInt(node1.getId()));
+                                                            AudioParams.graph.removeNode(node1);
+
+                                                        } catch (Exception e) {
                                                         }
                                                     }
                                                 }).start();
 
                                             }
 
-                                        }
+                                        }*/
 
                                     } catch (Exception e) {
                                     }

@@ -80,10 +80,10 @@ public class SamplingGraph {
 		Graphics2D g2 = bufferedImage.createGraphics();
 
 		//transparent
-		g2.setBackground(new Color(0, 0, 0, 0));
+		g2.setBackground(new Color(255, 255, 255, 255));
 		//glossy
 //		g2.setBackground(new Color(50, 50, 150, 255));
-		g2.setColor(Color.black);
+		g2.setColor(Color.white);
 		g2.clearRect(0, 0, w, h);
 
 
@@ -122,7 +122,7 @@ public class SamplingGraph {
 			}
 
 		}
-		g2.setColor(Color.white);
+		g2.setColor(Color.black);
 		for (int i = 1; i < lines.size(); i++) {
 			Line2D line = lines.get(i);
 

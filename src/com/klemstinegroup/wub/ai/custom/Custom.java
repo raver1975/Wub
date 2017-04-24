@@ -41,7 +41,7 @@ public class Custom implements KeyListener {
 
     public Custom(Song song) {
         Canvas tf = new Canvas();
-        tf.setBackground(new Color(0, 0, 0));
+        tf.setBackground(new Color(255, 255, 255));
         tf.setSize(width, height);
 //        JTextArea jta = new JTextArea(4, 20);
         JFrame jframe = new JFrame("Wub");
