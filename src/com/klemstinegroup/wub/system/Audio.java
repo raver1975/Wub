@@ -237,46 +237,48 @@ public class Audio {
                                         gra.clearRect(0, 0, tf.getWidth(), tf.getHeight());
                                         gra.drawImage(bi, 0, 0, null);
                                     }
-                                    if (audioInterval != null && AudioParams.graph != null) {
-                                        try {
-                                            if (!nodeset.contains(audioInterval.hashCode())) {
-                                                Node n = AudioParams.graph.addNode(audioInterval.hashCode() + "");
-                                                n.setAttribute("label", audioInterval.segment);
-                                                nodeset.add(audioInterval.hashCode());
+                                    if (!BeautifulKMGSRandReducefromAudioObject.running) {
+                                        if (audioInterval != null && AudioParams.graph != null) {
+                                            try {
+                                                if (!nodeset.contains(audioInterval.hashCode())) {
+                                                    Node n = AudioParams.graph.addNode(audioInterval.hashCode() + "");
+                                                    n.setAttribute("label", audioInterval.segment);
+                                                    nodeset.add(audioInterval.hashCode());
+                                                }
+                                            } catch (Exception e) {
                                             }
                                         }
-                                        catch (Exception e){}
-                                    }
 
-                                    if (lastPlayed[0] != null && !nodeset.contains(lastPlayed[0].hashCode())) {
-                                        try {
-                                            Node n = AudioParams.graph.addNode(lastPlayed[0].hashCode() + "");
-                                            n.setAttribute("label", audioInterval.segment);
-                                            if (lastNode3 != null) {
-                                                n.setAttribute("x", lastNode3.getAttribute("x"));
-                                                n.setAttribute("y", lastNode3.getAttribute("y"));
-                                            }
-                                            lastNode3 = n;
+                                        if (lastPlayed[0] != null && !nodeset.contains(lastPlayed[0].hashCode())) {
+                                            try {
+                                                Node n = AudioParams.graph.addNode(lastPlayed[0].hashCode() + "");
+                                                n.setAttribute("label", audioInterval.segment);
+                                                if (lastNode3 != null) {
+                                                    n.setAttribute("x", lastNode3.getAttribute("x"));
+                                                    n.setAttribute("y", lastNode3.getAttribute("y"));
+                                                }
+                                                lastNode3 = n;
 //                                        }
-                                            nodeset.add(lastPlayed[0].hashCode());
-                                        } catch (Exception e) {
+                                                nodeset.add(lastPlayed[0].hashCode());
+                                            } catch (Exception e) {
+                                            }
                                         }
-                                    }
-                                    if (lastPlayed[0] != null && audioInterval != null) {
-                                        EdgePair ep2 = new EdgePair(lastPlayed[0].hashCode(), audioInterval.hashCode());
-                                        if (!edgemap.contains(ep2)) {
-                                            edgemap.add(ep2);
-                                            AudioInterval lp = lastPlayed[0];
-                                            AudioInterval ai = audioInterval;
-                                            new Thread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    try {
-                                                        Thread.sleep(200);
-                                                    } catch (InterruptedException e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                    try {
+                                        if (lastPlayed[0] != null && audioInterval != null) {
+                                            EdgePair ep2 = new EdgePair(lastPlayed[0].hashCode(), audioInterval.hashCode());
+                                            if (!edgemap.contains(ep2)) {
+                                                edgemap.add(ep2);
+                                                AudioInterval lp = lastPlayed[0];
+                                                AudioInterval ai = audioInterval;
+//                                            new Thread(new Runnable() {
+//                                                @Override
+//                                                public void run() {
+//                                                    try {
+//                                                        Thread.sleep(200);
+//                                                    } catch (InterruptedException e) {
+//                                                        e.printStackTrace();
+//                                                    }
+                                                try {
+                                                    if (AudioParams.graph.getNode(lp.hashCode() + "") != null && AudioParams.graph.getNode(ai.hashCode() + "") != null) {
                                                         Edge edge = AudioParams.graph.addEdge("" + (idEdge[0]++), lp.hashCode() + "", ai.hashCode() + "", true);
                                                         Color hhcolor = ColorHelper.numberToColorPercentage((double) (edge.getNode0().getInDegree() + edge.getNode0().getOutDegree()) / 10d);
                                                         edge.getNode0().addAttribute("ui.style", "fill-color: rgba(" + hhcolor.getRed() + "," + hhcolor.getGreen() + "," + hhcolor.getBlue() + ",127);");
@@ -284,14 +286,27 @@ public class Audio {
                                                         hhcolor = ColorHelper.numberToColorPercentage((double) (edge.getNode1().getInDegree() + edge.getNode1().getOutDegree()) / 10d);
                                                         edge.getNode1().addAttribute("ui.style", "fill-color: rgba(255,0,0,128);");
                                                         edge.getNode1().addAttribute("ui.style", "size: 35;");
-                                                    } catch (Exception e) {
                                                     }
+                                                } catch (Exception e) {
                                                 }
-                                            }).start();
+//                                                }
+//                                            }).start();
+
+                                            }
+                                        }
+                                    } else {
+                                        Node n = AudioParams.graph.getNode(audioInterval.hashCode() + "");
+                                        n.addAttribute("ui.style", "fill-color: rgba(255,0,0,255);");
+                                        n.addAttribute("ui.style", "size: 25;");
+                                        if (lastPlayed[0] != null) {
+                                            n = AudioParams.graph.getNode(lastPlayed[0].hashCode() + "");
+                                            n.addAttribute("ui.style", "fill-color: rgba(0,0,255,255);");
+                                            n.addAttribute("ui.style", "size: 10;");
 
                                         }
                                     }
-//                                    if (AudioParams.graph != null) {
+//                                    if (Aud
+// ioParams.graph != null) {
 //                                        Node node1 = AudioParams.graph.getNode(audioInterval.hashCode() + "");
 //                                        if (node1 != null) {
 //                                            node1.addAttribute("ui.style", "fill-color: rgba(127,127,127,128);");
@@ -315,14 +330,14 @@ public class Audio {
                                             try {
                                                 if (edge.getNode0().getInDegree() + edge.getNode0().getOutDegree() == 0) {
                                                     Node n = AudioParams.graph.removeNode(edge.getNode0().getId());
-                                                    nodeset.remove(Integer.parseInt(n.getId()));
+                                                    nodeset.remove((Integer) Integer.parseInt(n.getId()));
                                                 }
                                             } catch (Exception e) {
                                             }
                                             try {
                                                 if (edge.getNode1().getInDegree() + edge.getNode1().getOutDegree() == 0) {
                                                     Node n = AudioParams.graph.removeNode(edge.getNode1().getId());
-                                                    nodeset.remove(Integer.parseInt(n.getId()));
+                                                    nodeset.remove((Integer) Integer.parseInt(n.getId()));
                                                 }
                                             } catch (Exception e) {
                                             }

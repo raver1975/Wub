@@ -31,8 +31,11 @@ public class BeautifulKMGSRandReducefromAudioObject {
 
     private static int width = 1200;
     private static int height = 800;
+    public static boolean running=false;
 
-    public static void bkrrao(Song song) {
+    public static void bkrrao(Song song)
+    {
+        running=true;
 //        AudioParams.firstSong = song;
         new Thread(new Runnable() {
             @Override
@@ -113,7 +116,7 @@ public class BeautifulKMGSRandReducefromAudioObject {
                 System.out.println(" kept clusters=" + ((int) (totsegm * Settings.segmentsKept)));
                 AudioParams.numClusters = ((int) (totsegm * Settings.segmentsKept));
                 tf = new Canvas();
-                tf.setBackground(Color.black);
+                tf.setBackground(Color.WHITE);
                 tf.setFont(new Font("Arial", Font.BOLD, 300));
 
                 HashMap<AudioInterval, AudioInterval> map1 = makeMap(totsegm - Settings.decreaseClustersBy, song);
