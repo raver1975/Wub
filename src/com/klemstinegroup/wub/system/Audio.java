@@ -50,7 +50,7 @@ public class Audio {
     public static ByteArrayOutputStream baos = new ByteArrayOutputStream();
     //    Node lastNode1 = null;
 //    Node lastNode2 = null;
-    Node lastNode3 = null;
+//    Node lastNode3 = null;
     private int start;
     //    private int lastSeg;
     private Queue<AudioInterval> lastPlayedQueue = new LinkedList<>();
@@ -244,24 +244,32 @@ public class Audio {
                                                 if (!nodeset.contains(audioInterval.hashCode())) {
                                                     Node n = AudioParams.graph.addNode(audioInterval.hashCode() + "");
                                                     n.setAttribute("label", audioInterval.segment);
+                                                    n.addAttribute("ui.style", "fill-color: rgba(0,255,0,255);");
+                                                    n.addAttribute("ui.style", "size: 25;");
                                                     nodeset.add(audioInterval.hashCode());
+                                                } else {
+                                                    Node n = AudioParams.graph.getNode(audioInterval.hashCode() + "");
+                                                    if (n != null) n.removeAttribute("ui.hide");
                                                 }
                                             } catch (Exception e) {
                                             }
                                         }
 
-                                        if (lastPlayed[0] != null && !nodeset.contains(lastPlayed[0].hashCode())) {
-                                            try {
-                                                Node n = AudioParams.graph.addNode(lastPlayed[0].hashCode() + "");
-                                                n.setAttribute("label", audioInterval.segment);
-                                                if (lastNode3 != null) {
-                                                    n.setAttribute("x", lastNode3.getAttribute("x"));
-                                                    n.setAttribute("y", lastNode3.getAttribute("y"));
-                                                }
-                                                lastNode3 = n;
+                                        if (lastPlayed[0] != null) {
+                                            if (!nodeset.contains(lastPlayed[0].hashCode())) {
+                                                try {
+                                                    Node n = AudioParams.graph.addNode(lastPlayed[0].hashCode() + "");
+                                                    n.setAttribute("label", audioInterval.segment);
+                                                    n.addAttribute("ui.style", "fill-color: rgba(0,255,0,255);");
+                                                    n.addAttribute("ui.style", "size: 25;");
+//
 //                                        }
-                                                nodeset.add(lastPlayed[0].hashCode());
-                                            } catch (Exception e) {
+                                                    nodeset.add(lastPlayed[0].hashCode());
+                                                } catch (Exception e) {
+                                                }
+                                            } else {
+                                                Node n = AudioParams.graph.getNode(lastPlayed[0].hashCode() + "");
+                                                if (n != null) n.removeAttribute("ui.hide");
                                             }
                                         }
                                         if (lastPlayed[0] != null && audioInterval != null) {
@@ -282,16 +290,23 @@ public class Audio {
                                                     @Override
                                                     public void run() {
                                                         try {
-                                                            Thread.sleep(200);
+                                                            Thread.sleep(100);
                                                             if (AudioParams.graph.getNode(lp.hashCode() + "") != null && AudioParams.graph.getNode(ai.hashCode() + "") != null) {
                                                                 Edge edge = AudioParams.graph.addEdge("" + (idEdge[0]++), lp.hashCode() + "", ai.hashCode() + "", true);
-                                                                Color hhcolor = ColorHelper.numberToColorPercentage((double) (edge.getNode0().getInDegree() + edge.getNode0().getOutDegree()) / 10d);
-                                                                edge.getNode0().addAttribute("ui.style", "fill-color: rgba(" + hhcolor.getRed() + "," + hhcolor.getGreen() + "," + hhcolor.getBlue() + ",127);");
-                                                                edge.getNode0().addAttribute("ui.style", "size: 25;");
-                                                                hhcolor = ColorHelper.numberToColorPercentage((double) (edge.getNode1().getInDegree() + edge.getNode1().getOutDegree()) / 10d);
-                                                                edge.getNode1().addAttribute("ui.style", "fill-color: rgba(255,0,0,128);");
-                                                                edge.getNode1().addAttribute("ui.style", "size: 35;");
+                                                                if (edge != null) {
+                                                                    if (edge.getNode0() != null) {
+                                                                        Color hhcolor = ColorHelper.numberToColorPercentage((double) (edge.getNode0().getInDegree() + edge.getNode0().getOutDegree()) / 10d);
+                                                                        edge.getNode0().addAttribute("ui.style", "fill-color: rgba(" + hhcolor.getRed() + "," + hhcolor.getGreen() + "," + hhcolor.getBlue() + ",127);");
+                                                                        edge.getNode0().addAttribute("ui.style", "size: 25;");
+                                                                    }
+                                                                    if (edge.getNode1() != null) {
+                                                                        Color hhcolor = ColorHelper.numberToColorPercentage((double) (edge.getNode1().getInDegree() + edge.getNode1().getOutDegree()) / 10d);
+                                                                        edge.getNode1().addAttribute("ui.style", "fill-color: rgba(255,0,0,128);");
+                                                                        edge.getNode1().addAttribute("ui.style", "size: 35;");
+                                                                    }
+                                                                }
                                                             }
+                                                        } catch (org.graphstream.graph.EdgeRejectedException e) {
                                                         } catch (ElementNotFoundException e) {
                                                         } catch (InterruptedException e) {
                                                             e.printStackTrace();
@@ -329,25 +344,30 @@ public class Audio {
 
                                             EdgePair ep = edgemap.removeFirst();
                                             Edge edge = AudioParams.graph.removeEdge(ep.s + "", ep.e + "");
-                                            Color hhcolor = ColorHelper.numberToColorPercentage((double) (edge.getNode0().getInDegree() + edge.getNode0().getOutDegree()) / 10d);
-                                            edge.getNode0().addAttribute("ui.style", "fill-color: rgba(" + hhcolor.getRed() + "," + hhcolor.getGreen() + "," + hhcolor.getBlue() + ",127);");
-                                            edge.getNode0().addAttribute("ui.style", "size: 25;");
-                                            hhcolor = ColorHelper.numberToColorPercentage((double) (edge.getNode1().getInDegree() + edge.getNode1().getOutDegree()) / 10d);
-                                            edge.getNode1().addAttribute("ui.style", "fill-color: rgba(" + hhcolor.getRed() + "," + hhcolor.getGreen() + "," + hhcolor.getBlue() + ",127);");
-                                            edge.getNode1().addAttribute("ui.style", "size: 25;");
-
+                                            if (edge.getNode0() != null) {
+                                                Color hhcolor = ColorHelper.numberToColorPercentage((double) (edge.getNode0().getInDegree() + edge.getNode0().getOutDegree()) / 10d);
+                                                edge.getNode0().addAttribute("ui.style", "fill-color: rgba(" + hhcolor.getRed() + "," + hhcolor.getGreen() + "," + hhcolor.getBlue() + ",127);");
+                                                edge.getNode0().addAttribute("ui.style", "size: 25;");
+                                            }
+                                            if (edge.getNode1() != null) {
+                                                Color hhcolor = ColorHelper.numberToColorPercentage((double) (edge.getNode1().getInDegree() + edge.getNode1().getOutDegree()) / 10d);
+                                                edge.getNode1().addAttribute("ui.style", "fill-color: rgba(" + hhcolor.getRed() + "," + hhcolor.getGreen() + "," + hhcolor.getBlue() + ",127);");
+                                                edge.getNode1().addAttribute("ui.style", "size: 25;");
+                                            }
 //                                        if (lastNode1 != null) {
                                             try {
                                                 if (edge.getNode0().getInDegree() + edge.getNode0().getOutDegree() == 0) {
-                                                    Node n = AudioParams.graph.removeNode(edge.getNode0().getId());
-                                                    nodeset.remove((Integer) Integer.parseInt(n.getId()));
+                                                    Node n = AudioParams.graph.getNode(edge.getNode0().getId());
+//                                                    nodeset.remove((Integer) Integer.parseInt(n.getId()));
+                                                    n.addAttribute("ui.hide");
                                                 }
                                             } catch (Exception e) {
                                             }
                                             try {
                                                 if (edge.getNode1().getInDegree() + edge.getNode1().getOutDegree() == 0) {
-                                                    Node n = AudioParams.graph.removeNode(edge.getNode1().getId());
-                                                    nodeset.remove((Integer) Integer.parseInt(n.getId()));
+                                                    Node n = AudioParams.graph.getNode(edge.getNode1().getId());
+//                                                    nodeset.remove((Integer) Integer.parseInt(n.getId()));
+                                                    n.addAttribute("ui.hide");
                                                 }
                                             } catch (Exception e) {
                                             }

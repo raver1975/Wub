@@ -59,8 +59,8 @@ public class Custom implements KeyListener {
                 AudioParams.graph.addAttribute("ui.antialias");
                 Viewer viewer = new Viewer(AudioParams.graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
                 SpringBox sb = new SpringBox();
-                sb.setForce(.8f);
-                sb.setQuality(1);
+                sb.setForce(1f);
+                sb.setQuality(1f);
                 sb.setGravityFactor(.1f);
                 viewer.enableAutoLayout(sb);
                 ViewPanel vp = viewer.addDefaultView(false);
@@ -315,11 +315,11 @@ public class Custom implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyChar() == 'c') {
-            AudioParams.graph.clear();
-            Audio.nodeset.clear();
-            Audio.edgemap.clear();
-        }
+//        if (e.getKeyChar() == 'c') {
+//            AudioParams.graph.clear();
+//            Audio.nodeset.clear();
+//            Audio.edgemap.clear();
+//        }
         if (e.getKeyChar() == ' ') audio.pause = !audio.pause;
     }
 
