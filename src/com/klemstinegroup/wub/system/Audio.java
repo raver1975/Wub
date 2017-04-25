@@ -251,6 +251,7 @@ public class Audio {
                                                     Node n = AudioParams.graph.getNode(audioInterval.hashCode() + "");
                                                     if (n != null) n.removeAttribute("ui.hide");
                                                 }
+
                                             } catch (Exception e) {
                                             }
                                         }
@@ -301,11 +302,26 @@ public class Audio {
                                                                     }
                                                                     if (edge.getNode1() != null) {
                                                                         Color hhcolor = ColorHelper.numberToColorPercentage((double) (edge.getNode1().getInDegree() + edge.getNode1().getOutDegree()) / 10d);
-                                                                        edge.getNode1().addAttribute("ui.style", "fill-color: rgba(255,0,0,128);");
-                                                                        edge.getNode1().addAttribute("ui.style", "size: 35;");
+                                                                        edge.getNode1().addAttribute("ui.style", "fill-color: rgba(" + hhcolor.getRed() + "," + hhcolor.getGreen() + "," + hhcolor.getBlue() + ",127);");
+                                                                        edge.getNode1().addAttribute("ui.style", "size: 25;");
                                                                     }
                                                                 }
                                                             }
+                                                            Node n = AudioParams.graph.getNode(audioInterval.hashCode() + "");
+                                                            if (n!=null) {
+                                                                n.addAttribute("ui.style", "fill-color: rgba(127,127,127,127);");
+                                                                n.addAttribute("ui.style", "size: 25;");
+                                                            }
+                                                            if (lastPlayed[0] != null) {
+                                                                n = AudioParams.graph.getNode(lastPlayed[0].hashCode() + "");
+                                                                if (n!=null) {
+                                                                    Color hhcolor = ColorHelper.numberToColorPercentage((double) (n.getInDegree() + n.getOutDegree()) / 10d);
+                                                                    n.addAttribute("ui.style", "fill-color: rgba(" + hhcolor.getRed() + "," + hhcolor.getGreen() + "," + hhcolor.getBlue() + ",127);");
+                                                                    n.addAttribute("ui.style", "fill-color: rgba(255,0,0,255);");
+                                                                    n.addAttribute("ui.style", "size: 35;");
+                                                                }
+                                                            }
+
                                                         } catch (org.graphstream.graph.EdgeRejectedException e) {
                                                         } catch (ElementNotFoundException e) {
                                                         } catch (InterruptedException e) {
