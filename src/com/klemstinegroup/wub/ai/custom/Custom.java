@@ -33,6 +33,7 @@ public class Custom implements KeyListener {
     int width = 1200;
     int height = 400;
     int numClusters = 200;
+    boolean generateGraph=false;
 
     public Custom() {
         this(SongManager.getRandom((int) (Math.random() * 1300)));
@@ -54,33 +55,42 @@ public class Custom implements KeyListener {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                AudioParams.graph = new SingleGraph("id");
-                AudioParams.graph.addAttribute("ui.quality");
-                AudioParams.graph.addAttribute("ui.antialias");
-                Viewer viewer = new Viewer(AudioParams.graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-                SpringBox sb = new SpringBox();
-                sb.setForce(1f);
-                sb.setQuality(1f);
-                sb.setGravityFactor(.1f);
-                viewer.enableAutoLayout(sb);
-                ViewPanel vp = viewer.addDefaultView(false);
-                vp.setSize(width, height);
-                jframe.addWindowListener(new WindowAdapter() {
-                    @Override
-                    public void windowClosing(WindowEvent windowEvent) {
-                        Audio.stop();
 
-                    }
-                });
+                if (generateGraph) {
+                    AudioParams.graph = new SingleGraph("id");
+                    AudioParams.graph.addAttribute("ui.quality");
+                    AudioParams.graph.addAttribute("ui.antialias");
+                    Viewer viewer = new Viewer(AudioParams.graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+                    SpringBox sb = new SpringBox();
+                    sb.setForce(1f);
+                    sb.setQuality(1f);
+                    sb.setGravityFactor(.1f);
+                    viewer.enableAutoLayout(sb);
+                    ViewPanel vp = viewer.addDefaultView(false);
+                    vp.setSize(width, height);
+                    jframe.addWindowListener(new WindowAdapter() {
+                        @Override
+                        public void windowClosing(WindowEvent windowEvent) {
+                            Audio.stop();
 
-                jframe.getContentPane().add("North", tf);
-                jframe.getContentPane().add("Center", vp);
+                        }
+                    });
+
+                    jframe.getContentPane().add("North", tf);
+                    jframe.getContentPane().add("Center", vp);
 //        tf.setMinimumSize(new Dimension(100, 100));
 //        tf.setPreferredSize(new Dimension(100, 100));
+
+
+
+                    vp.addKeyListener(Custom.this);
+                }
+                else{
+                    jframe.getContentPane().add("Center", tf);
+                }
                 jframe.invalidate();
                 tf.addKeyListener(Custom.this);
                 jframe.addKeyListener(Custom.this);
-                vp.addKeyListener(Custom.this);
             }
         }).start();
 

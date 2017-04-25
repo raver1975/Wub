@@ -54,7 +54,7 @@ public class Audio {
     private int start;
     //    private int lastSeg;
     private Queue<AudioInterval> lastPlayedQueue = new LinkedList<>();
-    private int graphSize = 30;
+    private int graphSize = 100;
 
     public Audio() {
         this(null, 1);
@@ -238,47 +238,48 @@ public class Audio {
                                         gra.clearRect(0, 0, tf.getWidth(), tf.getHeight());
                                         gra.drawImage(bi, 0, 0, null);
                                     }
-                                    if (!BeautifulKMGSRandReducefromAudioObject.running) {
-                                        if (audioInterval != null && AudioParams.graph != null) {
-                                            try {
-                                                if (!nodeset.contains(audioInterval.hashCode())) {
-                                                    Node n = AudioParams.graph.addNode(audioInterval.hashCode() + "");
-                                                    n.setAttribute("label", audioInterval.segment);
-                                                    n.addAttribute("ui.style", "fill-color: rgba(0,255,0,255);");
-                                                    n.addAttribute("ui.style", "size: 25;");
-                                                    nodeset.add(audioInterval.hashCode());
-                                                } else {
-                                                    Node n = AudioParams.graph.getNode(audioInterval.hashCode() + "");
-                                                    if (n != null) n.removeAttribute("ui.hide");
-                                                }
-
-                                            } catch (Exception e) {
-                                            }
-                                        }
-
-                                        if (lastPlayed[0] != null) {
-                                            if (!nodeset.contains(lastPlayed[0].hashCode())) {
+                                    if (AudioParams.graph != null) {
+                                        if (!BeautifulKMGSRandReducefromAudioObject.running) {
+                                            if (audioInterval != null && AudioParams.graph != null) {
                                                 try {
-                                                    Node n = AudioParams.graph.addNode(lastPlayed[0].hashCode() + "");
-                                                    n.setAttribute("label", audioInterval.segment);
-                                                    n.addAttribute("ui.style", "fill-color: rgba(0,255,0,255);");
-                                                    n.addAttribute("ui.style", "size: 25;");
-//
-//                                        }
-                                                    nodeset.add(lastPlayed[0].hashCode());
+                                                    if (!nodeset.contains(audioInterval.hashCode())) {
+                                                        Node n = AudioParams.graph.addNode(audioInterval.hashCode() + "");
+                                                        n.setAttribute("label", audioInterval.segment);
+                                                        n.addAttribute("ui.style", "fill-color: rgba(0,255,0,255);");
+                                                        n.addAttribute("ui.style", "size: 25;");
+                                                        nodeset.add(audioInterval.hashCode());
+                                                    } else {
+                                                        Node n = AudioParams.graph.getNode(audioInterval.hashCode() + "");
+                                                        if (n != null) n.removeAttribute("ui.hide");
+                                                    }
+
                                                 } catch (Exception e) {
                                                 }
-                                            } else {
-                                                Node n = AudioParams.graph.getNode(lastPlayed[0].hashCode() + "");
-                                                if (n != null) n.removeAttribute("ui.hide");
                                             }
-                                        }
-                                        if (lastPlayed[0] != null && audioInterval != null) {
-                                            EdgePair ep2 = new EdgePair(lastPlayed[0].hashCode(), audioInterval.hashCode());
-                                            if (!edgemap.contains(ep2)) {
-                                                edgemap.add(ep2);
-                                                AudioInterval lp = lastPlayed[0];
-                                                AudioInterval ai = audioInterval;
+
+                                            if (lastPlayed[0] != null) {
+                                                if (!nodeset.contains(lastPlayed[0].hashCode())) {
+                                                    try {
+                                                        Node n = AudioParams.graph.addNode(lastPlayed[0].hashCode() + "");
+                                                        n.setAttribute("label", audioInterval.segment);
+                                                        n.addAttribute("ui.style", "fill-color: rgba(0,255,0,255);");
+                                                        n.addAttribute("ui.style", "size: 25;");
+//
+//                                        }
+                                                        nodeset.add(lastPlayed[0].hashCode());
+                                                    } catch (Exception e) {
+                                                    }
+                                                } else {
+                                                    Node n = AudioParams.graph.getNode(lastPlayed[0].hashCode() + "");
+                                                    if (n != null) n.removeAttribute("ui.hide");
+                                                }
+                                            }
+                                            if (lastPlayed[0] != null && audioInterval != null) {
+                                                EdgePair ep2 = new EdgePair(lastPlayed[0].hashCode(), audioInterval.hashCode());
+                                                if (!edgemap.contains(ep2)) {
+                                                    edgemap.add(ep2);
+                                                    AudioInterval lp = lastPlayed[0];
+                                                    AudioInterval ai = audioInterval;
 //                                            new Thread(new Runnable() {
 //                                                @Override
 //                                                public void run() {
@@ -287,65 +288,65 @@ public class Audio {
 //                                                    } catch (InterruptedException e) {
 //                                                        e.printStackTrace();
 //                                                    }
-                                                new Thread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        try {
-                                                            Thread.sleep(100);
-                                                            if (AudioParams.graph.getNode(lp.hashCode() + "") != null && AudioParams.graph.getNode(ai.hashCode() + "") != null) {
-                                                                Edge edge = AudioParams.graph.addEdge("" + (idEdge[0]++), lp.hashCode() + "", ai.hashCode() + "", true);
-                                                                if (edge != null) {
-                                                                    if (edge.getNode0() != null) {
-                                                                        Color hhcolor = ColorHelper.numberToColorPercentage((double) (edge.getNode0().getInDegree() + edge.getNode0().getOutDegree()) / 10d);
-                                                                        edge.getNode0().addAttribute("ui.style", "fill-color: rgba(" + hhcolor.getRed() + "," + hhcolor.getGreen() + "," + hhcolor.getBlue() + ",127);");
-                                                                        edge.getNode0().addAttribute("ui.style", "size: 25;");
-                                                                    }
-                                                                    if (edge.getNode1() != null) {
-                                                                        Color hhcolor = ColorHelper.numberToColorPercentage((double) (edge.getNode1().getInDegree() + edge.getNode1().getOutDegree()) / 10d);
-                                                                        edge.getNode1().addAttribute("ui.style", "fill-color: rgba(" + hhcolor.getRed() + "," + hhcolor.getGreen() + "," + hhcolor.getBlue() + ",127);");
-                                                                        edge.getNode1().addAttribute("ui.style", "size: 25;");
+                                                    new Thread(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            try {
+                                                                Thread.sleep(100);
+                                                                if (AudioParams.graph.getNode(lp.hashCode() + "") != null && AudioParams.graph.getNode(ai.hashCode() + "") != null) {
+                                                                    Edge edge = AudioParams.graph.addEdge("" + (idEdge[0]++), lp.hashCode() + "", ai.hashCode() + "", true);
+                                                                    if (edge != null) {
+                                                                        if (edge.getNode0() != null) {
+                                                                            Color hhcolor = ColorHelper.numberToColorPercentage((double) (edge.getNode0().getInDegree() + edge.getNode0().getOutDegree()) / 10d);
+                                                                            edge.getNode0().addAttribute("ui.style", "fill-color: rgba(" + hhcolor.getRed() + "," + hhcolor.getGreen() + "," + hhcolor.getBlue() + ",127);");
+                                                                            edge.getNode0().addAttribute("ui.style", "size: 25;");
+                                                                        }
+                                                                        if (edge.getNode1() != null) {
+                                                                            Color hhcolor = ColorHelper.numberToColorPercentage((double) (edge.getNode1().getInDegree() + edge.getNode1().getOutDegree()) / 10d);
+                                                                            edge.getNode1().addAttribute("ui.style", "fill-color: rgba(" + hhcolor.getRed() + "," + hhcolor.getGreen() + "," + hhcolor.getBlue() + ",127);");
+                                                                            edge.getNode1().addAttribute("ui.style", "size: 25;");
+                                                                        }
                                                                     }
                                                                 }
-                                                            }
-                                                            Node n = AudioParams.graph.getNode(audioInterval.hashCode() + "");
-                                                            if (n!=null) {
-                                                                n.addAttribute("ui.style", "fill-color: rgba(127,127,127,127);");
-                                                                n.addAttribute("ui.style", "size: 25;");
-                                                            }
-                                                            if (lastPlayed[0] != null) {
-                                                                n = AudioParams.graph.getNode(lastPlayed[0].hashCode() + "");
-                                                                if (n!=null) {
-                                                                    Color hhcolor = ColorHelper.numberToColorPercentage((double) (n.getInDegree() + n.getOutDegree()) / 10d);
-                                                                    n.addAttribute("ui.style", "fill-color: rgba(" + hhcolor.getRed() + "," + hhcolor.getGreen() + "," + hhcolor.getBlue() + ",127);");
-                                                                    n.addAttribute("ui.style", "fill-color: rgba(255,0,0,255);");
-                                                                    n.addAttribute("ui.style", "size: 35;");
+                                                                Node n = AudioParams.graph.getNode(audioInterval.hashCode() + "");
+                                                                if (n != null) {
+                                                                    n.addAttribute("ui.style", "fill-color: rgba(127,127,127,127);");
+                                                                    n.addAttribute("ui.style", "size: 25;");
                                                                 }
-                                                            }
+                                                                if (lastPlayed[0] != null) {
+                                                                    n = AudioParams.graph.getNode(lastPlayed[0].hashCode() + "");
+                                                                    if (n != null) {
+                                                                        Color hhcolor = ColorHelper.numberToColorPercentage((double) (n.getInDegree() + n.getOutDegree()) / 10d);
+                                                                        n.addAttribute("ui.style", "fill-color: rgba(" + hhcolor.getRed() + "," + hhcolor.getGreen() + "," + hhcolor.getBlue() + ",127);");
+                                                                        n.addAttribute("ui.style", "fill-color: rgba(255,0,0,255);");
+                                                                        n.addAttribute("ui.style", "size: 35;");
+                                                                    }
+                                                                }
 
-                                                        } catch (org.graphstream.graph.EdgeRejectedException e) {
-                                                        } catch (ElementNotFoundException e) {
-                                                        } catch (InterruptedException e) {
-                                                            e.printStackTrace();
+                                                            } catch (org.graphstream.graph.EdgeRejectedException e) {
+                                                            } catch (ElementNotFoundException e) {
+                                                            } catch (InterruptedException e) {
+                                                                e.printStackTrace();
+                                                            }
                                                         }
-                                                    }
-                                                }).start();
+                                                    }).start();
 
 //                                                }
 //                                            }).start();
 
+                                                }
+                                            }
+                                        } else {
+                                            Node n = AudioParams.graph.getNode(audioInterval.hashCode() + "");
+                                            n.addAttribute("ui.style", "fill-color: rgba(255,0,0,255);");
+                                            n.addAttribute("ui.style", "size: 25;");
+                                            if (lastPlayed[0] != null) {
+                                                n = AudioParams.graph.getNode(lastPlayed[0].hashCode() + "");
+                                                n.addAttribute("ui.style", "fill-color: rgba(0,0,255,255);");
+                                                n.addAttribute("ui.style", "size: 10;");
+
                                             }
                                         }
-                                    } else {
-                                        Node n = AudioParams.graph.getNode(audioInterval.hashCode() + "");
-                                        n.addAttribute("ui.style", "fill-color: rgba(255,0,0,255);");
-                                        n.addAttribute("ui.style", "size: 25;");
-                                        if (lastPlayed[0] != null) {
-                                            n = AudioParams.graph.getNode(lastPlayed[0].hashCode() + "");
-                                            n.addAttribute("ui.style", "fill-color: rgba(0,0,255,255);");
-                                            n.addAttribute("ui.style", "size: 10;");
-
-                                        }
-                                    }
 //                                    if (Aud
 // ioParams.graph != null) {
 //                                        Node node1 = AudioParams.graph.getNode(audioInterval.hashCode() + "");
@@ -355,39 +356,39 @@ public class Audio {
 //                                        }
 ////                                        lastNode1 = node1;
 //                                    }
-                                    try {
-                                        while (edgemap.size() > graphSize) {
+                                        try {
+                                            while (edgemap.size() > graphSize) {
 
-                                            EdgePair ep = edgemap.removeFirst();
-                                            Edge edge = AudioParams.graph.removeEdge(ep.s + "", ep.e + "");
-                                            if (edge.getNode0() != null) {
-                                                Color hhcolor = ColorHelper.numberToColorPercentage((double) (edge.getNode0().getInDegree() + edge.getNode0().getOutDegree()) / 10d);
-                                                edge.getNode0().addAttribute("ui.style", "fill-color: rgba(" + hhcolor.getRed() + "," + hhcolor.getGreen() + "," + hhcolor.getBlue() + ",127);");
-                                                edge.getNode0().addAttribute("ui.style", "size: 25;");
-                                            }
-                                            if (edge.getNode1() != null) {
-                                                Color hhcolor = ColorHelper.numberToColorPercentage((double) (edge.getNode1().getInDegree() + edge.getNode1().getOutDegree()) / 10d);
-                                                edge.getNode1().addAttribute("ui.style", "fill-color: rgba(" + hhcolor.getRed() + "," + hhcolor.getGreen() + "," + hhcolor.getBlue() + ",127);");
-                                                edge.getNode1().addAttribute("ui.style", "size: 25;");
-                                            }
+                                                EdgePair ep = edgemap.removeFirst();
+                                                Edge edge = AudioParams.graph.removeEdge(ep.s + "", ep.e + "");
+                                                if (edge.getNode0() != null) {
+                                                    Color hhcolor = ColorHelper.numberToColorPercentage((double) (edge.getNode0().getInDegree() + edge.getNode0().getOutDegree()) / 10d);
+                                                    edge.getNode0().addAttribute("ui.style", "fill-color: rgba(" + hhcolor.getRed() + "," + hhcolor.getGreen() + "," + hhcolor.getBlue() + ",127);");
+                                                    edge.getNode0().addAttribute("ui.style", "size: 25;");
+                                                }
+                                                if (edge.getNode1() != null) {
+                                                    Color hhcolor = ColorHelper.numberToColorPercentage((double) (edge.getNode1().getInDegree() + edge.getNode1().getOutDegree()) / 10d);
+                                                    edge.getNode1().addAttribute("ui.style", "fill-color: rgba(" + hhcolor.getRed() + "," + hhcolor.getGreen() + "," + hhcolor.getBlue() + ",127);");
+                                                    edge.getNode1().addAttribute("ui.style", "size: 25;");
+                                                }
 //                                        if (lastNode1 != null) {
-                                            try {
-                                                if (edge.getNode0().getInDegree() + edge.getNode0().getOutDegree() == 0) {
-                                                    Node n = AudioParams.graph.getNode(edge.getNode0().getId());
+                                                try {
+                                                    if (edge.getNode0().getInDegree() + edge.getNode0().getOutDegree() == 0) {
+                                                        Node n = AudioParams.graph.getNode(edge.getNode0().getId());
 //                                                    nodeset.remove((Integer) Integer.parseInt(n.getId()));
-                                                    n.addAttribute("ui.hide");
+                                                        n.addAttribute("ui.hide");
+                                                    }
+                                                } catch (Exception e) {
                                                 }
-                                            } catch (Exception e) {
-                                            }
-                                            try {
-                                                if (edge.getNode1().getInDegree() + edge.getNode1().getOutDegree() == 0) {
-                                                    Node n = AudioParams.graph.getNode(edge.getNode1().getId());
+                                                try {
+                                                    if (edge.getNode1().getInDegree() + edge.getNode1().getOutDegree() == 0) {
+                                                        Node n = AudioParams.graph.getNode(edge.getNode1().getId());
 //                                                    nodeset.remove((Integer) Integer.parseInt(n.getId()));
-                                                    n.addAttribute("ui.hide");
+                                                        n.addAttribute("ui.hide");
+                                                    }
+                                                } catch (Exception e) {
                                                 }
-                                            } catch (Exception e) {
                                             }
-                                        }
 //                                        for (int gg : nodeset) {
 //                                            Node node1 = AudioParams.graph.getNode(gg + "");
 //                                            if ((node1.getInDegree() == 0 && node1.getOutDegree() == 0) || (node1.hasEdgeFrom(node1) || node1.hasEdgeToward(node1))) {
@@ -411,14 +412,14 @@ public class Audio {
 //                                        }
 
 
-                                    } catch (Exception e) {
-                                    }
-                                    lastPlayed[0] = audioInterval;
+                                        } catch (Exception e) {
+                                        }
+                                        lastPlayed[0] = audioInterval;
 
-                                }
+                                    }
 //                                System.out.println("hetre2");
 
-
+                                }
                             }).
 
                                     start();
