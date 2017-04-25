@@ -17,6 +17,7 @@ import javax.sound.sampled.SourceDataLine;
 
 import org.bytedeco.javacv.*;
 import org.graphstream.graph.Edge;
+import org.graphstream.graph.ElementNotFoundException;
 import org.graphstream.graph.Node;
 
 public class Audio {
@@ -277,18 +278,27 @@ public class Audio {
 //                                                    } catch (InterruptedException e) {
 //                                                        e.printStackTrace();
 //                                                    }
-                                                try {
-                                                    if (AudioParams.graph.getNode(lp.hashCode() + "") != null && AudioParams.graph.getNode(ai.hashCode() + "") != null) {
-                                                        Edge edge = AudioParams.graph.addEdge("" + (idEdge[0]++), lp.hashCode() + "", ai.hashCode() + "", true);
-                                                        Color hhcolor = ColorHelper.numberToColorPercentage((double) (edge.getNode0().getInDegree() + edge.getNode0().getOutDegree()) / 10d);
-                                                        edge.getNode0().addAttribute("ui.style", "fill-color: rgba(" + hhcolor.getRed() + "," + hhcolor.getGreen() + "," + hhcolor.getBlue() + ",127);");
-                                                        edge.getNode0().addAttribute("ui.style", "size: 25;");
-                                                        hhcolor = ColorHelper.numberToColorPercentage((double) (edge.getNode1().getInDegree() + edge.getNode1().getOutDegree()) / 10d);
-                                                        edge.getNode1().addAttribute("ui.style", "fill-color: rgba(255,0,0,128);");
-                                                        edge.getNode1().addAttribute("ui.style", "size: 35;");
+                                                new Thread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        try {
+                                                            Thread.sleep(200);
+                                                            if (AudioParams.graph.getNode(lp.hashCode() + "") != null && AudioParams.graph.getNode(ai.hashCode() + "") != null) {
+                                                                Edge edge = AudioParams.graph.addEdge("" + (idEdge[0]++), lp.hashCode() + "", ai.hashCode() + "", true);
+                                                                Color hhcolor = ColorHelper.numberToColorPercentage((double) (edge.getNode0().getInDegree() + edge.getNode0().getOutDegree()) / 10d);
+                                                                edge.getNode0().addAttribute("ui.style", "fill-color: rgba(" + hhcolor.getRed() + "," + hhcolor.getGreen() + "," + hhcolor.getBlue() + ",127);");
+                                                                edge.getNode0().addAttribute("ui.style", "size: 25;");
+                                                                hhcolor = ColorHelper.numberToColorPercentage((double) (edge.getNode1().getInDegree() + edge.getNode1().getOutDegree()) / 10d);
+                                                                edge.getNode1().addAttribute("ui.style", "fill-color: rgba(255,0,0,128);");
+                                                                edge.getNode1().addAttribute("ui.style", "size: 35;");
+                                                            }
+                                                        } catch (ElementNotFoundException e) {
+                                                        } catch (InterruptedException e) {
+                                                            e.printStackTrace();
+                                                        }
                                                     }
-                                                } catch (Exception e) {
-                                                }
+                                                }).start();
+
 //                                                }
 //                                            }).start();
 
