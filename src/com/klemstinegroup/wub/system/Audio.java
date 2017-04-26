@@ -54,7 +54,7 @@ public class Audio {
     private int start;
     //    private int lastSeg;
     private Queue<AudioInterval> lastPlayedQueue = new LinkedList<>();
-    private int graphSize = 100;
+    private int graphSize = 15;
 
     public Audio() {
         this(null, 1);
