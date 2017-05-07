@@ -135,7 +135,7 @@ public class Custom implements KeyListener {
             @Override
             public void run() {
                 try {
-                    String[] samples = RNNDemo.process(song, language, audio, finalOut);
+                    String[] samples = RNNDemo.process(smallercluster,song,language, audio, finalOut);
                     System.out.println(Arrays.toString(samples));
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -330,7 +330,9 @@ public class Custom implements KeyListener {
 //            Audio.nodeset.clear();
 //            Audio.edgemap.clear();
 //        }
-        if (e.getKeyChar() == ' ') audio.pause = !audio.pause;
+        if (e.getKeyChar() == ' ') {
+            audio.pause = !audio.pause;
+        }
     }
 
     @Override

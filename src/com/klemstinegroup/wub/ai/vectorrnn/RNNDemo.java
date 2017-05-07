@@ -60,7 +60,7 @@ public class RNNDemo {
 //
 //    }
 
-    public static String[] process(Song song, HashMap<AudioInterval, Character> language, Audio audio, String input) {
+    public static String[] process(HashMap<AudioInterval, AudioInterval> smallercluster, Song song, HashMap<AudioInterval, Character> language, Audio audio, String input) {
         generationInitialization = input.substring(input.length() / 2 - 20, input.length() / 2 + 20);
         HashMap<Character, AudioInterval> languageRev = new HashMap<>();
         for (Map.Entry<AudioInterval, Character> entry : language.entrySet())
@@ -173,55 +173,89 @@ public class RNNDemo {
 
 //            audio.play(song.getAudioInterval(sem,segMapped));
 
-                            if (net.score() < startPlayingScore && audio.queue.size() < nCharactersToSample * 3) {
-                                generationInitialization = samples[0];
-                                AudioInterval[] listAudioIntervals = new AudioInterval[generationInitialization.length()];
-                                for (int j = 0; j < generationInitialization.length(); j++) {
-                                    AudioInterval ss = languageRev.get(generationInitialization.charAt(j));
+                            if (net.score() < startPlayingScore && audio.queue.size() < nCharactersToSample * 5) {
+                                AudioInterval bestListAudioIntervals[] = null;
+                                int metaBestScore = Integer.MIN_VALUE;
+                                if (smoothing ) {//&& !audio.pause
+                                    System.out.println("___smoothing___");
+                                    for (int ggo = 0; ggo < 1; ggo++) {
+                                        System.out.println("ggo="+ggo);
+                                        generationInitialization = samples[0].substring(ggo);
+                                        AudioInterval[] listAudioIntervals = new AudioInterval[generationInitialization.length()];
+                                        for (int j = 0; j < generationInitialization.length(); j++) {
+                                            AudioInterval ss = languageRev.get(generationInitialization.charAt(j));
+                                            listAudioIntervals[j] = ss;
+                                        }
+
+                                        List<TimedEvent> bars = song.analysis.getBeats();
+                                        int listPos = 0;
+                                        int tembestScore = 0;
+                                        top:
+                                        while (listPos < listAudioIntervals.length) {
+                                            int bestScore = Integer.MIN_VALUE;
+                                            ArrayList<Segment> bestSegments = null;
+
+                                            for (TimedEvent bar : bars) {
+                                                ArrayList<Segment> segments = song.getSegments(bar);
+                                                int score = 0;
+                                                for (int oo = 0; oo < segments.size(); oo++) {
+                                                    if (listPos + oo >= listAudioIntervals.length) break;
+                                                    AudioInterval au1=smallercluster.get(listAudioIntervals[listPos + oo]);
+                                                    AudioInterval au2=smallercluster.get( song.getAudioIntervalForSegment(song.getSegmentsPosition(segments.get(oo)).get(0)));
+                                                    if (au1.equals(au2))
+                                                        score++;
+                                                }
+                                                if (score == bestScore && Math.random() < .5d) {
+                                                    bestSegments = segments;
+                                                }
+                                                if (score > bestScore) {
+                                                    bestScore = score;
+                                                    bestSegments = segments;
+                                                }
+
+                                            }
+
+//                                            System.out.println("bestscore for bar="+bestScore);
+                                            if (bestScore > 0) {
+                                                for (int oo = 0; oo < bestSegments.size(); oo++) {
+                                                    if (listPos + oo >= listAudioIntervals.length) break top;
+//                                                    listAudioIntervals[listPos + oo] = song.getAudioIntervalForSegment(song.getSegmentsPosition(bestSegments.get(oo)).get(0));
+                                                    listAudioIntervals[listPos + oo] = song.getAudioIntervalForSegment(song.getSegmentsPosition(bestSegments.get(oo)).get(0));
+
+                                                    listPos++;
+                                                }
+                                            } else listPos++;
+                                            tembestScore += bestScore;
+                                        }
+
+                                        if (tembestScore > metaBestScore) {
+                                            metaBestScore = tembestScore;
+                                            bestListAudioIntervals = listAudioIntervals;
+
+                                        }
+//                                        System.out.println(">--------------------------");
+                                    }
+
+                                } else {
+                                    generationInitialization = samples[0];
+                                    AudioInterval[] listAudioIntervals = new AudioInterval[generationInitialization.length()];
+                                    for (int j = 0; j < generationInitialization.length(); j++) {
+                                        AudioInterval ss = languageRev.get(generationInitialization.charAt(j));
 //                                    Segment sem = segments.get(ss.segment);
-                                    listAudioIntervals[j] = ss;
+                                        listAudioIntervals[j] = ss;
 //
 //                            audio.play(song.getAudioInterval(sem, ss));
-                                }
-                                if (smoothing) {
-                                    List<TimedEvent> bars = song.analysis.getBars();
-                                    int listPos = 0;
-                                    top:
-                                    while (listPos < listAudioIntervals.length) {
-                                        int bestScore = Integer.MIN_VALUE;
-                                        ArrayList<Segment> bestSegments = null;
-
-                                        for (TimedEvent bar : bars) {
-                                            ArrayList<Segment> segments = song.getSegments(bar);
-                                            int score = 0;
-                                            for (int oo = 0; oo < segments.size(); oo++) {
-                                                if (listPos+oo>=listAudioIntervals.length)break;
-                                                if (listAudioIntervals[listPos + oo].equals(song.getAudioIntervalForSegment(song.getSegmentsPosition(segments.get(oo)).get(0)))) score++;
-                                            }
-                                            if (score==bestScore&&Math.random()<.5d){                                                bestSegments = segments;
-                                                bestSegments = segments;
-                                            }
-                                            if (score > bestScore) {
-                                                bestScore = score;
-                                                bestSegments = segments;
-                                            }
-
-                                        }
-//                                        System.out.println(bestScore);
-                                        if (bestScore>0) {
-                                            for (int oo = 0; oo < bestSegments.size(); oo++) {
-                                                if (listPos + oo >= listAudioIntervals.length) break top;
-                                                listAudioIntervals[listPos + oo] = song.getAudioIntervalForSegment(song.getSegmentsPosition(bestSegments.get(oo)).get(0));
-                                                listPos++;
-                                            }
-                                        }
-                                        else listPos++;
                                     }
-                                }
-                                for (AudioInterval audioInterval : listAudioIntervals) {
-                                    audio.play(audioInterval);
-                                }
+                                    bestListAudioIntervals = listAudioIntervals;
 
+                                }
+                                if (metaBestScore != Integer.MIN_VALUE) {
+                                    System.out.println("best meta score=" + metaBestScore);
+                                }
+                                for (AudioInterval audioInterval : bestListAudioIntervals) {
+                                    audio.play(audioInterval);
+
+                                }
 
                                 System.out.println("-------------------------------------------------------");
                             }
