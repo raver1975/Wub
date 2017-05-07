@@ -1,6 +1,7 @@
 package com.klemstinegroup.wub.ai.vectorrnn;
 
 import com.echonest.api.v4.Segment;
+import com.echonest.api.v4.TimedEvent;
 import com.klemstinegroup.wub.ai.custom.Levenshtein;
 import com.klemstinegroup.wub.system.*;
 import org.deeplearning4j.nn.api.Layer;
@@ -64,7 +65,7 @@ public class RNNDemo {
         HashMap<Character, AudioInterval> languageRev = new HashMap<>();
         for (Map.Entry<AudioInterval, Character> entry : language.entrySet())
             languageRev.put(entry.getValue(), entry.getKey());
-        boolean smoothing = false;
+        boolean smoothing = true;
         final double[] bestScore = {Double.MAX_VALUE};
         double startPlayingScore = 10040d;
         int lstmLayerSize = 250;                    //Number of units in each GravesLSTM layer
@@ -78,7 +79,6 @@ public class RNNDemo {
         int nSamplesToGenerate = 1;                    //Number of samples to generate after each training epoch
         int nCharactersToSample = 60;                //Length of each sample to generate
 //        String generationInitialization = null;        //Optional character initialization; a random character is used if null
-
 
 
         // Above is Used to 'prime' the LSTM with a character sequence to continue/complete.
@@ -184,43 +184,38 @@ public class RNNDemo {
 //                            audio.play(song.getAudioInterval(sem, ss));
                                 }
                                 if (smoothing) {
-                                    //smoothing below just restores the song
-                                    //input
-                                    System.out.println("input=" + input);
-                                    System.out.println("gener=" + generationInitialization);
+                                    List<TimedEvent> bars = song.analysis.getBars();
+                                    int listPos = 0;
+                                    top:
+                                    while (listPos < listAudioIntervals.length) {
+                                        int bestScore = Integer.MIN_VALUE;
+                                        ArrayList<Segment> bestSegments = null;
 
-                                    //matching algorithm
-
-                                    int pos = 0;
-                                    String toProcess = generationInitialization;
-                                    while (pos < generationInitialization.length() - 1) {
-                                        int lowest = Integer.MAX_VALUE;
-                                        String best = "";
-                                        int bestpos = -1;
-                                        int sizeOfMatches = 15;
-                                        for (int size = 1; size < Math.min(sizeOfMatches, toProcess.length()); size++) {
-                                            String g = toProcess.substring(0, size);
-                                            for (int jj = 0; jj < input.length() - size; jj++) {
-                                                String h = input.substring(jj, jj + size);
-//                                    System.out.println(g+"="+h);
-                                                int score = (int) (((sizeOfMatches - size) * .5d) + Levenshtein.getLevenshteinDistance(g, h));
-                                                if (score < lowest) {
-                                                    lowest = score;
-                                                    best = h;
-                                                    bestpos = jj;
-//                                        System.out.println("score:" + score + "\tbest:" + bestpos + "\t" + best);
-                                                }
+                                        for (TimedEvent bar : bars) {
+                                            ArrayList<Segment> segments = song.getSegments(bar);
+                                            int score = 0;
+                                            for (int oo = 0; oo < segments.size(); oo++) {
+                                                if (listPos+oo>=listAudioIntervals.length)break;
+                                                if (listAudioIntervals[listPos + oo].equals(song.getAudioIntervalForSegment(song.getSegmentsPosition(segments.get(oo)).get(0)))) score++;
+                                            }
+                                            if (score==bestScore&&Math.random()<.5d){                                                bestSegments = segments;
+                                                bestSegments = segments;
+                                            }
+                                            if (score > bestScore) {
+                                                bestScore = score;
+                                                bestSegments = segments;
                                             }
 
                                         }
-                                        int pos2 = pos;
-                                        for (int hh = bestpos; hh < bestpos + best.length(); hh++) {
-
-                                            listAudioIntervals[pos2] = song.getAudioIntervalForSegment(hh);
-                                            pos2++;
+//                                        System.out.println(bestScore);
+                                        if (bestScore>0) {
+                                            for (int oo = 0; oo < bestSegments.size(); oo++) {
+                                                if (listPos + oo >= listAudioIntervals.length) break top;
+                                                listAudioIntervals[listPos + oo] = song.getAudioIntervalForSegment(song.getSegmentsPosition(bestSegments.get(oo)).get(0));
+                                                listPos++;
+                                            }
                                         }
-                                        toProcess = toProcess.substring(best.length());
-                                        pos += best.length();
+                                        else listPos++;
                                     }
                                 }
                                 for (AudioInterval audioInterval : listAudioIntervals) {
