@@ -23,6 +23,12 @@ public class Song {
         return ai;
     }
 
+    public AudioInterval getAudioIntervalForSegment(Segment segment){
+        int segnum=getSegmentsPosition(segment).get(0);
+        AudioInterval ai=new AudioInterval(analysis.getSegments().get(segnum),data,segnum);
+        return ai;
+    }
+
 //    public AudioInterval getAudioInterval(List<TimedEvent> list) {
 //        return new AudioInterval(list, data);
 //    }

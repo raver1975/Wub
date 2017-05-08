@@ -223,14 +223,14 @@ public class Audio {
                                     lastPlayedQueue = new LinkedList<AudioInterval>();
                                     lastPlayedQueue.addAll(lastPlayedQueue1);
 
-                                    g.setColor(Color.YELLOW);
-                                    for (int xi = -1; xi < 2; xi++) {
-                                        for (int yi = -1; yi < 2; yi++) {
-                                            g.drawString("#" + audioInterval.segment, 10 - xi, 25 + yi);
-                                        }
-                                    }
-                                    g.setColor(Color.RED);
-                                    g.drawString("#" + audioInterval.segment, 10, 25);
+//                                    g.setColor(Color.YELLOW);
+//                                    for (int xi = -1; xi < 2; xi++) {
+//                                        for (int yi = -1; yi < 2; yi++) {
+//                                            g.drawString("#" + audioInterval.segment, 10 - xi, 25 + yi);
+//                                        }
+//                                    }
+//                                    g.setColor(Color.RED);
+//                                    g.drawString("#" + audioInterval.segment, 10, 25);
 
                                     Graphics gra = tf.getGraphics();
                                     if (gra != null) {
