@@ -204,7 +204,9 @@ public class Audio {
                                     g.setFont(new Font("Arial", Font.BOLD, 20));
                                     while (quit.hasNext()) {
                                         Segment seg1 = quit.next().te;
-                                        g.setColor(ColorHelper.numberToColor((cnt * 100) / lastPlayedQueue.size()));
+                                        Color c=ColorHelper.numberToColor((cnt * 100) / lastPlayedQueue.size());
+                                        c=new Color(c.getRed()/255f,c.getGreen()/255f,c.getBlue()/255f,.4f);
+                                        g.setColor(c);
                                         //System.out.println(seg1+"\t"+seg1.getDuration());
                                         int x = (int) ((bi.getWidth() * seg1.getStart()) / maxDuration) - cnt;
                                         int y = bi.getHeight() / 2 - (bi.getHeight() / 2) * cnt / qsize;
