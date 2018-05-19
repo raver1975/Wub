@@ -27,10 +27,14 @@ public class ColorHelper {
 	 * @param value
 	 *            should be from 0 unti 100
 	 */
-	public static Color numberToColor(final double value) {
-		if (value < 0 || value > 100) {
-			return null;
+	public static Color numberToColor(double value) {
+		if (value < 0){
+			value=0;
 		}
+		if (value>100){
+			value=100;
+		}
+
 		return numberToColorPercentage(value / 100);
 	}
 
