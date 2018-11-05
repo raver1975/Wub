@@ -48,7 +48,7 @@ public class Audio {
     public static final AudioFormat audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sampleRate, resolution, channels, frameSize, sampleRate, false);
     public static final AudioFormat audioFormatMono = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sampleRate, resolution, channels / 2, frameSize / 2, sampleRate, false);
     public static final int bufferSize = 8192;
-    public static double maxDuration=1;
+    public static double maxDuration = 1;
     //    private Song cachedSong;
 //    private int cachedSongIndex;
     public static ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -133,28 +133,26 @@ public class Audio {
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    synchronized (lastPlayedQueue) {
 
-
-                                    ArrayList<Segment> list = new ArrayList<>();
-                                    Segment bbbb1 = audioInterval.te;
-                                    list.add(bbbb1);
+                                        ArrayList<Segment> list = new ArrayList<>();
+                                        Segment bbbb1 = audioInterval.te;
+                                        list.add(bbbb1);
 //
 
 //                                        double seconds = 1;
 //                                        for (Segment s : cachedSong.analysis.getSegments()) {
 //                                            seconds = Math.max(seconds, s.getStart() + s.getDuration());
 //                                        }
-                                    double duration = 1;
-                                    duration = audioInterval.te.duration;
+                                        double duration = 1;
+                                        duration = audioInterval.te.duration;
 
-                                    if (bbbb1.getStart()+bbbb1.getDuration()>maxDuration){
-                                        maxDuration=bbbb1.getDuration()+bbbb1.getStart();
-                                    }
+                                        if (bbbb1.getStart() + bbbb1.getDuration() > maxDuration) {
+                                            maxDuration = bbbb1.getDuration() + bbbb1.getStart();
+                                        }
 
-                                    BufferedImage bi = new SamplingGraph().createWaveForm(list, duration, audioInterval.data, audioFormat, tf.getWidth(), tf.getHeight());
-                                    Graphics g = bi.getGraphics();
-
-
+                                        BufferedImage bi = new SamplingGraph().createWaveForm(list, duration, audioInterval.data, audioFormat, tf.getWidth(), tf.getHeight());
+                                        Graphics g = bi.getGraphics();
 
 
 //                                        JSONObject js = (JSONObject) cachedSong.analysis.getMap().get("meta");
@@ -195,68 +193,68 @@ public class Audio {
 //                                        String sonSeq = "#" + i.payloadString.segment;
 
 //                                        Segment seg = cachedSong.analysis.getSegments().get(i.payloadString.segment);
-                                    lastPlayedQueue.add(audioInterval);
-                                    LinkedList<AudioInterval> lastPlayedQueue1 = new LinkedList();
-                                    lastPlayedQueue1.addAll(lastPlayedQueue);
-                                    Iterator<AudioInterval> quit = lastPlayedQueue1.iterator();
-                                    int cnt = 0;
-                                    int qsize = 15;
-                                    g.setFont(new Font("Arial", Font.BOLD, 20));
-                                    while (quit.hasNext()) {
-                                        Segment seg1 = quit.next().te;
-                                        Color c=ColorHelper.numberToColor((cnt * 100) / lastPlayedQueue.size());
-                                        c=new Color(c.getRed()/255f,c.getGreen()/255f,c.getBlue()/255f,.4f);
-                                        g.setColor(c);
-                                        //System.out.println(seg1+"\t"+seg1.getDuration());
-                                        int x = (int) ((bi.getWidth() * seg1.getStart()) / maxDuration) - cnt;
-                                        int y = bi.getHeight() / 2 - (bi.getHeight() / 2) * cnt / qsize;
-                                        int w = (int) ((bi.getWidth() * seg1.getDuration() * cnt * 2) / maxDuration);
-                                        int h = (bi.getHeight()) * cnt / qsize;
-                                        g.fillRect(x, y, w, h);
-                                        cnt++;
-                                    }
-                                    while (lastPlayedQueue1.size() > qsize) {
-                                        lastPlayedQueue1.removeFirst();
-                                    }
-                                    lastPlayedQueue = new LinkedList<AudioInterval>();
-                                    lastPlayedQueue.addAll(lastPlayedQueue1);
-
-                                    g.setColor(Color.YELLOW);
-                                    for (int xi = -1; xi < 2; xi++) {
-                                        for (int yi = -1; yi < 2; yi++) {
-                                            g.drawString("#"+audioInterval.label, 10 - xi, 25 + yi);
+                                        lastPlayedQueue.add(audioInterval);
+                                        LinkedList<AudioInterval> lastPlayedQueue1 = new LinkedList();
+                                        lastPlayedQueue1.addAll(lastPlayedQueue);
+                                        Iterator<AudioInterval> quit = lastPlayedQueue1.iterator();
+                                        int cnt = 0;
+                                        int qsize = 15;
+                                        g.setFont(new Font("Arial", Font.BOLD, 20));
+                                        while (quit.hasNext()) {
+                                            Segment seg1 = quit.next().te;
+                                            Color c = ColorHelper.numberToColor((cnt * 100) / lastPlayedQueue.size());
+                                            c = new Color(c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f, .4f);
+                                            g.setColor(c);
+                                            //System.out.println(seg1+"\t"+seg1.getDuration());
+                                            int x = (int) ((bi.getWidth() * seg1.getStart()) / maxDuration) - cnt;
+                                            int y = bi.getHeight() / 2 - (bi.getHeight() / 2) * cnt / qsize;
+                                            int w = (int) ((bi.getWidth() * seg1.getDuration() * cnt * 2) / maxDuration);
+                                            int h = (bi.getHeight()) * cnt / qsize;
+                                            g.fillRect(x, y, w, h);
+                                            cnt++;
                                         }
-                                    }
-                                    g.setColor(Color.RED);
-                                    g.drawString("#"+audioInterval.label, 10, 25);
-
-                                    //------------------------------------------------
-                                    int val = 0;
-                                    if (hm.get(lastSeg + "") == null) {
-                                        hm.put(lastSeg + "", 0);
-                                    } else {
-                                        Integer bbbb = hm.get(lastSeg + "");
-                                        if (bbbb != null) val = bbbb + 1;
-                                        else val = 1;
-                                    }
-                                    hm.put(lastSeg + "", val);
-                                    lastSeg = audioInterval.label;
-                                    Color color = ColorHelper.numberToColorPercentage((double) val / (double) AudioParams.maxValue);
-                                    if (lastNode1 != null) {
-                                        lastNode1.addAttribute("ui.style", "fill-color: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ");");
-                                        lastNode1.addAttribute("ui.style", "size: 15;");
-                                    }
-                                    if (lastNode2 != null) {
-                                        lastNode2.addAttribute("ui.style", "fill-color: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ");");
-                                        lastNode2.addAttribute("ui.style", "size: 15;");
-                                    }
-                                    if (AudioParams.graph != null) {
-                                        Node node1 = AudioParams.graph.getNode(audioInterval.hashCode() + "");
-                                        if (node1 != null) {
-                                            node1.addAttribute("ui.style", "fill-color: rgb(255,0,0);");
-                                            node1.addAttribute("ui.style", "size:25;");
+                                        while (lastPlayedQueue1.size() > qsize) {
+                                            lastPlayedQueue1.removeFirst();
                                         }
-                                        lastNode1 = node1;
+                                        lastPlayedQueue = new LinkedList<AudioInterval>();
+                                        lastPlayedQueue.addAll(lastPlayedQueue1);
+
+                                        g.setColor(Color.YELLOW);
+                                        for (int xi = -1; xi < 2; xi++) {
+                                            for (int yi = -1; yi < 2; yi++) {
+                                                g.drawString("#" + audioInterval.label, 10 - xi, 25 + yi);
+                                            }
+                                        }
+                                        g.setColor(Color.RED);
+                                        g.drawString("#" + audioInterval.label, 10, 25);
+
+                                        //------------------------------------------------
+                                        int val = 0;
+                                        if (hm.get(lastSeg + "") == null) {
+                                            hm.put(lastSeg + "", 0);
+                                        } else {
+                                            Integer bbbb = hm.get(lastSeg + "");
+                                            if (bbbb != null) val = bbbb + 1;
+                                            else val = 1;
+                                        }
+                                        hm.put(lastSeg + "", val);
+                                        lastSeg = audioInterval.label;
+                                        Color color = ColorHelper.numberToColorPercentage((double) val / (double) AudioParams.maxValue);
+                                        if (lastNode1 != null) {
+                                            lastNode1.addAttribute("ui.style", "fill-color: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ");");
+                                            lastNode1.addAttribute("ui.style", "size: 15;");
+                                        }
+                                        if (lastNode2 != null) {
+                                            lastNode2.addAttribute("ui.style", "fill-color: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ");");
+                                            lastNode2.addAttribute("ui.style", "size: 15;");
+                                        }
+                                        if (AudioParams.graph != null) {
+                                            Node node1 = AudioParams.graph.getNode(audioInterval.hashCode() + "");
+                                            if (node1 != null) {
+                                                node1.addAttribute("ui.style", "fill-color: rgb(255,0,0);");
+                                                node1.addAttribute("ui.style", "size:25;");
+                                            }
+                                            lastNode1 = node1;
 
                                             Node node2 = AudioParams.graph.getNode(audioInterval.hashCode() + "");
                                             if (node2 != null) {
@@ -265,16 +263,16 @@ public class Audio {
                                             }
 
                                             lastNode2 = node2;
+                                        }
+                                        //------------------------------------------------
+
+                                        Graphics gra = tf.getGraphics();
+                                        gra.setColor(new Color(0, 0, 0));
+                                        gra.clearRect(0, 0, tf.getWidth(), tf.getHeight());
+                                        gra.drawImage(bi, 0, 0, null);
                                     }
-                                    //------------------------------------------------
-
-                                    Graphics gra = tf.getGraphics();
-                                    gra.setColor(new Color(0,0,0));
-                                    gra.clearRect(0,0,tf.getWidth(),tf.getHeight());
-                                    gra.drawImage(bi, 0, 0, null);
-                                }
 //                                System.out.println("hetre2");
-
+                                }
 
                             }).start();
                         }
