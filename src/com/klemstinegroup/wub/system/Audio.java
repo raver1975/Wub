@@ -287,8 +287,7 @@ public class Audio {
                                 }
                             }
 
-                            BufferedImage image = robot.createScreenCapture(jframe.getBounds());
-                            Frame frame = converter.convert(image);
+
 //                            frame.audioChannels = Audio.channels;
 //                            frame.sampleRate = Audio.sampleRate;
 //                            frame.keyFrame = false;
@@ -303,12 +302,10 @@ public class Audio {
                             try {
                                 recorder.setTimestamp((long) frameNumber);
 //                                recorder.record(frame, AV_PIX_FMT_ARGB);
-                                recorder.recordImage(frame.imageWidth,frame.imageHeight,frame.imageDepth,frame.imageChannels,frame.imageStride,AV_PIX_FMT_ARGB,frame.image);
                                 recorder.recordSamples(sBuff);
                             } catch (FrameRecorder.Exception e) {
                                 e.printStackTrace();
                             }
-                            frameNumber += 1000000d * ((((double) audioInterval.data.length / 4d) / Audio.sampleRate));
                         }
 
                         int j = 0;
@@ -331,11 +328,31 @@ public class Audio {
                             }
                             position = j;
                             line.write(audioInterval.data, j, bufferSize);
+                            if (Settings.makeVideo) {
+                                BufferedImage image = robot.createScreenCapture(jframe.getBounds());
+                                Frame frame = converter.convert(image);
+                                try {
+                                    recorder.recordImage(frame.imageWidth, frame.imageHeight, frame.imageDepth, frame.imageChannels, frame.imageStride, AV_PIX_FMT_ARGB, frame.image);
+                                } catch (FrameRecorder.Exception e) {
+                                    e.printStackTrace();
+                                }
+                                frameNumber += 1000000d * ((((double) bufferSize / 4d) / Audio.sampleRate));
+                            }
                         }
 
                         if (j < audioInterval.data.length) {
                             position = j;
                             line.write(audioInterval.data, j, audioInterval.data.length - j);
+                            if (Settings.makeVideo) {
+                                BufferedImage image = robot.createScreenCapture(jframe.getBounds());
+                                Frame frame = converter.convert(image);
+                                try {
+                                    recorder.recordImage(frame.imageWidth, frame.imageHeight, frame.imageDepth, frame.imageChannels, frame.imageStride, AV_PIX_FMT_ARGB, frame.image);
+                                } catch (FrameRecorder.Exception e) {
+                                    e.printStackTrace();
+                                }
+                                frameNumber += 1000000d * ((((double) (audioInterval.data.length-j) / 4d) / Audio.sampleRate));
+                            }
                             // line.drain();
                         }
                         if (loop)
