@@ -25,6 +25,7 @@ public class SongManager {
     public static String directory;
     static {
         for (int i=0;i<26;i++) {
+            if ((char)'a'+i=='d')continue;
             String s=(char)('a'+i)+":\\wubdata\\";
             File f=new File(s);
             if (f.isDirectory()){

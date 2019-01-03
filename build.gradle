@@ -80,13 +80,13 @@ dependencies {
 
 
 
-    compile 'org.deeplearning4j:deeplearning4j-nlp:0.8.0'
+    compile 'org.deeplearning4j:deeplearning4j-nlp:1.0.0-beta2'
 
-//    compile 'org.nd4j:nd4j-native-platform:0.8.0'
-//     compile 'org.nd4j:nd4j-native:0.8.0:windows-x86_64'
+    compile 'org.nd4j:nd4j-native-platform:1.0.0-beta2'
+     compile 'org.nd4j:nd4j-native:1.0.0-beta2:windows-x86_64'
 
-    compile 'org.nd4j:nd4j-cuda-8.0-platform:0.8.0'
-    compile 'org.nd4j:nd4j-cuda-8.0:0.8.0:windows-x86_64'
+//    compile 'org.nd4j:nd4j-cuda-8.0-platform:0.8.0'
+//    compile 'org.nd4j:nd4j-cuda-8.0:0.8.0:windows-x86_64'
 
     compile group: 'jfree', name: 'jfreechart', version: '1.0.13'
 

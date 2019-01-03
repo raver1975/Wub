@@ -23,14 +23,16 @@ public class Custom {
     int numClusters=200;
 
     public Custom() {
-        this(SongManager.getRandom((int) (Math.random() * 1300)));
+//        this(SongManager.getRandom((int) (Math.random() * 1300)));
+        this(SongManager.getRandom(1061));
 
     }
     public Custom(Song song){
+        System.out.println("Song #"+song.number);
         Canvas tf = new Canvas();
         tf.setBackground(new Color(0,0,0));
 //        JTextArea jta = new JTextArea(4, 20);
-        JFrame jframe = new JFrame("Wub");
+        JFrame jframe = new JFrame("Wub #"+song.number);
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.setSize(width, height);
         jframe.setResizable(false);
@@ -45,6 +47,7 @@ public class Custom {
 
         ArrayList<AudioInterval> reducedSong=new ArrayList<>();
         HashMap<AudioInterval,Character> language=new HashMap<>();
+        HashMap<AudioInterval,Character> origlanguage=new HashMap<>();
 
 
         char newChar='A';
@@ -63,6 +66,7 @@ public class Custom {
                 language.put(segMapped,newChar);
                 newChar++;
             }
+            origlanguage.put(segOrig,language.get(segMapped));
             i++;
         }
         System.out.println((newChar-65)+" characters in language");
@@ -78,7 +82,7 @@ public class Custom {
             @Override
             public void run() {
                 try {
-                    String[] samples=RNNDemo.process(song,language,audio,finalOut);
+                    String[] samples=RNNDemo.process(song,language,origlanguage,audio,finalOut);
                     System.out.println(Arrays.toString(samples));
                 } catch (Exception e) {
                     e.printStackTrace();

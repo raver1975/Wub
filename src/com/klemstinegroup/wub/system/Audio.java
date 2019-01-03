@@ -4,9 +4,7 @@ import com.echonest.api.v4.Segment;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -20,10 +18,10 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.swing.*;
 
+import com.klemstinegroup.wub.BeautifulKMGSRandReduce;
 import org.bytedeco.javacv.*;
 import org.bytedeco.javacv.Frame;
 import org.graphstream.graph.Node;
-import org.json.simple.JSONObject;
 
 import static org.bytedeco.javacpp.avutil.AV_PIX_FMT_ARGB;
 
@@ -51,12 +49,15 @@ public class Audio {
     public static double maxDuration = 1;
     //    private Song cachedSong;
 //    private int cachedSongIndex;
-    public static ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    //public static ByteArrayOutputStream baos = new ByteArrayOutputStream();
     Node lastNode1 = null;
     Node lastNode2 = null;
     private int start;
     private int lastSeg;
     private Queue<AudioInterval> lastPlayedQueue = new LinkedList<>();
+
+    private boolean recorderStart = false;
+    private double frameNumber = 0;
 
     public Audio() {
         this(null, null, 1);
@@ -70,27 +71,6 @@ public class Audio {
             robot = new Robot();
         } catch (AWTException e) {
             e.printStackTrace();
-        }
-        if (Settings.makeVideo) {
-            recorder = new FFmpegFrameRecorder(new File("out" + Settings.spotifyId + ".mp4"), jframe.getWidth(), jframe.getHeight(), 2);
-            recorder.setSampleRate((int) audioFormat.getSampleRate());
-            recorder.setAudioChannels(2);
-            recorder.setInterleaved(true);
-            recorder.setVideoQuality(0);
-//            recorder.setVideoBitrate(10000000);
-//            recorder.setAudioBitrate(10000000);
-            recorder.setImageWidth(jframe.getWidth());
-            recorder.setImageHeight(jframe.getHeight());
-            try {
-                recorder.start();
-                Thread.sleep(2000);
-                System.out.println("****recorder started");
-            } catch (FrameRecorder.Exception e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-
-            }
-            converter = new Java2DFrameConverter();
         }
     }
 
@@ -277,6 +257,59 @@ public class Audio {
                             }).start();
                         }
 
+                        if (Settings.makeVideo) {
+
+                            if (!recorderStart) {
+                                if (Settings.makeVideo) {
+                                    recorder = new FFmpegFrameRecorder(new File("out" + Math.random() + ".mp4"), BeautifulKMGSRandReduce.width, BeautifulKMGSRandReduce.height, 2);
+                                    recorder.setVideoCodec(12);
+                                    recorder.setFormat("mov");
+                                    recorder.setFrameRate(30);
+//                                    recorder.setPixelFormat(AV_PIX_FMT_RGB24);
+//            recorder.setAudioCodecName("mp4");
+                                    recorder.setAudioCodec(0x10000);
+                                    recorder.setSampleRate((int) audioFormat.getSampleRate());
+                                    recorder.setAudioChannels(2);
+//                                    recorder.setInterleaved(true);
+                                    recorder.setVideoQuality(0);
+//            recorder.setVideoBitrate(10000000);
+//            recorder.setAudioBitrate(10000000);
+                                    recorder.setImageWidth(BeautifulKMGSRandReduce.width);
+                                    recorder.setImageHeight(BeautifulKMGSRandReduce.height);
+                                    try {
+                                        recorder.start();
+                                        System.out.println("****recorder started");
+                                        recorderStart = true;
+                                    } catch (FrameRecorder.Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    converter = new Java2DFrameConverter();
+                                }
+                            }
+
+                            BufferedImage image = robot.createScreenCapture(jframe.getBounds());
+                            Frame frame = converter.convert(image);
+//                            frame.audioChannels = Audio.channels;
+//                            frame.sampleRate = Audio.sampleRate;
+//                            frame.keyFrame = false;
+//                            frame.frameNumber = frameNumber;
+//                            System.out.println("frameNumber="+frameNumber);
+
+//                            frame.samples = new Buffer[]{ByteBuffer.wrap(audioInterval.data)};
+                            short[] samples = new short[audioInterval.data.length / 2];
+                            ByteBuffer.wrap(audioInterval.data).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(samples);
+                            ShortBuffer sBuff = ShortBuffer.wrap(samples);
+//                            frame.samples = new Buffer[]{sBuff};
+                            try {
+                                recorder.setTimestamp((long) frameNumber);
+//                                recorder.record(frame, AV_PIX_FMT_ARGB);
+                                recorder.recordImage(frame.imageWidth,frame.imageHeight,frame.imageDepth,frame.imageChannels,frame.imageStride,AV_PIX_FMT_ARGB,frame.image);
+                                recorder.recordSamples(sBuff);
+                            } catch (FrameRecorder.Exception e) {
+                                e.printStackTrace();
+                            }
+                            frameNumber += 1000000d * ((((double) audioInterval.data.length / 4d) / Audio.sampleRate));
+                        }
 
                         int j = 0;
                         for (j = 0; j <= audioInterval.data.length - bufferSize; j += bufferSize) {
@@ -298,7 +331,6 @@ public class Audio {
                             }
                             position = j;
                             line.write(audioInterval.data, j, bufferSize);
-
                         }
 
                         if (j < audioInterval.data.length) {
@@ -339,11 +371,11 @@ public class Audio {
     }
 
     public void play(AudioInterval i) {
-        try {
-            baos.write(i.data);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            baos.write(i.data);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         queue.add(i);
     }
 

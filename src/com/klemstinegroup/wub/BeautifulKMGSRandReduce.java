@@ -1,4 +1,4 @@
-    package com.klemstinegroup.wub;
+package com.klemstinegroup.wub;
 
 import com.echonest.api.v4.Segment;
 import com.klemstinegroup.wub.system.*;
@@ -29,7 +29,6 @@ public class BeautifulKMGSRandReduce {
     static final int attLength = 28;
     public static Attribute[] attlist;
 
-
     public static int[] playback = new int[]{(int) (Math.random() * 1300)};
 //    static int[] playback = new int[]{181};
 
@@ -55,8 +54,8 @@ public class BeautifulKMGSRandReduce {
 
     public static Canvas tf;
     private static AudioInterval firstSaved = null;
-    private static int width = 1200;
-    private static int height = 800;
+    public static int width = 1200;
+    public static int height = 800;
 
 //    public static HashMap<String,Integer> hm;
 
@@ -99,11 +98,13 @@ public class BeautifulKMGSRandReduce {
 
                     try {
                         title = (String) js.get("title");
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                     try {
                         artist = (String) js.get("artist");
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -352,6 +353,7 @@ public class BeautifulKMGSRandReduce {
 //            Map.Entry<String, String> bbe = (Map.Entry<String, String>) bbb;
 //            System.out.println(bbb.toString());
 //
+//                Audio.stop();
             }
         }).start();
 

@@ -6,9 +6,9 @@ package com.klemstinegroup.wub.system;
 public class Settings {
     public static final int decreaseClustersBy = 15;// * playback.length;
     public static String spotifyId = "spotify:track:5ghIJDpPoe3CfHMGu71E6T";
-    public static boolean makeVideo = false;
+    public static boolean makeVideo = true;
     public static String queryOverride = null;
-    public static boolean addTrackInfo = false;
+    public static boolean addTrackInfo = true;
     public static final float segmentsKept = .75f;
 
     public static float pitchFactor = 17f;
@@ -22,7 +22,7 @@ public class Settings {
 
 
 
-    public static int lengthOfBeaut = 5000;
+    public static int lengthOfBeaut = 500000;
 
     public static boolean localHost = false;
 }

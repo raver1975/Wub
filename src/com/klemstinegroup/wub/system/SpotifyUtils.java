@@ -39,11 +39,11 @@ public class SpotifyUtils {
 
     public static void setAccessToken() {
         System.out.println("Logging into spotify");
-        api = Api.builder()
-                .clientId(Credentials.clientId)
-                .clientSecret(Credentials.clientSecret)
-                .redirectURI("http://127.0.0.1:8002")
-                .build();
+//        api = Api.builder()
+//                .clientId(Credentials.clientId)
+//                .clientSecret(Credentials.clientSecret)
+//                .redirectURI("http://127.0.0.1:8002")
+//                .build();
         final ClientCredentialsGrantRequest request = api.clientCredentialsGrant().build();
         try {
             ClientCredentials clientCredentials = request.get();
