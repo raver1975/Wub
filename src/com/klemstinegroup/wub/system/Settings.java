@@ -11,10 +11,10 @@ public class Settings {
     public static boolean addTrackInfo = true;
     public static final float segmentsKept = .75f;
 
-    public static float pitchFactor = 17f;
-    public static float timbreFactor = 30f;
+    public static float pitchFactor = 170f;
+    public static float timbreFactor = 60f;
     public static float loudFactor = 20f;
-    public static float durationFactor = 90f;
+    public static float durationFactor = 400f;
 //    static float pitchFactor = 17f;
 //    static float timbreFactor = 17f;
 //    static float loudFactor = 70f;
